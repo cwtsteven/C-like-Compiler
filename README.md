@@ -6,7 +6,6 @@
 2. execute <code>make</code>
 
 ## How to run
-In order to run the parser, execute
-<pre><code>./Main.native</code></pre>
-In order to run the test, execute
-<pre><code>./TestBench.native</code></pre>
+In order to run the parser, execute<code>./Main.native</code> then enter you code in the console. For now, it will print the generated parse tree as its output.
+
+In order to run the test, execute<code>./TestBench.native</code>
