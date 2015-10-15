@@ -30,6 +30,7 @@ type expr = Var of var
 		  | UnaryOp of unary_op * expr
 		  | BinaryOp of binary_op * expr * expr
 		  | FunCall of var * expr list
+		  (*| Assign of var * expr*)
 
 type stmnt = Expr of expr
 		   | Return of expr
@@ -89,6 +90,7 @@ and printExpr expr =
 	| UnaryOp (op, e) 		-> printUnaryOp op; print_string " "; printExpr e
 	| BinaryOp (op, e1, e2) -> printBinaryOp op; print_string " "; printExpr e1; print_string " "; printExpr e2
 	| FunCall (v, ls) 		-> print_string ("FunCall " ^ v); print_string " ["; printExprList ls; print_string "] " 
+	(*| Assign (v, e)			-> print_string ("Assign (Var " ^ v ^ ") "); printExpr e*)
 	end;
 	print_string ")"
 

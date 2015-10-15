@@ -80,7 +80,7 @@ let rec find_symbol_throung_all_prod items symbol : xsymbol option =
 	match items with 
 	| [] -> None
 	| (prod, _) :: is -> let symbols = rhs prod in
-						 print_string (rhs_string symbols ^ "\n");
+						 (*print_string (rhs_string symbols ^ "\n");*)
 						 let target = find_symbol_in_prod symbols symbol in (
 							 match target with
 							 | None -> find_symbol_throung_all_prod is symbol
@@ -132,9 +132,10 @@ let print_parseError env lexbuf =
 		| Nil -> prerr_string ("Parse error in " ^ positionString lexbuf ^ ". Unexpected token: " ^ Lexing.lexeme lexbuf ^ "\n")
 		| Cons (Element (state, _, _, _), _) -> 
 			let symbol = incoming_symbol state in (
+				(*print_string (symbol2string (X symbol) ^ "\n");*)
 				match find_symbol_through_stack stack symbol with
-				| None 		  -> prerr_string ("Parse error in " ^ positionString lexbuf ^ ". Unexpected token: " ^ Lexing.lexeme lexbuf ^ "\n")
-				| Some symbol -> prerr_string ("Parse error in " ^ positionString lexbuf ^ ". " ^ symbol2string symbol
+				| None 		   -> prerr_string ("Parse error in " ^ positionString lexbuf ^ ". Unexpected token: " ^ Lexing.lexeme lexbuf ^ "\n")
+				| Some xsymbol -> prerr_string ("Parse error in " ^ positionString lexbuf ^ ". " ^ symbol2string xsymbol
 								 ^ " was expected but I got this token: " ^ Lexing.lexeme lexbuf ^ "\n")
 				)
 
