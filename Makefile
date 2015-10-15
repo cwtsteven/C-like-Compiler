@@ -1,4 +1,4 @@
-.PHONY: all clean test
+.PHONY: all
 
 MENHIRFLAGS     := --explain --table --inspection
 
@@ -10,7 +10,3 @@ TEST 		:= src/TestBench
 all:
 	$(OCAMLBUILD) $(MAIN).native
 	$(OCAMLBUILD) $(TEST).native
-
-clean:
-	rm -f *~ .*~
-	$(OCAMLBUILD) -clean
