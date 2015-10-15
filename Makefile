@@ -14,8 +14,3 @@ all:
 clean:
 	rm -f *~ .*~
 	$(OCAMLBUILD) -clean
-
-test: all
-	@echo "The following command should print 42:"
-	echo "(1 + 2 * 10) * 2" | ./$(MAIN).native
-
