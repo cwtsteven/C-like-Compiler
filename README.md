@@ -11,7 +11,7 @@ In order to run the parser, execute<code>./Main.native</code> then enter you cod
 In order to run the test, execute<code>./TestBench.native</code>
 
 ## Syntax
-This grammar is simulating a C-like imperative programming languages. In the top-level, you can declare global variables and functions. For instance:
+This grammar is simulating a C-like imperative programming languages. In the top-level, you can declare global variables and functions, for instance:
 <pre><code>a = 3;
 double(x) {
   return x + x;
