@@ -12,13 +12,11 @@ In order to run the test, execute<code>./TestBench.native</code>
 
 ## Syntax
 This grammar is simulating a C-like imperative programming languages. In the top-level, you can declare global variables and functions. For instance:
-<pre><code>
-a = 3;
+<pre><code>a = 3;
 double(x) {
   return x + x;
 }
 main() {
   b = <<;
   >> double(b);
-}
-</code></pre>
+}</code></pre>
