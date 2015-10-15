@@ -1,0 +1,24 @@
+————————————————————————————————————  Compiling Instruction ————————-—————————————
+
+1) Make sure you have the lastest version of Menhir (which includes the Incremental api and Inspection api) installed.
+
+2) Type “make” in your terminal to compile the Parser as well as the TestBench.
+
+3.0) Type “./Main.native” in terminal to invoke the Parser. 
+3.1) Type your program in terminal. Press enter double times to see the result. 
+3.2) For now, this program will print the respective Parse Tree as the output if the input is accepted by the grammar. 
+3.3) If there is an error, the parser will tell you exactly where the error occurs and what happened. 
+
+4) Type “./TestBench.native” to see the result of testing.
+
+————————————————————————————————————— File Desc ——————————————————————————————————
+
+1) Lexer.mll and Parser.mly are the ocamllex and menhir modules.
+2) Main.ml is the entry program.
+3) SyntaxTree.ml contains the type of the syntax tree that will be produced by the parser.
+4) ErrorHandling.ml helps to prodcue meaning error.
+5) TestBench.ml contains test cases and the testing procedure.
+
+————————————————————————————————————— Grammar Desc ————————————————————————————————
+
+This grammar is simulating Java-like imperative programming languages. 
