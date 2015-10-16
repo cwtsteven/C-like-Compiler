@@ -1,5 +1,6 @@
 # Dependencies
 In order to compile the project correctly, please make sure you have the following installed.
+
 1. Ocaml, minimum version 4.02.1
 2. Menhir, minimum version 20151005
 
