@@ -1,16 +1,16 @@
 # Compiler Construction
 
 ## Dependencies
-1. at least ocaml version 4.02.1
-2. at lest menhir version 20151005
+1. ocaml, minimum version 4.02.1
+2. menhir, minimum version 20151005
 
 ## How to compile
-1. execute <code>make all</code>
+In order to compile, execute <code>make all</code>.
 
 ## How to run
-In order to run the parser, execute<code>./Main.native</code> then enter you code in the console. For now, it will either print the generated parse tree or an error message as its ouptput.
+In order to run the parser, execute<code>./Main.native</code>, then enter you code in the console. For now, it will either print the generated parse tree or an error message as its ouptput.
 
-In order to run the test, execute<code>./TestBench.native</code>
+In order to run the test, execute<code>./TestBench.native</code>.
 
 ## Syntax
 This grammar is simulating a C-like imperative programming languages. In the top-level, you can declare global variables and functions, for instance:
