@@ -13,7 +13,7 @@ In order to run the parser, execute<code>./Main.native</code>, then enter you co
 In order to run the test, execute<code>./TestBench.native</code>.
 
 # Syntax
-This grammar is simulating a C-like imperative programming languages. In the top-level, you can declare global variables and functions, for instance:
+This grammar is simulating a C-like imperative programming languages. In the top-level, you can declare global variables and functions, below gives you a first taste of a valid program:
 <pre><code>var a = 3;
 double(x) {
   return x + x;
@@ -27,6 +27,7 @@ main() {
     >> double(a);
   }
 }</code></pre>
+The syntax will be described more detailly in the sections below.
 
 ## Identifiers
 An identifier is the name of a variable or function. The name is restricted by the following rules:
