@@ -14,6 +14,8 @@
 4. The documentation can provide some more examples for both valid and invaild input because for now, only a valid input is shown.
 5. It may be better if the Testing procedure is seperated from the main program (exp_test.ml) so the structure of the program will be clearer. 
 
+link to Deyan's repo:
+https://github.com/deangenovski/CompilerConstruction/blob/master/codeReview/week3/StevenCheung.md
 
 ##Reply to Deyan's suggestions:
-1 - 3. Yes, the test cases right now is really messy. I will 
+1 - 3. Yes, the test cases right now is really messy. I will in fact re-structure the whole testing procedure so that test cases and test sutie can be added more easily. Also, comparing the parse tree to test for precedence is a really good point. 
