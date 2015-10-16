@@ -64,8 +64,8 @@ All operators are left-associative unless otherwise specified. For instance, an 
 ## Control statement
 Traditional control flow <code>if</code> <code>if else</code> <code>while</code> and <code>for</code> are supported. 
 Here are the rules for each statement:
-- <code>if</code>: <code>if (expr) {statements}</code>
-- <code>if else </code>: <code>if (expr) {statements} else {statements}</code>
-- <code>while</code>: <code>while (expr) {statements}</code>
-- <code>for</code>: <code>for(expr;expr;expr) {statements}</code>
+- if: <code>if (expr) {statements}</code>
+- if else: <code>if (expr) {statements} else {statements}</code>
+- while: <code>while (expr) {statements}</code>
+- for: <code>for(expr;expr;expr) {statements}</code>
 
