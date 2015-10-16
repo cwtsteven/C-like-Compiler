@@ -48,6 +48,6 @@ An operator is either a nullary/unary/binary operator. Here is the precedence io
 - <code>==</code> <code>!=</code> <code>></code> <code>>=</code> <code><</code> <code><=</code> 
 - <code>+</code> <code>-</code>
 - <code>*</code> <code>/</code>
-- 
+
 All operators are left-associative unless otherwise specified. For instance, an expression:
 <code>>> 3 + 4 * 5 >= 1;</code> will be evaluated as <code>>> ((3 + (4 * 5)) >= 1)</code>. 
