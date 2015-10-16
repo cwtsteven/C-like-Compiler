@@ -8,11 +8,13 @@ In order to compile the project correctly, please make sure you have the followi
 In order to compile, execute <code>make all</code>.
 
 # How to run
+## Run the compiler
 In order to run the parser, execute<code>./Main.native</code>, then enter you code in the console. For now, it will either print the generated parse tree or an error message as its ouptput. The error will inform you where and what exactly happened, for instance, if we have this input program:
 <pre><code>var a = ;</code></pre>
 we will get
 <pre><code>Parse error in Line 1, Column 9. expression was expected but I got this token: ;</code></pre>
 
+## Run the parser
 In order to run the test, execute<code>./TestBench.native</code>.
 
 # Syntax
