@@ -33,8 +33,8 @@ An identifier is the name of a variable or function. The name is restricted by t
 - An identifier must begin with a small-case letter (a - z) or an underscore <code>_</code>.
 - It can be followed by (a - z) or (A - Z) or (0 - 9) or an underscore.
 - An identifier cannot be a predefined keyword
-- Example of valid identifier: a _a _a123
-- Example if invalid identifier: A A123 123A
+- Example of valid identifier: <code>a</code> <code>_a</code> <code>_a123</code>
+- Example if invalid identifier: <code>A</code> <code>A123</code> <code>123A</code>
 
 ## Declaring variables
 You can either just to decalre a variable or at the same time, assign a value to it, for instance: <code>var a;</code> and <code>var a = 1;</code>. The right hand side can also be an expression: <code>var a = 3 + 5;</code>. Be aware that the variables declared inside a function is local to the function, for instance, if we decalre a global variable and a local varibale with the same name, the local one is used inside the function.
