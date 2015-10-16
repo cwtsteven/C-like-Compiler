@@ -29,4 +29,10 @@ main() {
 }</code></pre>
 
 ### Declaring variables
-You can either just to decalre a variable or at the same time, assign a value to it, for instance: <code>var a;</code> and <code>var a = 1;</code>
+You can either just to decalre a variable or at the same time, assign a value to it, for instance: <code>var a;</code> and <code>var a = 1;</code>. The right hand side can also be an expression: <code>var a = 3 + 5;</code>. Be aware that the variables declared inside a function is local to the function, for instance, if we decalre a global variable and a local varibale with the same name, the local one is used inside the function.
+<pre><code>var a = 1;
+main() {
+  var a = 1;
+  a = a + 1;
+}</pre></code>
+In the line <code>a = a + 1;</code>, it will not change the global variable <code>a</code>
