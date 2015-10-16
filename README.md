@@ -27,3 +27,6 @@ main() {
     >> double(a);
   }
 }</code></pre>
+
+### Declaring variables
+You can either just to decalre a variable or at the same time, assign a value to it, for instance: <code>var a;</code> and <code>var a = 1;</code>
