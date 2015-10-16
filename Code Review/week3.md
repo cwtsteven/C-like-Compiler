@@ -16,3 +16,4 @@
 
 
 ##Reply to Deyan's suggestions:
+1 - 3. Yes, the test cases right now is really messy. I will 
