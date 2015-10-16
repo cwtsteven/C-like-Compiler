@@ -37,4 +37,4 @@ main() {
 In the line <code>a = a + 1;</code>, it will not change the global variable <code>a</code>. 
 
 ## Basic I/O
-You can use <code><<</code> as basic input and <code>>></code> as output. <code><<</code> will return a string by default while <code>>></code> is followed by an expression in which the compiler will evaluate the expression before printing it. For instance: <code>>> 3 + 5;</code> will print 8. 
+You can use <code><<</code> as basic input and <code>>></code> as output. <code><<</code> is an expression that will return a string by default, for example, you can assign the return value to a variable <code>a = <<;</code>. <code>>></code> is followed by an expression in which the compiler will evaluate the expression before printing it. For instance: <code>>> 3 + 5;</code> will print 8. 
