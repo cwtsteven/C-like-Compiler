@@ -1,4 +1,5 @@
 # Dependencies
+In order to compile the project correctly, please make sure you have the following installed.
 1. Ocaml, minimum version 4.02.1
 2. Menhir, minimum version 20151005
 
@@ -33,4 +34,7 @@ main() {
   var a = 1;
   a = a + 1;
 }</pre></code>
-In the line <code>a = a + 1;</code>, it will not change the global variable <code>a</code>
+In the line <code>a = a + 1;</code>, it will not change the global variable <code>a</code>. 
+
+## Basic I/O
+You can use <code><<</code> as basic input and <code>>></code> as output. <code><<</code> will return a string by default while <code>>></code> is followed by an expression in which the compiler will evaluate the expression before printing it. For instance: <code>>> 3 + 5;</code> will print 8. 
