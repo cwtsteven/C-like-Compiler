@@ -15,4 +15,4 @@
 5. It may be better if the Testing procedure is seperated from the main program (exp_test.ml) so the structure of the program will be clearer. 
 
 
-##Reply to Deyan'suggestions:
+##Reply to Deyan's suggestions:
