@@ -28,6 +28,14 @@ main() {
   }
 }</code></pre>
 
+## Identifiers
+An identifier is the name of a variable or function. The name is restricted by the following rules:
+- An identifier must begin with a small-case letter (a - z) or an underscore <code>_</code>.
+- It can be followed by (a - z) or (A - Z) or (0 - 9) or an underscore.
+- An identifier cannot be a predefined keyword
+- Example of valid identifier: a _a _a123
+- Example if invalid identifier: A A123 123A
+
 ## Declaring variables
 You can either just to decalre a variable or at the same time, assign a value to it, for instance: <code>var a;</code> and <code>var a = 1;</code>. The right hand side can also be an expression: <code>var a = 3 + 5;</code>. Be aware that the variables declared inside a function is local to the function, for instance, if we decalre a global variable and a local varibale with the same name, the local one is used inside the function.
 <pre><code>var a = 1;
@@ -50,4 +58,7 @@ An operator is either a nullary/unary/binary operator. Here is the precedence io
 - <code>*</code> <code>/</code>
 
 All operators are left-associative unless otherwise specified. For instance, an expression:
-<code>>> 3 + 4 * 5 >= 1;</code> will be evaluated as <code>>> ((3 + (4 * 5)) >= 1)</code>. 
+<code>>> 3 + 4 * 5 >= 1;</code> will be evaluated to <code>>> ((3 + (4 * 5)) >= 1)</code>. 
+
+## Control statement
+Traditional <code>if</code> <code>if else</code> <code>while</code> and <code>for</code> control flow are supported. 
