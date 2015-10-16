@@ -1,8 +1,8 @@
 # Compiler Construction
 
 ## Dependencies
-1. ocaml, minimum version 4.02.1
-2. menhir, minimum version 20151005
+1. Ocaml, minimum version 4.02.1
+2. Menhir, minimum version 20151005
 
 ## How to compile
 In order to compile, execute <code>make all</code>.
