@@ -61,4 +61,4 @@ All operators are left-associative unless otherwise specified. For instance, an 
 <code>>> 3 + 4 * 5 >= 1;</code> will be evaluated to <code>>> ((3 + (4 * 5)) >= 1)</code>. 
 
 ## Control statement
-Traditional <code>if</code> <code>if else</code> <code>while</code> and <code>for</code> control flow are supported. 
+Traditional control flow <code>if</code> <code>if else</code> <code>while</code> and <code>for</code> are supported. 
