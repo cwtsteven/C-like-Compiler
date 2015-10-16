@@ -9,9 +9,10 @@
 
 ##Suggestions:
 1. The error msg generated shows where the error came from, but the line number in the position is always 1. The line number should be consistent with the input.
-2. The testing of error does not compare what the error is (Syntax/Parse) nor the position of the error. 
+2. It may be better if testing includes comparison on what the error is (Syntax/Parse) and the position of the error. 
 3. I am not sure about the use of 'var' in the grammar. If 'var' is used as a declaration, then the grammar does not have assignemnt statement. If the 'var' is used as assignment, then it may not be neccesary, i.e. just a := 5 will serve the purpose.
-4. The documentation can provide more examples for both valid and invaild input because for now, only a valid input is shown.
+4. The documentation can provide some more examples for both valid and invaild input because for now, only a valid input is shown.
+5. It may be better if the Testing procedure is seperated from the main program (exp_test.ml) so the structure of the program will be clearer. 
 
 
 ##Reply to Deyan'suggestions:
