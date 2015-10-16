@@ -14,7 +14,7 @@ In order to run the parser, execute<code>./Main.native</code>, then enter you co
 we will get
 <pre><code>Parse error in Line 1, Column 9. expression was expected but I got this token: ;</code></pre>
 
-## Run the parser
+## Run the tests
 In order to run the test, execute<code>./TestBench.native</code>.
 
 # Syntax
