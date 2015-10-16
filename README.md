@@ -39,3 +39,14 @@ In the line <code>a = a + 1;</code>, it will not change the global variable <cod
 
 ## Basic I/O
 You can use <code><<</code> as basic input and <code>>></code> as output. <code><<</code> is an expression that will return a string by default, for example, you can assign the return value to a variable <code>a = <<;</code>. <code>>></code> is followed by an expression in which the compiler will evaluate the expression before printing it. For instance: <code>>> 3 + 5;</code> will print 8. 
+
+## Operators
+An operator is either a nullary/unary/binary operator. Here is the precedence iof operators (from low to high)
+- <code>>></code> (non-associative)
+- <code>=</code> (non-associative)
+- <code>&&</code> <code>||<code> <code>not<code>
+- <code>==</code> <code>!=</code> <code>></code> <code>>=</code> <code><</code> <code><=</code> 
+- <code>+</code> <code>-</code>
+- <code>*</code> <code>/</code>
+All operators are left-associative unless otherwise specified. For instance, an expression:
+<code>>> 3 + 4 * 5 >= 1;</code> will be evaluated as <code>>> ((3 + (4 * 5)) >= 1)</code>. 
