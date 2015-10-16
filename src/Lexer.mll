@@ -30,6 +30,7 @@ let logical_not = '!'
 
 let main = "main"
 let return = "return"
+let var = "var"
 let if = "if"
 let else = "else"
 let while = "while"
@@ -42,7 +43,7 @@ let string = '"'_*'"'
 let true = "true"
 let false = "false"
 
-let var = ['a'-'z' '_']['a'-'z' 'A'-'Z' '0'-'9' '_']*
+let identifier = ['a'-'z' '_']['a'-'z' 'A'-'Z' '0'-'9' '_']*
 
 let comma = ','
 let semicolon = ';'
@@ -89,7 +90,8 @@ rule read = parse
 | true { BOOL true }
 | false { BOOL false }
 
-| var { VAR (Lexing.lexeme lexbuf) }
+| var { VAR }
+| identifier { IDENTIFIER (Lexing.lexeme lexbuf) }
 
 | comma { COMMA }
 | semicolon { SEMICOLON }

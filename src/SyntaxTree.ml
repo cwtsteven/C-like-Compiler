@@ -32,15 +32,18 @@ type expr = Var of var
 		  | FunCall of var * expr list
 		  (*| Assign of var * expr*)
 
+type declare_stmnt = Declare of var
+			 	   | DeclareAssign of var * expr
+
 type stmnt = Expr of expr
 		   | Return of expr
 		   | If_Then_Else of expr * block * block
 		   | While of expr * block
 		   | For of expr * expr * expr * block
+		   | Local of declare_stmnt
 and block = stmnt list
 
-type declare = Declare of var
-			 | DeclareAssign of var * expr
+type declare = Global of declare_stmnt
 			 | Function of var * var list * block
 			 | Main of block
 
@@ -94,6 +97,9 @@ and printExpr expr =
 	end;
 	print_string ")"
 
+let printDeclareStmnt declare_stmnt = match declare_stmnt with
+	| Declare v 		   -> print_string "Declare (Var "; print_string v; print_string ") "
+	| DeclareAssign (v, e) -> print_string "DeclareAssign (Var "; print_string v; print_string ") "; printExpr e
 
 let rec printStmnt stmnt = 
 	begin
@@ -103,6 +109,7 @@ let rec printStmnt stmnt =
 	| If_Then_Else (e, b1, b2) 	-> print_string "If_Then_Else "; printExpr e; print_string " ["; printBlock b1; print_string "] {"; printBlock b2; print_string "}"; 
 	| While (e, b)				-> print_string "While "; printExpr e; print_string " {"; printBlock b; print_string "}"; 
 	| For (e1, e2, e3, b)		-> print_string "For "; printExpr e1; print_string " "; printExpr e2; print_string " "; printExpr e3; print_string " {"; printBlock b; print_string "}"; 
+	| Local s 			   		-> printDeclareStmnt s
 	end;
 	print_string "; "
 and printBlock block = 
@@ -119,8 +126,7 @@ let rec printVarList ls =
 	| (x :: xs) -> print_string x; print_string " "; printVarList xs
 
 let printDeclare declare = match declare with
-	| Declare v 		   -> print_string "Declare (Var "; print_string v; print_string ") "
-	| DeclareAssign (v, e) -> print_string "DeclareAssign (Var "; print_string v; print_string ") "; printExpr e
+	| Global s 			   -> printDeclareStmnt s
 	| Function (v, ps, b)  -> print_string "Function (Var "; print_string v; print_string ") ["; printVarList ps; print_string "] {"; printBlock b; print_string "}"
 	| Main b 			   -> print_string "Main "; print_string "{"; printBlock b; print_string "}"
 

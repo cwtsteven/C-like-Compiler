@@ -8,7 +8,8 @@
 %token <string> STRING
 %token <bool> BOOL
 
-%token <string> VAR
+%token <string> IDENTIFIER
+%token VAR
 %token ASSIGN
 %token AND OR NOT
 %token ADD SUB MUL DIV
@@ -48,15 +49,14 @@ program:
 ;
 
 declare:
-| v = VAR; SEMICOLON					{ Declare v }
-| v = VAR; ASSIGN; e = expr; SEMICOLON	{ DeclareAssign (v, e) }
-| v = VAR; ps = param; b = block		{ Function (v, ps, b) }
+| d = declare_var_stmnt					{ Global d }
+| v = IDENTIFIER; ps = param; b = block	{ Function (v, ps, b) }
 | MAIN; L_BRACKET; R_BRACKET; b = block { Main b }
 ;
 
 param:
 | L_BRACKET; 
-	ps = separated_list(COMMA, VAR); 
+	ps = separated_list(COMMA, IDENTIFIER); 
 	R_BRACKET 							{ ps }
 ;
 
@@ -69,9 +69,16 @@ block:
 stmnt:
 | e = expr; SEMICOLON					{ Expr e }
 | RETURN; e = expr; SEMICOLON			{ Return e }
+| d = declare_var_stmnt 				{ Local d }
 | ifs = if_stmnt						{ ifs }
 | whs = while_stmnt						{ whs }
 | fos = for_stmnt						{ fos }
+;
+
+declare_var_stmnt:
+| VAR; v = IDENTIFIER; SEMICOLON		{ Declare v }
+| VAR; v = IDENTIFIER; 
+	ASSIGN; e = expr; SEMICOLON			{ DeclareAssign (v, e) }
 ;
 
 if_stmnt: 
@@ -100,7 +107,7 @@ expr:
 | op = unary_op; e = expr 				{ UnaryOp (op, e) }
 | e1 = expr; op = binary_op; e2 = expr 	{ BinaryOp (op, e1, e2) }
 | L_BRACKET; e = expr; R_BRACKET		{ e }
-| v = VAR; ps = fun_call_param;			{ FunCall (v, ps) }
+| v = IDENTIFIER; ps = fun_call_param;	{ FunCall (v, ps) }
 ;
 
 fun_call_param:
@@ -110,7 +117,7 @@ fun_call_param:
 ;
 
 data:
-| v = VAR								{ Var v }
+| v = IDENTIFIER						{ Var v }
 | i = INT 								{ Int i }
 | r = REAL								{ Real r }
 | c = CHAR 								{ Char c }
