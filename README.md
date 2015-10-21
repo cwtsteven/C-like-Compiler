@@ -19,13 +19,13 @@ In order to run the test, execute<code>./TestBench.native</code>.
 
 # Syntax
 This grammar is simulating a C-like imperative programming languages. In the top-level, you can declare global variables and functions, below gives you a first taste of a valid program:
-<pre><code>var a = 3;
-double(x) {
+<pre><code>int a = 3;
+int double(x) {
   return x + x;
 }
 main() {
-  var a = 1;
-  b = <<;
+  a = 1;
+  int b = <<;
   if (b > a) {
     >> double(b);
   } else {
@@ -42,11 +42,19 @@ An identifier is the name of a variable or function. The name is restricted by t
 - Example of valid identifier: <code>a</code> <code>_a</code> <code>_a123</code>
 - Example if invalid identifier: <code>A</code> <code>A123</code> <code>123A</code>
 
+## Primitive Data types
+There are five primitive data types. 
+- <code>int</code> correspond to a 32-bit integer
+- <code>real</code> corrresponed to double precision floating point (double in C)
+- <code>char</code> a single character
+- <code>string</code> a string (cannot contain <code>"</code>)
+- <code>bool</code> either true or false
+
 ## Declaring variables
 You can either just to decalre a variable or at the same time, assign a value to it, for instance: <code>var a;</code> and <code>var a = 1;</code>. The right hand side can also be an expression: <code>var a = 3 + 5;</code>. Be aware that the variables declared inside a function is local to the function, for instance, if we decalre a global variable and a local varibale with the same name, the local one is used inside the function.
-<pre><code>var a = 1;
+<pre><code>int a = 1;
 main() {
-  var a = 1;
+  int a = 1;
   a = a + 1;
 }</pre></code>
 In the line <code>a = a + 1;</code>, it will not change the global variable <code>a</code>. 
