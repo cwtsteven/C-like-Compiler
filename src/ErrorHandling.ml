@@ -58,15 +58,15 @@ let symbol2string (type a) (symbol : xsymbol) : string =
 	| X (N N_data)			-> "data"
 	| X (T T_error)			-> "error"
 	| X (N N_fun_call_param) -> "funtion call"
-	| X (N N_list_declare_) -> "identifier"
+	| X (N N_list_top_level_) -> "identifier"
 	| X (N N_separated_nonempty_list_COMMA_expr_) -> "expression"
 	| X (N N_separated_nonempty_list_COMMA_IDENTIFIER_) -> "identifier"
 
-	| X (N N_declare_var_stmnt) -> "declaration of variable"
+	| X (N N_declare_stmnt) -> "declaration of variable"
 	| X (N N_param) -> "what???"
 	| X (N N_loption_separated_nonempty_list_COMMA_expr__) -> "why so many???????"
 	| X (N N_loption_separated_nonempty_list_COMMA_IDENTIFIER__) -> "hmmm?"
-	| X (N N_declare) -> "huh???"
+	| X (N N_top_level) -> "huh???"
 
 let positionString lexbuf : string =
 	let pos = lexbuf.lex_curr_p in  "Line " ^ string_of_int pos.pos_lnum ^ ", Column "  ^ string_of_int (pos.pos_cnum - pos.pos_bol)  
@@ -108,7 +108,7 @@ let rec find_symbol_through_stack stack symbol : xsymbol option =
 			| Some (X (T T_COMMA))			-> Some (X (T T_R_BRACKET))
 			| Some (X (N N_separated_nonempty_list_COMMA_expr_)) -> Some (X (N N_separated_nonempty_list_COMMA_expr_))
 			| Some (X (N N_separated_nonempty_list_COMMA_IDENTIFIER_)) -> Some (X (N N_separated_nonempty_list_COMMA_IDENTIFIER_))
-			| Some (X (N N_declare_var_stmnt)) -> Some (X (N N_declare_var_stmnt))
+			| Some (X (N N_declare_stmnt))  -> Some (X (N N_declare_stmnt))
 
 			| Some (X (T T_ELSE))    		-> Some (X (T T_ELSE))
 			| Some (X (N N_expr)) 			-> Some (X (N N_expr))
@@ -117,7 +117,7 @@ let rec find_symbol_through_stack stack symbol : xsymbol option =
 			| Some (X (T T_R_BRACKET))		-> Some (X (T T_R_BRACKET))
 			| Some (X (T T_L_CBRACKET))		-> Some (X (T T_L_CBRACKET))
 			| Some (X (T T_R_CBRACKET))		-> Some (X (T T_R_CBRACKET))
-			| Some (X (N N_list_declare_))  -> Some (X (N N_list_declare_))
+			| Some (X (N N_list_top_level_))  -> Some (X (N N_list_top_level_))
 			| _ 							-> find_symbol_through_stack tailStack symbol
 			)
 		

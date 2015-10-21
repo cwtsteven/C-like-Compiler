@@ -36,22 +36,14 @@
 %left MUL DIV
 
 %type <SyntaxTree.type_> type_
-%type <SyntaxTree.expr> data
-%type <SyntaxTree.nullary_op> nullary_op
-%type <SyntaxTree.unary_op> unary_op
-%type <SyntaxTree.binary_op> binary_op
-%type <SyntaxTree.expr> expr
-%type <SyntaxTree.declare> declare
-%type <SyntaxTree.stmnt> stmnt if_stmnt while_stmnt for_stmnt
-%type <SyntaxTree.block> block
 %start <SyntaxTree.program> program
 %%
 program:
-| ls = list(declare); EOF				{ ls } 
+| ls = list(top_level); EOF				{ ls } 
 ;
 
-declare:
-| d = declare_var_stmnt								{ Global d }
+top_level:
+| d = declare_stmnt									{ Global d }
 | t = type_; v = IDENTIFIER; ps = param; b = block	{ Function (t, v, ps, b) }
 | MAIN; L_BRACKET; R_BRACKET; b = block 			{ Main b }
 ;
@@ -71,13 +63,13 @@ block:
 stmnt:
 | e = expr; SEMICOLON					{ Expr e }
 | RETURN; e = expr; SEMICOLON			{ Return e }
-| d = declare_var_stmnt 				{ Local d }
+| d = declare_stmnt		 				{ Local d }
 | ifs = if_stmnt						{ ifs }
 | whs = while_stmnt						{ whs }
 | fos = for_stmnt						{ fos }
 ;
 
-declare_var_stmnt:
+declare_stmnt:
 | t = type_; v = IDENTIFIER; SEMICOLON	{ Declare (t, v) }
 | t = type_; v = IDENTIFIER; 
 	ASSIGN; e = expr; SEMICOLON			{ DeclareAssign (t, v, e) }

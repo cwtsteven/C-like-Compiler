@@ -49,11 +49,11 @@ type stmnt = Expr of expr
 		   | Local of declare_stmnt
 and block = stmnt list
 
-type declare = Global of declare_stmnt
-			 | Function of type_ * var * var list * block
-			 | Main of block
+type top_level = Global of declare_stmnt
+			   | Function of type_ * var * var list * block
+			   | Main of block
 
-type program = declare list
+type program = top_level list
 
 (* printing the tree, so tedious *)
 
@@ -139,11 +139,11 @@ let rec string_of_var_list ls =
 	| (x :: []) -> x ^ ""
 	| (x :: xs) -> x ^ " " ^ string_of_var_list xs
 
-let string_of_declare declare = match declare with
+let string_of_top_level declare = match declare with
 	| Global s 				   -> "Global (" ^ string_of_declare_stmnt s ^ ")"
 	| Function (t, v, ps, b)   -> "Function (" ^ string_of_type t ^ ", " ^ v ^ ") [" ^ string_of_var_list ps ^ "] {" ^ string_of_block b ^ "}"
 	| Main b 			   	   -> "Main {" ^ string_of_block b ^ "}"
 
 let rec string_of_program program = match program with
 	| [] -> ""
-	| (x :: xs) -> string_of_declare x ^ "\n\n" ^ string_of_program xs
+	| (x :: xs) -> string_of_top_level x ^ "\n\n" ^ string_of_program xs

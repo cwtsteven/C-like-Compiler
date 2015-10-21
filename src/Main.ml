@@ -7,7 +7,7 @@ open ConstantFolding
 module Interpreter = Parser.MenhirInterpreter
 
 (* we manually run the parser by considering each tranisition *)
-let rec parse_with_inspecton lexbuf (result : SyntaxTree.program Interpreter.result) = 
+let rec parse_with_inspecton lexbuf (result : SyntaxTree.program Interpreter.result) : program = 
 	match result with
 	| Interpreter.InputNeeded env 		-> 	let token = Lexer.read lexbuf in
 						   	   				let startp = lexbuf.Lexing.lex_start_p
@@ -21,7 +21,7 @@ let rec parse_with_inspecton lexbuf (result : SyntaxTree.program Interpreter.res
   	| Interpreter.Accepted v 			-> 	v (* return the accepted parse tree *)
   	| Interpreter.Rejected 				-> 	assert false (* why????? you shd be handled by the HandlingError *)
 
-let process lexbuf = 
+let process lexbuf : program = 
 	try parse_with_inspecton lexbuf (Parser.Incremental.program()) with (* Parser.Incremental.program() creates the initial state *)
 	| Lexer.SyntaxError msg  -> print_syntaxError lexbuf msg;
 						  		exit (-1)
