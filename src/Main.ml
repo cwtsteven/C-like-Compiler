@@ -2,13 +2,8 @@ open Lexing
 open SyntaxTree
 open ErrorHandling
 open MenhirLib.General
+open ConstantFolding
 module Interpreter = Parser.MenhirInterpreter
-
-let parse_without_inpsection content = 
-content
-|> Lexing.from_string
-|> Parser.program Lexer.read
-
 
 (* we manually run the parser by considering each tranisition *)
 let rec parse_with_inspecton lexbuf (result : SyntaxTree.program Interpreter.result) = 
@@ -21,8 +16,8 @@ let rec parse_with_inspecton lexbuf (result : SyntaxTree.program Interpreter.res
     | Interpreter.Shifting _	
     | Interpreter.AboutToReduce _ 		-> 	let result = Interpreter.resume result in
     					   	   				parse_with_inspecton lexbuf result (* just carry on parsing *)
-	| Interpreter.HandlingError env 	-> 	ErrorHandling.print_parseError env lexbuf (* produce meaningful error by inpsecting current state *)
-  	| Interpreter.Accepted v 			-> 	print_string (SyntaxTree.string_of_program v) (* return the accepted parse tree *)
+	| Interpreter.HandlingError env 	-> 	ErrorHandling.print_parseError env lexbuf; [](* produce meaningful error by inpsecting current state *)
+  	| Interpreter.Accepted v 			-> 	v (* return the accepted parse tree *)
   	| Interpreter.Rejected 				-> 	assert false (* why????? you shd be handled by the HandlingError *)
 
 let process lexbuf = 
@@ -31,10 +26,13 @@ let process lexbuf =
 						  		exit (-1)
 
 let parse content =
-content
-|> Lexing.from_string
-|> process;
-print_newline ()
+	content
+	|> Lexing.from_string
+	|> process
+	|> ConstantFolding.constant_folding
+	|> SyntaxTree.string_of_program
+	|> print_string;
+	print_newline ()
 
 let rec read_to_empty buf =
 	let s = read_line () in
@@ -42,6 +40,6 @@ let rec read_to_empty buf =
 		else (Buffer.add_string buf s; Buffer.add_string buf "\n"; read_to_empty buf)
 
 let _ = 
-read_to_empty (Buffer.create 1)
-|> Buffer.contents
-|> parse;
+	read_to_empty (Buffer.create 1)
+	|> Buffer.contents
+	|> parse;

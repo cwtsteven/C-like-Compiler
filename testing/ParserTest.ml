@@ -66,12 +66,16 @@ let rec test_valid_cases testcases =
 									  read_file ("testing/valid/" ^ filename) content;
 									  print_string ("case " ^ filename ^ ": ");
 									  let result = parse !content in
-									  (if compare (string_of_program result) (string_of_program expected) == 0
+									  (*
+									  assert (result = expected); 
+									  print_string "passed.";
+									  *)
+									  (if result = expected 
 									  then print_string "passed"
 									  else print_string "failed.");
 									  print_string "\n";
 									  test_valid_cases xs
-
+(*
 let rec test_invalid_cases testcases = 
 	match testcases with
 	| [] -> ()
@@ -83,13 +87,13 @@ let rec test_invalid_cases testcases =
 									  | Parser.Error  -> if compare expected "ParserError" == 0 then print_string "passed." else print_string "failed.");
 									  print_string "\n";
 									  test_invalid_cases xs
+*)
 
-
-let parserTest = 
+let test = 
 	print_string "Testing the Parser (without opimization)...\n";
 	print_string "Testing valid programs...\n";
 	test_valid_cases valid_testcases;
 	print_string "Done.\n";
 	print_string "Testing invalid programs...\n";
-	test_invalid_cases invalid_testcases;
+	(*test_invalid_cases invalid_testcases;*)
 	print_string "Done.\n";

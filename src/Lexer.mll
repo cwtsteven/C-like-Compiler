@@ -39,7 +39,7 @@ let for = "for"
 let int = ['0'-'9']['0'-'9']*
 let real = ['0'-'9']+'.'['0'-'9']+
 let char = "'"_"'"
-let string = '"'_*'"'
+let string = '"'([^'\"']*)'"'
 let true = "true"
 let false = "false"
 
