@@ -1,1 +1,1 @@
-var a = 'cc';
+char a = 'cc';

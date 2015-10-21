@@ -8,8 +8,9 @@
 %token <string> STRING
 %token <bool> BOOL
 
+%token TYPEVOID TYPEINT TYPEREAL TYPECHAR TYPESTRING TYPEBOOL
+
 %token <string> IDENTIFIER
-%token VAR
 %token ASSIGN
 %token AND OR NOT
 %token ADD SUB MUL DIV
@@ -34,6 +35,7 @@
 %left ADD SUB
 %left MUL DIV
 
+%type <SyntaxTree.type_> type_
 %type <SyntaxTree.expr> data
 %type <SyntaxTree.nullary_op> nullary_op
 %type <SyntaxTree.unary_op> unary_op
@@ -49,9 +51,9 @@ program:
 ;
 
 declare:
-| d = declare_var_stmnt					{ Global d }
-| v = IDENTIFIER; ps = param; b = block	{ Function (v, ps, b) }
-| MAIN; L_BRACKET; R_BRACKET; b = block { Main b }
+| d = declare_var_stmnt								{ Global d }
+| t = type_; v = IDENTIFIER; ps = param; b = block	{ Function (t, v, ps, b) }
+| MAIN; L_BRACKET; R_BRACKET; b = block 			{ Main b }
 ;
 
 param:
@@ -76,9 +78,9 @@ stmnt:
 ;
 
 declare_var_stmnt:
-| VAR; v = IDENTIFIER; SEMICOLON		{ Declare v }
-| VAR; v = IDENTIFIER; 
-	ASSIGN; e = expr; SEMICOLON			{ DeclareAssign (v, e) }
+| t = type_; v = IDENTIFIER; SEMICOLON	{ Declare (t, v) }
+| t = type_; v = IDENTIFIER; 
+	ASSIGN; e = expr; SEMICOLON			{ DeclareAssign (t, v, e) }
 ;
 
 if_stmnt: 
@@ -150,3 +152,11 @@ data:
 | AND			{ And }
 | OR			{ Or }
 ;
+
+type_:
+| TYPEVOID		{ Void }
+| TYPEINT 		{ Int }
+| TYPEREAL 		{ Real }
+| TYPECHAR		{ Char }
+| TYPESTRING 	{ String }
+| TYPEBOOL 		{ Bool }

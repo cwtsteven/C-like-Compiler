@@ -12,12 +12,12 @@ content
 let to32 = Int32.of_int
 
 let valid_testcases = [
-("tc201", [Global(DeclareAssign("a", Int (to32 8)))]) ;
-("tc202", [Global(DeclareAssign("a", Bool true))]) ; 
-("tc203", [Global(DeclareAssign("a", String "I am so excited!"))]) ; 
-("tc204", [Global(DeclareAssign("a", Bool false))]) ; 
-("tc205", [Global(DeclareAssign("a", Real 6.2))]) ; 
-("tc206", [Main[Local(DeclareAssign("a", Int (to32 5))); If_Then_Else(Bool true, [Expr(UnaryOp(Print, Var "a"))], [])]])
+("tc201", [Global(DeclareAssign(Int, "a", Int (to32 8)))]) ;
+("tc202", [Global(DeclareAssign(Bool, "a", Bool true))]) ; 
+("tc203", [Global(DeclareAssign(String, "a", String "I am so excited!"))]) ; 
+("tc204", [Global(DeclareAssign(Bool, "a", Bool false))]) ; 
+("tc205", [Global(DeclareAssign(Real, "a", Real 6.2))]) ; 
+("tc206", [Main[Local(DeclareAssign(Int, "a", Int (to32 5))); If_Then_Else(Bool true, [Expr(UnaryOp(Print, Var "a"))], [])]])
 ]
 	
 

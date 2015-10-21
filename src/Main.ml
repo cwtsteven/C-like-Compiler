@@ -3,6 +3,7 @@ open SyntaxTree
 open ErrorHandling
 open MenhirLib.General
 open ConstantFolding
+(*open ConstantPropagation*)
 module Interpreter = Parser.MenhirInterpreter
 
 (* we manually run the parser by considering each tranisition *)

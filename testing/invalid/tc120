@@ -1,6 +1,6 @@
 var a = 5;
 
-double (x) {
+int double(x) {
 	return x + x
 }
 

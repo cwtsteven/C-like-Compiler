@@ -1,1 +1,1 @@
-var a = f(x,y);
+int a = f(x,y);

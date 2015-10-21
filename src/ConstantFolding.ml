@@ -123,8 +123,8 @@ and constant_folding_expr expr =
 
 let constant_folding_declare_stmnt declare_stmnt = 
 	match declare_stmnt with
-	| Declare v      	   -> Declare v
-	| DeclareAssign (v, e) -> DeclareAssign (v, constant_folding_expr e)
+	| Declare (t, v)     	  -> Declare (t, v)
+	| DeclareAssign (t, v, e) -> DeclareAssign (t, v, constant_folding_expr e)
 
 let rec constant_folding_stmnt stmnt = 
 	match stmnt with
@@ -146,9 +146,9 @@ and constant_folding_block block =
 
 let constant_folding_declare declare = 
 	match declare with
-	| Global s            -> Global (constant_folding_declare_stmnt s)
-	| Function (v, ps, b) -> Function (v, ps, constant_folding_block b)
-	| Main b              -> Main (constant_folding_block b)
+	| Global s            	 -> Global (constant_folding_declare_stmnt s)
+	| Function (t, v, ps, b) -> Function (t, v, ps, constant_folding_block b)
+	| Main b              	 -> Main (constant_folding_block b)
 
 let rec constant_folding program = 
 	match program with

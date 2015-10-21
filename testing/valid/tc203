@@ -1,1 +1,1 @@
-var a = "I am" + " so excited!";
+string a = "I am" + " so excited!";

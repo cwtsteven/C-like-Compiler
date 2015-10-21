@@ -1,11 +1,11 @@
-var a = 5;
+int a = 5;
 
-double (x) {
+int double(x) {
 	return x + x;
 }
 
 main() {
-	var b = <<;
+	int b = <<;
 	while (b <= a) {
 		a = a + 1;
 		if (b <= a) {

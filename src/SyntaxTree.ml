@@ -1,5 +1,12 @@
 type var = string
 
+type type_	 = Void
+			 | Int
+			 | Real
+			 | Char
+			 | String
+			 | Bool
+
 type nullary_op = Prompt
 
 type unary_op = Print
@@ -31,8 +38,8 @@ type expr = Var of var
 		  | BinaryOp of binary_op * expr * expr
 		  | FunCall of var * expr list
 
-type declare_stmnt = Declare of var
-			 	   | DeclareAssign of var * expr
+type declare_stmnt = Declare of type_ * var
+			 	   | DeclareAssign of type_ * var * expr
 
 type stmnt = Expr of expr
 		   | Return of expr
@@ -43,7 +50,7 @@ type stmnt = Expr of expr
 and block = stmnt list
 
 type declare = Global of declare_stmnt
-			 | Function of var * var list * block
+			 | Function of type_ * var * var list * block
 			 | Main of block
 
 type program = declare list
@@ -73,6 +80,15 @@ let string_of_binary_op op = match op with
 	| And 	 ->  "And"
 	| Or 	 ->  "Or"
 
+let string_of_type (type_ : type_) = 
+	match type_ with
+	| Void -> "void"
+	| Int -> "int"
+	| Real -> "real"
+	| Char -> "char"
+	| String -> "string"
+	| Bool -> "bool"
+
 let rec string_of_expr_list ls = 
 	match ls with
 	| [] 		-> ""
@@ -96,8 +112,8 @@ and string_of_expr expr =
 	")"
 
 let string_of_declare_stmnt declare_stmnt = match declare_stmnt with
-	| Declare v 		   -> "Declare (\"" ^ v ^ "\")"
-	| DeclareAssign (v, e) -> "DeclareAssign (\"" ^ v ^ "\") " ^ string_of_expr e
+	| Declare (t, v) 		  -> "Declare (" ^ string_of_type t ^ " \"" ^ v ^ "\")"
+	| DeclareAssign (t, v, e) -> "DeclareAssign (" ^ string_of_type t ^ " \"" ^ v ^ "\") " ^ string_of_expr e
 
 let rec string_of_stmnt stmnt = 
 	begin
@@ -124,9 +140,9 @@ let rec string_of_var_list ls =
 	| (x :: xs) -> x ^ " " ^ string_of_var_list xs
 
 let string_of_declare declare = match declare with
-	| Global s 			   -> "Global (" ^ string_of_declare_stmnt s ^ ")"
-	| Function (v, ps, b)  -> "Function (" ^ v ^ ") [" ^ string_of_var_list ps ^ "] {" ^ string_of_block b ^ "}"
-	| Main b 			   -> "Main {" ^ string_of_block b ^ "}"
+	| Global s 				   -> "Global (" ^ string_of_declare_stmnt s ^ ")"
+	| Function (t, v, ps, b)   -> "Function (" ^ string_of_type t ^ ", " ^ v ^ ") [" ^ string_of_var_list ps ^ "] {" ^ string_of_block b ^ "}"
+	| Main b 			   	   -> "Main {" ^ string_of_block b ^ "}"
 
 let rec string_of_program program = match program with
 	| [] -> ""

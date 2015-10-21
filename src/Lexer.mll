@@ -28,6 +28,13 @@ let logical_and = "&&"
 let logical_or = "||"
 let logical_not = '!'
 
+let type_void = "void"
+let type_int = "int"
+let type_real = "real"
+let type_char = "char"
+let type_string = "string"
+let type_bool = "bool"
+
 let main = "main"
 let return = "return"
 let var = "var"
@@ -76,6 +83,13 @@ rule read = parse
 | logical_or { OR }
 | logical_not { NOT }
 
+| type_void { TYPEVOID }
+| type_int { TYPEINT }
+| type_real { TYPEREAL }
+| type_char { TYPECHAR }
+| type_string { TYPESTRING }
+| type_bool { TYPEBOOL }
+
 | main { MAIN }
 | return { RETURN }
 | if { IF }
@@ -90,7 +104,6 @@ rule read = parse
 | true { BOOL true }
 | false { BOOL false }
 
-| var { VAR }
 | identifier { IDENTIFIER (Lexing.lexeme lexbuf) }
 
 | comma { COMMA }
