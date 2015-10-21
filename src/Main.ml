@@ -4,42 +4,29 @@ open ErrorHandling
 open MenhirLib.General
 module Interpreter = Parser.MenhirInterpreter
 
-(*
-let parse_with_error lexbuf = 
-	try Parser.program Lexer.read lexbuf with 
-	| Lexer.SyntaxError msg  -> print_syntaxError lexbuf msg;
-						  		exit (-1)
-	| Parser.ParseError msg	 -> prerr_string (msg ^ "\n");
-								exit (-1)
-	| Parser.Error 	   		 -> prerr_string ("Parse error: " ^ positionString lexbuf ^ "\n");
-						  		exit (-1)
-
-let parse content = 
+let parse_without_inpsection content = 
 content
 |> Lexing.from_string
-|> parse_with_error
-|> SyntaxTree.printProgram;
-print_newline ()
-*)
+|> Parser.program Lexer.read
 
 
 (* we manually run the parser by considering each tranisition *)
-let rec parse_with_error lexbuf (result : SyntaxTree.program Interpreter.result) = 
+let rec parse_with_inspecton lexbuf (result : SyntaxTree.program Interpreter.result) = 
 	match result with
 	| Interpreter.InputNeeded env 		-> 	let token = Lexer.read lexbuf in
 						   	   				let startp = lexbuf.Lexing.lex_start_p
 						   	   				and endp = lexbuf.Lexing.lex_curr_p in
 						   	   				let result = Interpreter.offer result (token, startp, endp) in
-						   	   				parse_with_error lexbuf result (* request token from lexer whenever the parser needs one, then carry on parsing *)
+						   	   				parse_with_inspecton lexbuf result (* request token from lexer whenever the parser needs one, then carry on parsing *)
     | Interpreter.Shifting _	
     | Interpreter.AboutToReduce _ 		-> 	let result = Interpreter.resume result in
-    					   	   				parse_with_error lexbuf result (* just carry on parsing *)
+    					   	   				parse_with_inspecton lexbuf result (* just carry on parsing *)
 	| Interpreter.HandlingError env 	-> 	ErrorHandling.print_parseError env lexbuf (* produce meaningful error by inpsecting current state *)
-  	| Interpreter.Accepted v 			-> 	SyntaxTree.printProgram v (* return the accepted parse tree *)
+  	| Interpreter.Accepted v 			-> 	print_string (SyntaxTree.string_of_program v) (* return the accepted parse tree *)
   	| Interpreter.Rejected 				-> 	assert false (* why????? you shd be handled by the HandlingError *)
 
 let process lexbuf = 
-	try parse_with_error lexbuf (Parser.Incremental.program()) with (* Parser.Incremental.program() creates the initial state *)
+	try parse_with_inspecton lexbuf (Parser.Incremental.program()) with (* Parser.Incremental.program() creates the initial state *)
 	| Lexer.SyntaxError msg  -> print_syntaxError lexbuf msg;
 						  		exit (-1)
 

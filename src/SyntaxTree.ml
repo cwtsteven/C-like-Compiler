@@ -30,7 +30,6 @@ type expr = Var of var
 		  | UnaryOp of unary_op * expr
 		  | BinaryOp of binary_op * expr * expr
 		  | FunCall of var * expr list
-		  (*| Assign of var * expr*)
 
 type declare_stmnt = Declare of var
 			 	   | DeclareAssign of var * expr
@@ -51,85 +50,84 @@ type program = declare list
 
 (* printing the tree, so tedious *)
 
-let printNullaryOp op = match op with
-	| Prompt -> print_string "Prompt"
+let string_of_nullary_op op = match op with
+	| Prompt -> "Prompt"
 
-let printUnaryOp op = match op with
-	| Neg	-> print_string "Neg"
-	| Print -> print_string "Print"
-	| Not 	-> print_string "Not"
+let string_of_unary_op op = match op with
+	| Neg	-> "Neg"
+	| Print -> "Print"
+	| Not 	-> "Not"
 
-let printBinaryOp op = match op with
-	| Assign -> print_string "Assign"
-	| Add 	-> print_string "Add"
-	| Sub 	-> print_string "Sub"
-	| Mul 	-> print_string "Mul"
-	| Div 	-> print_string "Div"
-	| Eq 	-> print_string "Eq"
-	| Neq	-> print_string "Neq"
-	| Gt	-> print_string "Gt"
-	| Geq	-> print_string "Geq"
-	| Lt 	-> print_string "Lt"
-	| Leq	-> print_string "Leq"
-	| And 	-> print_string "And"
-	| Or 	-> print_string "Or"
+let string_of_binary_op op = match op with
+	| Assign ->  "Assign"
+	| Add 	 ->  "Add"
+	| Sub 	 ->  "Sub"
+	| Mul 	 ->  "Mul"
+	| Div 	 ->  "Div"
+	| Eq 	 ->  "Eq"
+	| Neq	 ->  "Neq"
+	| Gt	 ->  "Gt"
+	| Geq	 ->  "Geq"
+	| Lt 	 ->  "Lt"
+	| Leq	 ->  "Leq"
+	| And 	 ->  "And"
+	| Or 	 ->  "Or"
 
-let rec printExprList ls = 
+let rec string_of_expr_list ls = 
 	match ls with
-	| [] 		-> ()
-	| (x :: []) -> printExpr x; printExprList []
-	| (x :: xs) -> printExpr x; print_string " "; printExprList xs
-and printExpr expr = 
-	print_string "(";
+	| [] 		-> ""
+	| (x :: []) -> string_of_expr x
+	| (x :: xs) -> string_of_expr x ^ " " ^ string_of_expr_list xs
+and string_of_expr expr = 
+	"(" ^ 
 	begin
 	match expr with
-	| Var v 				-> print_string "Var "; print_string v
-	| Int i 				-> print_string ("Int " ^ Int32.to_string i)
-	| Real r 				-> print_string "Real "; print_float r
-	| Char c 				-> print_string "Char '"; print_char c; print_string "'"
-	| String s 				-> print_string "String \""; print_string s; print_char '"'
-	| Bool b				-> print_string "Bool "; if b then print_string "true" else print_string "false"
-	| NullaryOp op 		 	-> printNullaryOp op
-	| UnaryOp (op, e) 		-> printUnaryOp op; print_string " "; printExpr e
-	| BinaryOp (op, e1, e2) -> printBinaryOp op; print_string " "; printExpr e1; print_string " "; printExpr e2
-	| FunCall (v, ls) 		-> print_string ("FunCall " ^ v); print_string " ["; printExprList ls; print_string "] " 
-	(*| Assign (v, e)			-> print_string ("Assign (Var " ^ v ^ ") "); printExpr e*)
-	end;
-	print_string ")"
+	| Var v 				-> "Var " ^ v
+	| Int i 				-> "Int " ^ Int32.to_string i
+	| Real r 				-> "Real " ^ string_of_float r
+	| Char c 				-> "Char '" ^ Char.escaped c ^ "'"
+	| String s 				-> "String \"" ^ s ^ "\""
+	| Bool b				-> "Bool " ^ if b then "true" else "false"
+	| NullaryOp op 		 	-> string_of_nullary_op op
+	| UnaryOp (op, e) 		-> string_of_unary_op op ^ " " ^ string_of_expr e
+	| BinaryOp (op, e1, e2) -> string_of_binary_op op ^ " " ^ string_of_expr e1 ^ " " ^ string_of_expr e2
+	| FunCall (v, ls) 		-> "FunCall " ^ v ^ " [" ^ string_of_expr_list ls ^ "] " 
+	end ^ 
+	")"
 
-let printDeclareStmnt declare_stmnt = match declare_stmnt with
-	| Declare v 		   -> print_string "Declare (Var "; print_string v; print_string ") "
-	| DeclareAssign (v, e) -> print_string "DeclareAssign (Var "; print_string v; print_string ") "; printExpr e
+let string_of_declare_stmnt declare_stmnt = match declare_stmnt with
+	| Declare v 		   -> "Declare (\"" ^ v ^ "\")"
+	| DeclareAssign (v, e) -> "DeclareAssign (\"" ^ v ^ "\") " ^ string_of_expr e
 
-let rec printStmnt stmnt = 
+let rec string_of_stmnt stmnt = 
 	begin
 	match stmnt with
-	| Expr e 					-> printExpr e
-	| Return e 					-> print_string "Return "; printExpr e
-	| If_Then_Else (e, b1, b2) 	-> print_string "If_Then_Else "; printExpr e; print_string " ["; printBlock b1; print_string "] {"; printBlock b2; print_string "}"; 
-	| While (e, b)				-> print_string "While "; printExpr e; print_string " {"; printBlock b; print_string "}"; 
-	| For (e1, e2, e3, b)		-> print_string "For "; printExpr e1; print_string " "; printExpr e2; print_string " "; printExpr e3; print_string " {"; printBlock b; print_string "}"; 
-	| Local s 			   		-> printDeclareStmnt s
-	end;
-	print_string "; "
-and printBlock block = 
+	| Expr e 					-> string_of_expr e
+	| Return e 					-> "Return " ^ string_of_expr e
+	| If_Then_Else (e, b1, b2) 	-> "If_Then_Else " ^ string_of_expr e ^ " [" ^string_of_block b1 ^ "] {" ^ string_of_block b2 ^ "}"
+	| While (e, b)				-> "While " ^ string_of_expr e ^  " {" ^string_of_block b ^ "}"
+	| For (e1, e2, e3, b)		-> "For " ^ string_of_expr e1 ^ " " ^ string_of_expr e2 ^ " " ^ string_of_expr e3 ^ " {" ^ string_of_block b ^ "}"
+	| Local s 			   		-> "Local (" ^ string_of_declare_stmnt s ^ ")"
+	end
+	^ "; "
+and string_of_block block = 
 	begin
 	match block with
-	| [] -> ()
-	| (s :: b) -> printStmnt s; printBlock b
+	| [] -> ""
+	| (s :: b) -> string_of_stmnt s ^ string_of_block b
 	end
 
-let rec printVarList ls = 
+let rec string_of_var_list ls = 
 	match ls with
-	| [] 		-> ()
-	| (x :: []) -> print_string x; printExprList []
-	| (x :: xs) -> print_string x; print_string " "; printVarList xs
+	| [] 		-> ""
+	| (x :: []) -> x ^ ""
+	| (x :: xs) -> x ^ " " ^ string_of_var_list xs
 
-let printDeclare declare = match declare with
-	| Global s 			   -> printDeclareStmnt s
-	| Function (v, ps, b)  -> print_string "Function (Var "; print_string v; print_string ") ["; printVarList ps; print_string "] {"; printBlock b; print_string "}"
-	| Main b 			   -> print_string "Main "; print_string "{"; printBlock b; print_string "}"
+let string_of_declare declare = match declare with
+	| Global s 			   -> "Global (" ^ string_of_declare_stmnt s ^ ")"
+	| Function (v, ps, b)  -> "Function (" ^ v ^ ") [" ^ string_of_var_list ps ^ "] {" ^ string_of_block b ^ "}"
+	| Main b 			   -> "Main {" ^ string_of_block b ^ "}"
 
-let rec printProgram program = match program with
-	| [] -> ()
-	| (x :: xs) -> printDeclare x; print_string "\n\n"; printProgram xs
+let rec string_of_program program = match program with
+	| [] -> ""
+	| (x :: xs) -> string_of_declare x ^ "\n\n" ^ string_of_program xs

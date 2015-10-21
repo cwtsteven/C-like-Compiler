@@ -2,11 +2,12 @@
 
 MENHIRFLAGS     := --explain --table --inspection
 
-OCAMLBUILD      := ocamlbuild -use-ocamlfind -use-menhir -menhir "menhir $(MENHIRFLAGS)" -package menhirLib
+BUILDMAIN       := ocamlbuild -use-ocamlfind -use-menhir -menhir "menhir $(MENHIRFLAGS)" -package menhirLib
+BUILDTEST       := ocamlbuild -Is src -use-ocamlfind -use-menhir -menhir "menhir $(MENHIRFLAGS)" -package menhirLib
 
 MAIN            := src/Main
-TEST 			:= src/TestBench
+TEST 			:= testing/TestBench
 
 all:
-	$(OCAMLBUILD) $(MAIN).native
-	$(OCAMLBUILD) $(TEST).native
+	$(BUILDMAIN) $(MAIN).native
+	$(BUILDTEST) $(TEST).native
