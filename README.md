@@ -65,7 +65,7 @@ You can use <code><<</code> as basic input and <code>>></code> as output. <code>
 ## Operators
 An operator is either a nullary/unary/binary operator. Here is the precedence iof operators (from low to high)
 - <code>>></code> (non-associative)
-- <code>=</code> (non-associative)
+- <code>=</code> (right-associative)
 - <code>&&</code> <code>||</code> <code>!</code>
 - <code>==</code> <code>!=</code> <code>></code> <code>>=</code> <code><</code> <code><=</code> 
 - <code>+</code> <code>-</code>
