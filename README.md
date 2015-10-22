@@ -56,7 +56,7 @@ You can either just to decalre a variable or at the same time, assign a value to
 main() {
   int a = 1;
   a = a + 1;
-}</pre></code>
+}</code></pre>
 In the line <code>a = a + 1;</code>, it will not change the global variable <code>a</code>. 
 
 ## Basic I/O
