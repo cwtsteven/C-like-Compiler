@@ -1,3 +1,5 @@
+let to32 = Int32.of_int
+
 let read_file filename buf = 
 	let file = open_in filename in
 	try

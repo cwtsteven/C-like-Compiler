@@ -100,6 +100,7 @@ expr:
 | op = nullary_op						{ NullaryOp op}
 | op = unary_op; e = expr 				{ UnaryOp (op, e) }
 | e1 = expr; op = binary_op; e2 = expr 	{ BinaryOp (op, e1, e2) }
+| v = IDENTIFIER; ASSIGN; e = expr		{ Assign (v, e) }
 | L_BRACKET; e = expr; R_BRACKET		{ e }
 | v = IDENTIFIER; ps = fun_call_param;	{ FunCall (v, ps) }
 ;
@@ -130,7 +131,6 @@ data:
 ;
 
 %inline binary_op:
-| ASSIGN		{ Assign }
 | ADD			{ Add }
 | SUB			{ Sub }
 | MUL			{ Mul }

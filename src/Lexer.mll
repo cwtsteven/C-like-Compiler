@@ -37,7 +37,6 @@ let type_bool = "bool"
 
 let main = "main"
 let return = "return"
-let var = "var"
 let if = "if"
 let else = "else"
 let while = "while"

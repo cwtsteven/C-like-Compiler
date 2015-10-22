@@ -1,14 +1,10 @@
 open SyntaxTree
-open Parser
-open Lexer
 open TestHelper
 
 let parse content = 
 content
 |> Lexing.from_string
 |> Parser.program Lexer.read
-
-let to32 = Int32.of_int
 
 let valid_testcases = [
 ("tc101", [Global(Declare (Int, "a"))]) ; 
@@ -25,13 +21,12 @@ let valid_testcases = [
 ("tc112", [Global(DeclareAssign(String, "a", NullaryOp Prompt))]) ; 
 ("tc113", [Global(DeclareAssign(Int, "a", FunCall ("f", [Var "x"; Var "y"])))]) ; 
 ("tc114", [Main[]]) ; 
-("tc115", [Main[Expr(BinaryOp(Assign, Var "a", BinaryOp(Add, Var "a", Int (to32 3))))]]) ; 
-("tc116", [Main[If_Then_Else(BinaryOp(Eq, Var "a", Var "b"), [Expr(BinaryOp(Assign, Var "x", Var "y"))], [])]]) ; 
-("tc117", [Main[If_Then_Else(BinaryOp(Eq, Var "a", Var "b"), [Expr(BinaryOp(Assign, Var "x", Var "y"))], [Expr(UnaryOp(Print, Var "a"))])]]) ; 
-("tc118", [Main[While(Bool true, [Expr(BinaryOp(Assign, Var "x", BinaryOp(Add, Var "x", Int (to32 1))))])]]) ; 
-("tc119", [Main[For(BinaryOp(Assign, Var "i", Int (to32 2)), BinaryOp(Leq, Var "i", Int (to32 3)), BinaryOp(Assign, Var "i", BinaryOp(Add, Var "i", Int (to32 1))), [Expr(UnaryOp(Print, Var "i"))])]]) ;
-("tc120", [Global(DeclareAssign(Int, "a", Int (to32 5))); Function (Int, "double", ["x"], [Return (BinaryOp(Add, Var "x", Var "x"))]); Main[Local(DeclareAssign(Int, "b", NullaryOp(Prompt))); While(BinaryOp(Leq, Var "b", Var "a"), [Expr(BinaryOp(Assign, Var "a", BinaryOp(Add, Var "a", Int (to32 1)))) ; If_Then_Else(BinaryOp(Leq, Var "b", Var "a"), [Expr(UnaryOp(Print, Var "a"))], [Expr(UnaryOp(Print, Var "b"))]) ]) ] ]); 
-
+("tc115", [Main[Expr(Assign("a", BinaryOp(Add, Var "a", Int (to32 3))))]]) ; 
+("tc116", [Main[If_Then_Else(BinaryOp(Eq, Var "a", Var "b"), [Expr(Assign("x", Var "y"))], [])]]) ; 
+("tc117", [Main[If_Then_Else(BinaryOp(Eq, Var "a", Var "b"), [Expr(Assign("x", Var "y"))], [Expr(UnaryOp(Print, Var "a"))])]]) ; 
+("tc118", [Main[While(Bool true, [Expr(Assign("x", BinaryOp(Add, Var "x", Int (to32 1))))])]]) ; 
+("tc119", [Main[For(Assign("i", Int (to32 2)), BinaryOp(Leq, Var "i", Int (to32 3)), Assign("i", BinaryOp(Add, Var "i", Int (to32 1))), [Expr(UnaryOp(Print, Var "i"))])]]) ;
+("tc120", [Global(DeclareAssign(Int, "a", Int (to32 5))); Function (Int, "double", ["x"], [Return (BinaryOp(Add, Var "x", Var "x"))]); Main[Local(DeclareAssign(Int, "b", NullaryOp(Prompt))); While(BinaryOp(Leq, Var "b", Var "a"), [Expr(Assign("a", BinaryOp(Add, Var "a", Int (to32 1)))) ; If_Then_Else(BinaryOp(Leq, Var "b", Var "a"), [Expr(UnaryOp(Print, Var "a"))], [Expr(UnaryOp(Print, Var "b"))]) ]) ] ]); 
 ]
 
 let invalid_testcases = [
@@ -57,7 +52,6 @@ let invalid_testcases = [
 ("tc119", "ParserError") ;
 ("tc120", "ParserError")
 ]
-	
 
 let rec test_valid_cases testcases = 
 	match testcases with
@@ -82,18 +76,16 @@ let rec test_invalid_cases testcases =
 	| ((filename, expected) :: xs) -> let content = ref "" in
 									  read_file ("testing/invalid/" ^ filename) content;
 									  print_string ("case " ^ filename ^ ": ");
-									  (try parse !content; () with
-									  | SyntaxError _ -> if compare expected "SyntaxError" == 0 then print_string "passed." else print_string "failed."
-									  | Parser.Error  -> if compare expected "ParserError" == 0 then print_string "passed." else print_string "failed.");
+									  (try parse !content; print_string "impossible" with
+									  | Lexer.SyntaxError _ -> if compare expected "SyntaxError" == 0 then print_string "passed." else print_string "failed."
+									  | Parser.Error  		-> if compare expected "ParserError" == 0 then print_string "passed." else print_string "failed.");
 									  print_string "\n";
 									  test_invalid_cases xs
 
-
 let test = 
-	print_string "Testing the Parser (without opimization)...\n";
+	print_string "\n------- Parser Test -------\n";
 	print_string "Testing valid programs...\n";
 	test_valid_cases valid_testcases;
-	print_string "Done.\n";
 	print_string "Testing invalid programs...\n";
 	test_invalid_cases invalid_testcases;
-	print_string "Done.\n";
+	print_string "Done.\n"

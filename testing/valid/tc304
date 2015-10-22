@@ -1,0 +1,8 @@
+main() {
+	int a = 3;
+	int b = a;
+	if (a == b) {
+		int a = 5;
+		int c = a;
+	}
+}

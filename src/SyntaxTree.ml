@@ -13,8 +13,7 @@ type unary_op = Print
 			  | Neg
 			  | Not
 
-type binary_op = Assign
-			   | Add 
+type binary_op = Add 
 			   | Sub
 			   | Mul
 			   | Div
@@ -36,6 +35,7 @@ type expr = Var of var
 		  | NullaryOp of nullary_op
 		  | UnaryOp of unary_op * expr
 		  | BinaryOp of binary_op * expr * expr
+		  | Assign of var * expr
 		  | FunCall of var * expr list
 
 type declare_stmnt = Declare of type_ * var
@@ -66,7 +66,6 @@ let string_of_unary_op op = match op with
 	| Not 	-> "Not"
 
 let string_of_binary_op op = match op with
-	| Assign ->  "Assign"
 	| Add 	 ->  "Add"
 	| Sub 	 ->  "Sub"
 	| Mul 	 ->  "Mul"
@@ -107,6 +106,7 @@ and string_of_expr expr =
 	| NullaryOp op 		 	-> string_of_nullary_op op
 	| UnaryOp (op, e) 		-> string_of_unary_op op ^ " " ^ string_of_expr e
 	| BinaryOp (op, e1, e2) -> string_of_binary_op op ^ " " ^ string_of_expr e1 ^ " " ^ string_of_expr e2
+	| Assign (v, e)			-> "Assign " ^ v ^ " " ^ string_of_expr e
 	| FunCall (v, ls) 		-> "FunCall " ^ v ^ " [" ^ string_of_expr_list ls ^ "] " 
 	end ^ 
 	")"

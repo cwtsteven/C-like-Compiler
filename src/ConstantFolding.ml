@@ -16,7 +16,6 @@ let rec constant_folding_unary_op (op, e) : expr =
 				)
 and constant_folding_binary_op (op, e1, e2) : expr = 
 	match op with
-	| Assign -> BinaryOp (Assign, constant_folding_expr e1, constant_folding_expr e2)
 	| Add    -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
 				(match (e1', e2') with
 					| (Int i1, Int i2)       -> Int (Int32.add i1 i2)
@@ -32,7 +31,7 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (Real r1, Real r2)	 -> Real (r1 -. r2)
 					| (Real r, Int i)		 -> Real (r -. Int32.to_float i)
 					| (Int i, Real r)        -> Real (Int32.to_float i -. r)
-					| _                      -> BinaryOp (Add, e1', e2')
+					| _                      -> BinaryOp (Sub, e1', e2')
 				)
 	| Mul  	 -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
 				(match (e1', e2') with
@@ -40,7 +39,7 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (Real r1, Real r2)	 -> Real (r1 *. r2)
 					| (Real r, Int i)		 -> Real (r *. Int32.to_float i)
 					| (Int i, Real r)        -> Real (Int32.to_float i *. r)
-					| _                      -> BinaryOp (Add, e1', e2')
+					| _                      -> BinaryOp (Mul, e1', e2')
 				)
 	| Div 	 -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
 				(match (e1', e2') with
@@ -48,7 +47,7 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (Real r1, Real r2)	 -> Real (r1 /. r2)
 					| (Real r, Int i)		 -> Real (r /. Int32.to_float i)
 					| (Int i, Real r)        -> Real (Int32.to_float i /. r)
-					| _                      -> BinaryOp (Add, e1', e2')
+					| _                      -> BinaryOp (Div, e1', e2')
 				)
 	| Eq     -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
 				(match (e1', e2') with
@@ -59,7 +58,7 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (Char c1, Char c2)	 -> Bool (c1 = c2)
 					| (String s1, String s2) -> Bool (s1 = s2) 
 					| (Bool b1, Bool b2)     -> Bool (b1 = b2) 
-					| _                      -> BinaryOp (Add, e1', e2')
+					| _                      -> BinaryOp (Eq, e1', e2')
 				)
 	| Neq	 -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
 				(match (e1', e2') with
@@ -70,7 +69,7 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (Char c1, Char c2)	 -> Bool (not (c1 = c2))
 					| (String s1, String s2) -> Bool (not (s1 = s2))
 					| (Bool b1, Bool b2)     -> Bool (not (b1 = b2))
-					| _                      -> BinaryOp (Add, e1', e2')
+					| _                      -> BinaryOp (Neq, e1', e2')
 				)
 	| Gt  	 -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
 				(match (e1', e2') with
@@ -80,7 +79,7 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (Int i, Real r)        -> Bool (Int32.to_float i > r)
 					| (Char c1, Char c2)	 -> Bool (c1 > c2)
 					| (String s1, String s2) -> Bool (s1 > s2) 
-					| _                      -> BinaryOp (Add, e1', e2')
+					| _                      -> BinaryOp (Gt, e1', e2')
 				)
 	| Geq 	 -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
 				(match (e1', e2') with
@@ -90,7 +89,7 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (Int i, Real r)        -> Bool (Int32.to_float i >= r)
 					| (Char c1, Char c2)	 -> Bool (c1 >= c2)
 					| (String s1, String s2) -> Bool (s1 >= s2) 
-					| _                      -> BinaryOp (Add, e1', e2')
+					| _                      -> BinaryOp (Geq, e1', e2')
 				)
 	| Lt     -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
 				(match (e1', e2') with
@@ -100,7 +99,7 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (Int i, Real r)        -> Bool (Int32.to_float i < r)
 					| (Char c1, Char c2)	 -> Bool (c1 < c2)
 					| (String s1, String s2) -> Bool (s1 < s2) 
-					| _                      -> BinaryOp (Add, e1', e2')
+					| _                      -> BinaryOp (Lt, e1', e2')
 				)
 	| Leq 	 -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
 				(match (e1', e2') with
@@ -110,17 +109,17 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (Int i, Real r)        -> Bool (Int32.to_float i <= r)
 					| (Char c1, Char c2)	 -> Bool (c1 <= c2)
 					| (String s1, String s2) -> Bool (s1 <= s2) 
-					| _                      -> BinaryOp (Add, e1', e2')
+					| _                      -> BinaryOp (Leq, e1', e2')
 				)
 	| And 	 -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
 				(match (e1', e2') with
 					| (Bool b1, Bool b2)     -> Bool (b1 && b2)
-					| _                      -> BinaryOp (Add, e1', e2')
+					| _                      -> BinaryOp (And, e1', e2')
 				)
 	| Or 	 -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
 				(match (e1', e2') with
 					| (Bool b1, Bool b2)     -> Bool (b1 || b2)
-					| _                      -> BinaryOp (Add, e1', e2')
+					| _                      -> BinaryOp (Or, e1', e2')
 				)
 and constant_folding_expr_list es : expr list = 
 	match es with
@@ -131,6 +130,7 @@ and constant_folding_expr expr : expr =
 	| UnaryOp (op, e)       -> constant_folding_unary_op (op, e)
 	| BinaryOp (op, e1, e2) -> constant_folding_binary_op (op, e1, e2)
 	| FunCall (v, es)		-> FunCall (v, constant_folding_expr_list es)
+	| Assign (v, e) 		   -> Assign (v, constant_folding_expr e)
 	| x -> x
 
 let constant_folding_declare_stmnt declare_stmnt : declare_stmnt = 

@@ -1,5 +1,4 @@
-let () = 
-	begin
+let _ = 
 	ParserTest.test;
-	ConstantFoldingTest.test
-	end
+	ConstantFoldingTest.test;
+	ConstantPropagationTest.test

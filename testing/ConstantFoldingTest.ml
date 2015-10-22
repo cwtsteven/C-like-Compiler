@@ -1,6 +1,4 @@
 open SyntaxTree
-open Parser
-open Lexer
 open TestHelper
 
 let parse content = 
@@ -8,8 +6,6 @@ content
 |> Lexing.from_string
 |> Parser.program Lexer.read
 |> ConstantFolding.constant_folding
-
-let to32 = Int32.of_int
 
 let valid_testcases = [
 ("tc201", [Global(DeclareAssign(Int, "a", Int (to32 8)))]) ;
@@ -35,7 +31,6 @@ let rec test_valid_cases testcases =
 									  test_valid_cases xs
 
 let test = 
-	print_string "Testing the Parser (with opimization)...\n";
-	print_string "Testing valid programs...\n";
+	print_string "\n------- Constant Folding Test -------\n";
 	test_valid_cases valid_testcases;
-	print_string "Done.\n";
+	print_string "Done.\n"
