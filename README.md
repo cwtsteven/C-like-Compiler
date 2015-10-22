@@ -20,7 +20,7 @@ In order to run the test, execute<code>./TestBench.native</code>.
 # Syntax
 This grammar is simulating a C-like imperative programming languages. In the top-level, you can declare global variables and functions, below gives you a first taste of a valid program:
 <pre><code>int a = 3;
-int double(x) {
+int double(int x) {
   return x + x;
 }
 main() {
@@ -51,7 +51,7 @@ There are five primitive data types.
 - <code>bool</code> either true or false
 
 ## Declaring variables
-You can either just to decalre a variable or at the same time, assign a value to it, for instance: <code>var a;</code> and <code>var a = 1;</code>. The right hand side can also be an expression: <code>var a = 3 + 5;</code>. Be aware that the variables declared inside a function is local to the function, for instance, if we decalre a global variable and a local varibale with the same name, the local one is used inside the function.
+You can either just to decalre a variable or at the same time, assign a value to it, for instance: <code>int a;</code> and <code>int a = 1;</code>. The right hand side can also be an expression: <code>int a = 3 + 5;</code>. Be aware that the variables declared inside a function is local to the function, for instance, if we decalre a global variable and a local varibale with the same name, the local one is used inside the function.
 <pre><code>int a = 1;
 main() {
   int a = 1;
@@ -82,3 +82,11 @@ Here are the rules for each statement:
 - <code>while (expr) {statements}</code>
 - <code>for(expr;expr;expr) {statements}</code>
 
+## Function
+Funtion declaration is also allowed in the top-level. Here is an example:
+<pre><code>int a = 5;
+int double(int x) {
+  return 2 * x;
+}
+</code></pre>
+In the above, we defined a function called <code>double</code> which takes a single <code>int</code> parameter <code>x</code> and return an <code>int</code>. 
