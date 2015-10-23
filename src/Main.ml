@@ -2,9 +2,12 @@ open Lexing
 open SyntaxTree
 open ErrorHandling
 open MenhirLib.General
+(*
 open ConstantFolding
 open ConstantPropagation
 open FunctionInlining
+*)
+open SyntacticOptimisation
 module Interpreter = Parser.MenhirInterpreter
 
 (* we manually run the parser by considering each tranisition *)
@@ -31,8 +34,11 @@ let parse content =
 	content
 	|> Lexing.from_string
 	|> process
+	(*
 	|> ConstantFolding.optimise
 	|> FunctionInlining.optimise
+	*)
+	|> SyntacticOptimisation.optimise
 	|> SyntaxTree.string_of_program
 	|> print_string;
 	print_newline ()

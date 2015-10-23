@@ -5,11 +5,10 @@ let parse content =
 content
 |> Lexing.from_string
 |> Parser.program Lexer.read
-|> ConstantFolding.optimise
-|> FunctionInlining.optimise
+|> SyntacticOptimisation.optimise
 
 let valid_testcases = [
-"tc401" ; "tc402" ; "tc403" ; "tc404" ; "tc405" ; "tc406" ; "tc407"
+"tc401" ; "tc402" ; "tc403" ; "tc404" ; "tc405" ; "tc406" ; "tc407" ; "tc408"
 ]
 	
 
