@@ -90,3 +90,11 @@ int double(int x) {
 }
 </code></pre>
 In the above, we defined a function called <code>double</code> which takes a single <code>int</code> parameter <code>x</code> and return an <code>int</code>. 
+
+# Syntactic Optimisation
+
+## Constant Folding
+Right now, the compiler will do constant folding. For instance, <code>int a = 3 + 6;</code> will be transformed to <code>int a = 9;</code> in the parse tree.
+
+## Constant Propagation and Function Inlining
+The compiler will also perform constant propagation on the parse tree. However, this optimisation is not extremely sophisticated. Within a block of code, if we reach a statement that has side effects (ie, printing, prompting, assigning non-local variables), we will stop the process within that particular block (but we will continue on inner block).
