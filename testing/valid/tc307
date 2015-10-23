@@ -1,0 +1,16 @@
+int a = 1;
+
+void side_effect() {
+	a = 5;
+}
+
+main() {
+	char a = 'a';
+	if (a == 'a') {
+		bool v = true;
+		side_effect();
+		bool r = v;
+	} else {
+		>> a;
+	}
+}

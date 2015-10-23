@@ -47,10 +47,11 @@ type stmnt = Expr of expr
 		   | While of expr * block
 		   | For of expr * expr * expr * block
 		   | Local of declare_stmnt
+		   | Block of stmnt list
 and block = stmnt list
 
 type top_level = Global of declare_stmnt
-			   | Function of type_ * var * var list * block
+			   | Function of type_ * var * (type_ * var) list * block
 			   | Main of block
 
 type program = top_level list
@@ -124,6 +125,7 @@ let rec string_of_stmnt stmnt =
 	| While (e, b)				-> "While " ^ string_of_expr e ^  " {" ^string_of_block b ^ "}"
 	| For (e1, e2, e3, b)		-> "For " ^ string_of_expr e1 ^ " " ^ string_of_expr e2 ^ " " ^ string_of_expr e3 ^ " {" ^ string_of_block b ^ "}"
 	| Local s 			   		-> "Local (" ^ string_of_declare_stmnt s ^ ")"
+	| Block b 					-> "Block " ^ string_of_block b
 	end
 	^ "; "
 and string_of_block block = 
@@ -136,8 +138,8 @@ and string_of_block block =
 let rec string_of_var_list ls = 
 	match ls with
 	| [] 		-> ""
-	| (x :: []) -> x ^ ""
-	| (x :: xs) -> x ^ " " ^ string_of_var_list xs
+	| ((t, v) :: []) -> string_of_type t ^ " " ^ v ^ ""
+	| ((t, v) :: xs) -> string_of_type t ^ " " ^ v ^ " " ^ string_of_var_list xs
 
 let string_of_top_level declare = match declare with
 	| Global s 				   -> "Global (" ^ string_of_declare_stmnt s ^ ")"

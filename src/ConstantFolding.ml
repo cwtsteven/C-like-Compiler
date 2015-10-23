@@ -1,22 +1,22 @@
 open SyntaxTree
 
-let rec constant_folding_unary_op (op, e) : expr = 
+let rec optimise_unary_op (op, e) : expr = 
 	match op with
-	| Neg   ->	let e' = constant_folding_expr e in
+	| Neg   ->	let e' = optimise_expr e in
 				(match e' with
 					| Int i  ->	Int (Int32.neg i)
 					| Real r -> Real (0.0 -. r)
 					| _      ->	UnaryOp (Neg, e')
 				)
-	| Print -> UnaryOp (Print , constant_folding_expr e)
-	| Not   -> 	let e' = constant_folding_expr e in
+	| Print -> UnaryOp (Print , optimise_expr e)
+	| Not   -> 	let e' = optimise_expr e in
 				(match e' with
 					| Bool x -> Bool (not x)
 					| _      -> UnaryOp (Not, e')
 				)
-and constant_folding_binary_op (op, e1, e2) : expr = 
+and optimise_binary_op (op, e1, e2) : expr = 
 	match op with
-	| Add    -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
+	| Add    -> let (e1', e2') = (optimise_expr e1, optimise_expr e2) in 
 				(match (e1', e2') with
 					| (Int i1, Int i2)       -> Int (Int32.add i1 i2)
 					| (Real r, Int i)		 -> Real (r +. Int32.to_float i)
@@ -25,7 +25,7 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (String s1, String s2) -> String (s1 ^ s2)
 					| _                      -> BinaryOp (Add, e1', e2')
 				)
-	| Sub	 ->	let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
+	| Sub	 ->	let (e1', e2') = (optimise_expr e1, optimise_expr e2) in 
 				(match (e1', e2') with
 					| (Int i1, Int i2)       -> Int (Int32.sub i1 i2)
 					| (Real r1, Real r2)	 -> Real (r1 -. r2)
@@ -33,7 +33,7 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (Int i, Real r)        -> Real (Int32.to_float i -. r)
 					| _                      -> BinaryOp (Sub, e1', e2')
 				)
-	| Mul  	 -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
+	| Mul  	 -> let (e1', e2') = (optimise_expr e1, optimise_expr e2) in 
 				(match (e1', e2') with
 					| (Int i1, Int i2)       -> Int (Int32.mul i1 i2)
 					| (Real r1, Real r2)	 -> Real (r1 *. r2)
@@ -41,7 +41,7 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (Int i, Real r)        -> Real (Int32.to_float i *. r)
 					| _                      -> BinaryOp (Mul, e1', e2')
 				)
-	| Div 	 -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
+	| Div 	 -> let (e1', e2') = (optimise_expr e1, optimise_expr e2) in 
 				(match (e1', e2') with
 					| (Int i1, Int i2)       -> Int (Int32.div i1 i2)
 					| (Real r1, Real r2)	 -> Real (r1 /. r2)
@@ -49,7 +49,7 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (Int i, Real r)        -> Real (Int32.to_float i /. r)
 					| _                      -> BinaryOp (Div, e1', e2')
 				)
-	| Eq     -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
+	| Eq     -> let (e1', e2') = (optimise_expr e1, optimise_expr e2) in 
 				(match (e1', e2') with
 					| (Int i1, Int i2)       -> Bool (i1 = i2)
 					| (Real r1, Real r2)	 -> Bool (r1 = r2)
@@ -60,7 +60,7 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (Bool b1, Bool b2)     -> Bool (b1 = b2) 
 					| _                      -> BinaryOp (Eq, e1', e2')
 				)
-	| Neq	 -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
+	| Neq	 -> let (e1', e2') = (optimise_expr e1, optimise_expr e2) in 
 				(match (e1', e2') with
 					| (Int i1, Int i2)       -> Bool (not (i1 = i2))
 					| (Real r1, Real r2)	 -> Bool (not (r1 = r2))
@@ -71,7 +71,7 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (Bool b1, Bool b2)     -> Bool (not (b1 = b2))
 					| _                      -> BinaryOp (Neq, e1', e2')
 				)
-	| Gt  	 -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
+	| Gt  	 -> let (e1', e2') = (optimise_expr e1, optimise_expr e2) in 
 				(match (e1', e2') with
 					| (Int i1, Int i2)       -> Bool (i1 > i2)
 					| (Real r1, Real r2)	 -> Bool (r1 > r2)
@@ -81,7 +81,7 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (String s1, String s2) -> Bool (s1 > s2) 
 					| _                      -> BinaryOp (Gt, e1', e2')
 				)
-	| Geq 	 -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
+	| Geq 	 -> let (e1', e2') = (optimise_expr e1, optimise_expr e2) in 
 				(match (e1', e2') with
 					| (Int i1, Int i2)       -> Bool (i1 >= i2)
 					| (Real r1, Real r2)	 -> Bool (r1 >= r2)
@@ -91,7 +91,7 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (String s1, String s2) -> Bool (s1 >= s2) 
 					| _                      -> BinaryOp (Geq, e1', e2')
 				)
-	| Lt     -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
+	| Lt     -> let (e1', e2') = (optimise_expr e1, optimise_expr e2) in 
 				(match (e1', e2') with
 					| (Int i1, Int i2)       -> Bool (i1 < i2)
 					| (Real r1, Real r2)	 -> Bool (r1 < r2)
@@ -101,7 +101,7 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (String s1, String s2) -> Bool (s1 < s2) 
 					| _                      -> BinaryOp (Lt, e1', e2')
 				)
-	| Leq 	 -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
+	| Leq 	 -> let (e1', e2') = (optimise_expr e1, optimise_expr e2) in 
 				(match (e1', e2') with
 					| (Int i1, Int i2)       -> Bool (i1 <= i2)
 					| (Real r1, Real r2)	 -> Bool (r1 <= r2)
@@ -111,58 +111,62 @@ and constant_folding_binary_op (op, e1, e2) : expr =
 					| (String s1, String s2) -> Bool (s1 <= s2) 
 					| _                      -> BinaryOp (Leq, e1', e2')
 				)
-	| And 	 -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
+	| And 	 -> let (e1', e2') = (optimise_expr e1, optimise_expr e2) in 
 				(match (e1', e2') with
 					| (Bool b1, Bool b2)     -> Bool (b1 && b2)
 					| _                      -> BinaryOp (And, e1', e2')
 				)
-	| Or 	 -> let (e1', e2') = (constant_folding_expr e1, constant_folding_expr e2) in 
+	| Or 	 -> let (e1', e2') = (optimise_expr e1, optimise_expr e2) in 
 				(match (e1', e2') with
 					| (Bool b1, Bool b2)     -> Bool (b1 || b2)
 					| _                      -> BinaryOp (Or, e1', e2')
 				)
-and constant_folding_expr_list es : expr list = 
+and optimise_expr_list es : expr list = 
 	match es with
 	| [] -> []
-	| (x :: xs) -> constant_folding_expr x :: constant_folding_expr_list xs
-and constant_folding_expr expr : expr = 
+	| (x :: xs) -> optimise_expr x :: optimise_expr_list xs
+and optimise_expr expr : expr = 
 	match expr with
-	| UnaryOp (op, e)       -> constant_folding_unary_op (op, e)
-	| BinaryOp (op, e1, e2) -> constant_folding_binary_op (op, e1, e2)
-	| FunCall (v, es)		-> FunCall (v, constant_folding_expr_list es)
-	| Assign (v, e) 		   -> Assign (v, constant_folding_expr e)
+	| UnaryOp (op, e)       -> optimise_unary_op (op, e)
+	| BinaryOp (op, e1, e2) -> optimise_binary_op (op, e1, e2)
+	| FunCall (v, es)		-> FunCall (v, optimise_expr_list es)
+	| Assign (v, e) 		   -> Assign (v, optimise_expr e)
 	| x -> x
 
-let constant_folding_declare_stmnt declare_stmnt : declare_stmnt = 
+let optimise_declare_stmnt declare_stmnt : declare_stmnt = 
 	match declare_stmnt with
 	| Declare (t, v)     	  -> Declare (t, v)
-	| DeclareAssign (t, v, e) -> DeclareAssign (t, v, constant_folding_expr e)
+	| DeclareAssign (t, v, e) -> DeclareAssign (t, v, optimise_expr e)
 
-let rec constant_folding_stmnt stmnt : stmnt = 
+let rec optimise_stmnt stmnt : stmnt = 
 	match stmnt with
-	| Expr e                   -> Expr (constant_folding_expr e)
-	| Return e                 -> Return (constant_folding_expr e)
-	| If_Then_Else (e, b1, b2) ->	let e' = constant_folding_expr e in
+	| Expr e                   -> Expr (optimise_expr e)
+	| Return e                 -> Return (optimise_expr e)
+	| If_Then_Else (e, b1, b2) ->	let e' = optimise_expr e in
 									(match e' with
-										| Bool true  -> If_Then_Else (Bool true, constant_folding_block b1, [])
-										| Bool false -> If_Then_Else (Bool false, [], constant_folding_block b2)
-										| _          -> If_Then_Else (e', constant_folding_block b1, constant_folding_block b2)
+										| Bool true  -> Block (optimise_block b1)
+										| Bool false -> Block (optimise_block b2)
+										| _          -> If_Then_Else (e', optimise_block b1, optimise_block b2)
 									)
-	| While (e, b)             -> While (constant_folding_expr e, constant_folding_block b)
-	| For (e1, e2, e3, b)      -> For (constant_folding_expr e1, constant_folding_expr e2, constant_folding_expr e3, constant_folding_block b)
-	| Local s                  -> Local (constant_folding_declare_stmnt s)
-and constant_folding_block block : block = 
+	| While (e, b)             -> 	let e' = optimise_expr e in 
+									(match e' with
+									| Bool false -> Block []
+									| _ 		 -> While (e', optimise_block b))
+	| For (e1, e2, e3, b)      -> For (optimise_expr e1, optimise_expr e2, optimise_expr e3, optimise_block b)
+	| Local s                  -> Local (optimise_declare_stmnt s)
+	| Block b 				   -> Block (optimise_block b)
+and optimise_block block : block = 
 	match block with
 	| []        -> []
-	| (x :: xs) -> constant_folding_stmnt x :: constant_folding_block xs
+	| (x :: xs) -> optimise_stmnt x :: optimise_block xs
 
-let constant_folding_top_level top_level : top_level = 
+let optimise_top_level top_level : top_level = 
 	match top_level with
-	| Global s            	 -> Global (constant_folding_declare_stmnt s)
-	| Function (t, v, ps, b) -> Function (t, v, ps, constant_folding_block b)
-	| Main b              	 -> Main (constant_folding_block b)
+	| Global s            	 -> Global (optimise_declare_stmnt s)
+	| Function (t, v, ps, b) -> Function (t, v, ps, optimise_block b)
+	| Main b              	 -> Main (optimise_block b)
 
-let rec constant_folding program : program = 
+let rec optimise program : program = 
 	match program with
 	| []        -> []
-	| (x :: xs) -> constant_folding_top_level x :: constant_folding xs
+	| (x :: xs) -> optimise_top_level x :: optimise xs

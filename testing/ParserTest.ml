@@ -26,7 +26,7 @@ let valid_testcases = [
 ("tc117", [Main[If_Then_Else(BinaryOp(Eq, Var "a", Var "b"), [Expr(Assign("x", Var "y"))], [Expr(UnaryOp(Print, Var "a"))])]]) ; 
 ("tc118", [Main[While(Bool true, [Expr(Assign("x", BinaryOp(Add, Var "x", Int (to32 1))))])]]) ; 
 ("tc119", [Main[For(Assign("i", Int (to32 2)), BinaryOp(Leq, Var "i", Int (to32 3)), Assign("i", BinaryOp(Add, Var "i", Int (to32 1))), [Expr(UnaryOp(Print, Var "i"))])]]) ;
-("tc120", [Global(DeclareAssign(Int, "a", Int (to32 5))); Function (Int, "double", ["x"], [Return (BinaryOp(Add, Var "x", Var "x"))]); Main[Local(DeclareAssign(Int, "b", NullaryOp(Prompt))); While(BinaryOp(Leq, Var "b", Var "a"), [Expr(Assign("a", BinaryOp(Add, Var "a", Int (to32 1)))) ; If_Then_Else(BinaryOp(Leq, Var "b", Var "a"), [Expr(UnaryOp(Print, Var "a"))], [Expr(UnaryOp(Print, Var "b"))]) ]) ] ]); 
+("tc120", [Global(DeclareAssign(Int, "a", Int (to32 5))); Function (Int, "double", [(Int, "x")], [Return (BinaryOp(Add, Var "x", Var "x"))]); Main[Local(DeclareAssign(Int, "b", NullaryOp(Prompt))); While(BinaryOp(Leq, Var "b", Var "a"), [Expr(Assign("a", BinaryOp(Add, Var "a", Int (to32 1)))) ; If_Then_Else(BinaryOp(Leq, Var "b", Var "a"), [Expr(UnaryOp(Print, Var "a"))], [Expr(UnaryOp(Print, Var "b"))]) ]) ] ]); 
 ]
 
 let invalid_testcases = [

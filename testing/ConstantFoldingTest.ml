@@ -5,25 +5,23 @@ let parse content =
 content
 |> Lexing.from_string
 |> Parser.program Lexer.read
-|> ConstantFolding.constant_folding
+|> ConstantFolding.optimise
 
 let valid_testcases = [
-("tc201", [Global(DeclareAssign(Int, "a", Int (to32 8)))]) ;
-("tc202", [Global(DeclareAssign(Bool, "a", Bool true))]) ; 
-("tc203", [Global(DeclareAssign(String, "a", String "I am so excited!"))]) ; 
-("tc204", [Global(DeclareAssign(Bool, "a", Bool false))]) ; 
-("tc205", [Global(DeclareAssign(Real, "a", Real 6.2))]) ; 
-("tc206", [Main[Local(DeclareAssign(Int, "a", Int (to32 5))); If_Then_Else(Bool true, [Expr(UnaryOp(Print, Var "a"))], [])]])
+"tc201" ; "tc202" ; "tc203" ; "tc204" ; "tc205" ; "tc206" ; "tc207"
 ]
 	
 
 let rec test_valid_cases testcases = 
 	match testcases with
 	| [] -> ()
-	| ((filename, expected) :: xs) -> let content = ref "" in
+	| (filename :: xs) -> let content = ref "" in
 									  read_file ("testing/valid/" ^ filename) content;
+									  let content2 = ref "" in
+									  read_file ("testing/valid/" ^ filename ^ "a") content2;
 									  print_string ("case " ^ filename ^ ": ");
-									  let result = parse !content in
+									  let result = parse !content
+									  and expected = parse !content2 in
 									  (if result = expected 
 									  then print_string "passed"
 									  else print_string "failed.");

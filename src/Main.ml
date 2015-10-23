@@ -30,8 +30,8 @@ let parse content =
 	content
 	|> Lexing.from_string
 	|> process
-	|> ConstantFolding.constant_folding
-	|> ConstantPropagation.constant_propagation
+	|> ConstantFolding.optimise
+	|> ConstantPropagation.optimise
 	|> SyntaxTree.string_of_program
 	|> print_string;
 	print_newline ()

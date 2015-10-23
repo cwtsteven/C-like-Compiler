@@ -1,0 +1,20 @@
+bool a = true;
+
+string side_effect() {
+	a = false;
+	return "hia";
+}
+
+string c = side_effect();
+
+bool b = a;
+
+main() {
+	bool c = true;
+	bool b = true;
+	if (true) {
+		int a = 5;
+		>> 5;
+	} else {
+	}
+}

@@ -1,0 +1,11 @@
+bool a = true;
+bool b = !true;
+
+main() {
+	int b = 2;
+	if (true == false) {
+		>> a;
+	} else {
+		>> b;
+	}
+}

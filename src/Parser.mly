@@ -29,7 +29,7 @@
 %token EOF
 
 %nonassoc PRINT
-%nonassoc ASSIGN
+%right ASSIGN
 %left AND OR NOT
 %left EQ NEQ GT GEQ LT LEQ 
 %left ADD SUB
@@ -44,14 +44,20 @@ program:
 
 top_level:
 | d = declare_stmnt									{ Global d }
-| t = type_; v = IDENTIFIER; ps = param; b = block	{ Function (t, v, ps, b) }
+| t = type_; v = IDENTIFIER; ps = params; b = block	{ Function (t, v, ps, b) }
 | MAIN; L_BRACKET; R_BRACKET; b = block 			{ Main b }
 ;
 
-param:
+params:
 | L_BRACKET; 
-	ps = separated_list(COMMA, IDENTIFIER); 
+	ps = param
 	R_BRACKET 							{ ps }
+;
+
+param:
+| t = type_; v = IDENTIFIER; COMMA; ps = param	{ (t, v) :: ps }
+| t = type_; v = IDENTIFIER						{ (t, v) :: [] } 
+| 												{ [] }
 ;
 
 block:
