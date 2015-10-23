@@ -9,7 +9,7 @@ content
 |> FunctionInlining.optimise
 
 let valid_testcases = [
-"tc401" ; "tc402" ; "tc403" ; "tc404" ; "tc405" ; "tc406"
+"tc401" ; "tc402" ; "tc403" ; "tc404" ; "tc405" ; "tc406" ; "tc407"
 ]
 	
 
