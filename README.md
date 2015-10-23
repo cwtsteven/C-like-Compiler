@@ -97,4 +97,20 @@ In the above, we defined a function called <code>double</code> which takes a sin
 Right now, the compiler will do constant folding. For instance, <code>int a = 3 + 6;</code> will be transformed to <code>int a = 9;</code> in the parse tree.
 
 ## Constant Propagation and Function Inlining
-The compiler will also perform constant propagation on the parse tree. However, this optimisation is not extremely sophisticated. Within a block of code, if we reach a statement that has side effects (ie, printing, prompting, assigning non-local variables), we will stop the process within that particular block (but we will continue on inner block).
+The compiler will also perform constant propagation and function inlining on the parse tree. For instance: 
+<pre><code>int a = 1;
+int b = a + 1;
+int double(int x) {
+  return x + x;
+}
+int c = double(a);
+</code></pre>
+will be transformed to
+<pre><code>int a = 1;
+int b = 2;
+int double(int x) {
+  return x + x;
+}
+int c = 2;
+</code></pre>
+However, this optimisation is not extremely sophisticated. Within a block of code, if we reach a statement that has side effects (ie, printing, prompting, assigning non-local variables), we will stop the process within that particular block (but we will continue on inner block).
