@@ -1,0 +1,10 @@
+int a = 5;
+
+int double(int x) {
+	return 2 * x;
+}
+
+main() {
+	int a = 2;
+	int c = double(a);
+}

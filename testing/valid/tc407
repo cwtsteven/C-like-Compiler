@@ -1,0 +1,6 @@
+int f() {
+	>> 1;
+	return 2;
+}
+
+int c = f() + f();

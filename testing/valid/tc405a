@@ -1,0 +1,12 @@
+int a = 3;
+
+void f() {
+	a = a + 1;
+}
+
+main() {
+	int v = 1;
+	int w = 1;
+	f();
+	int c = v;
+}

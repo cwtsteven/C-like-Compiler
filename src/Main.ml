@@ -4,6 +4,7 @@ open ErrorHandling
 open MenhirLib.General
 open ConstantFolding
 open ConstantPropagation
+open FunctionInlining
 module Interpreter = Parser.MenhirInterpreter
 
 (* we manually run the parser by considering each tranisition *)
@@ -31,7 +32,7 @@ let parse content =
 	|> Lexing.from_string
 	|> process
 	|> ConstantFolding.optimise
-	|> ConstantPropagation.optimise
+	|> FunctionInlining.optimise
 	|> SyntaxTree.string_of_program
 	|> print_string;
 	print_newline ()

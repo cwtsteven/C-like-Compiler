@@ -130,7 +130,7 @@ and optimise_expr expr : expr =
 	| UnaryOp (op, e)       -> optimise_unary_op (op, e)
 	| BinaryOp (op, e1, e2) -> optimise_binary_op (op, e1, e2)
 	| FunCall (v, es)		-> FunCall (v, optimise_expr_list es)
-	| Assign (v, e) 		   -> Assign (v, optimise_expr e)
+	| Assign (v, e) 		-> Assign (v, optimise_expr e)
 	| x -> x
 
 let optimise_declare_stmnt declare_stmnt : declare_stmnt = 

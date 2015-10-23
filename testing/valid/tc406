@@ -1,0 +1,17 @@
+bool a = true;
+
+int f(bool a) {
+	if (a) {
+		return 1;
+	}
+	while (a) {
+		>> a;
+	}
+}
+
+main() {
+	int t = 1;
+	int w = t;
+	int b = f(true);
+	int e = t;
+}

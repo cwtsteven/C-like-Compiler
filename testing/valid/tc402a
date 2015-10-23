@@ -1,0 +1,7 @@
+int a = 5;
+int side_effect(int x) {
+	a = a + 5;
+	return x;
+}
+int c = side_effect(a);
+int b = a;
