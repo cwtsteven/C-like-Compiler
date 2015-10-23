@@ -1,8 +1,12 @@
 open SyntaxTree
 
+(* whether the function has side-effect or not *)
 let f_table : (var, bool) Hashtbl.t = Hashtbl.create 10
+
+(* store the block of an function that has no side-effects *)
 let f_table_fun : (var, (type_ * var * (type_ * var) list * block)) Hashtbl.t = Hashtbl.create 10
 
+(* evaulating pure functions *)
 let push_params_to_fun (es, ps) v_table = 
 	match (es, ps) with
 	| ([], [])   -> ()
@@ -26,6 +30,7 @@ let rec evaluate_function (v, es) (t, v, ps, b) : expr =
 	| Some e 	-> e
 
 
+(* optimisation procedures, tedious *)
 and optimise_nullary_op op can_progress : expr =
 	match op with
 	| Prompt 	-> can_progress := false; NullaryOp Prompt
@@ -221,6 +226,9 @@ let push_params ps v_table =
 	| [] -> ()
 	| ((t, v) :: xs) -> Hashtbl.add v_table v None
 
+(*
+	we add the function to f_table_fun if the function has no side effects.
+*)
 let optimise_function (t, v, ps, b) : top_level = 
 	let v_table : (var, expr option) Hashtbl.t = Hashtbl.create 10
 	and can_progress = ref true in
@@ -230,7 +238,18 @@ let optimise_function (t, v, ps, b) : top_level =
 	if !can_progress then Hashtbl.add f_table_fun v (t, v, ps, b');
 	Function (t, v, ps, b')
 
+(*
+	We analyse the parse tree like this:
+	Iterate each statement in a block
+		set flag = true
+		if a statement dont have any side effects,
+			if flag is true
+				we can do constant foldind, constant propagation and function inlining
+		else 
+			only constant folding will be applied
+			flag = false
 
+*)
 let optimise program : program = 
 	let v_table : (var, expr option) Hashtbl.t = Hashtbl.create 10
 	and can_progress = ref true
