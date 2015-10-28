@@ -10,6 +10,7 @@ In order to compile, execute <code>make</code>.
 # How to run
 ## Run the compiler
 In order to run the parser, execute<code>./Main.native file [-fopoff]</code>, then enter you code in the console. 
+
 -. <code>-fopoff</code> turns off fron-end optimisation. If this tag does not appear, the compiler will perform front-end optimisation by default.
 
 ## Run the tests
