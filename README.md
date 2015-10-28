@@ -9,13 +9,13 @@ In order to compile, execute <code>make</code>.
 
 # How to run
 ## Run the compiler
-In order to run the parser, execute<code>./Main.native file [-fopoff]</code>, then enter you code in the console. For example: <code>./Main.native main.txt -fopoff</code>
+In order to run the parser, execute <code>./Main.native file [-fopoff]</code>, then enter you code in the console. For example: <code>./Main.native main.txt -fopoff</code>
 
 1. <code>file</code> is the path of the source code. 
 2. <code>-fopoff</code> turns off fron-end optimisation. If this tag does not appear, the compiler will perform front-end optimisation by default.
 
 ## Run the tests
-In order to run the tests, execute<code>sh testbench.sh</code>.
+In order to run the tests, execute <code>sh testbench.sh</code>.
 
 # Error
 The error will inform you where and what exactly happened, for instance, if we have this input program:
@@ -71,7 +71,7 @@ In the line <code>a = a + 1;</code>, it will not change the global variable <cod
 You can use <code><<</code> as basic input and <code>>></code> as output. <code><<</code> is an expression that will return a string by default, for example, you can assign the return value to a variable <code>a = <<;</code>. <code>>></code> is followed by an expression in which the compiler will evaluate the expression before printing it. For instance: <code>>> 3 + 5;</code> will print 8. 
 
 ## Operators
-An operator is either a nullary/unary/binary operator. Here is the precedence iof operators (from low to high)
+An operator is either a nullary/unary/binary operator. Here is the precedence of operators (from low to high)
 - <code>>></code> (non-associative)
 - <code>=</code> (right-associative)
 - <code>&&</code> <code>||</code> <code>!</code>
@@ -79,7 +79,7 @@ An operator is either a nullary/unary/binary operator. Here is the precedence io
 - <code>+</code> <code>-</code>
 - <code>*</code> <code>/</code>
 
-All operators are left-associative unless otherwise specified. For instance, an expression:
+All operators are left-associative unless otherwise specified. For instance, an expression: 
 <code>>> 3 + 4 * 5 >= 1;</code> will be evaluated to <code>>> ((3 + (4 * 5)) >= 1)</code>. 
 
 ## Control statement
