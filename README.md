@@ -8,7 +8,7 @@ In order to compile the project correctly, please make sure you have the followi
 In order to compile, execute <code>make</code>.
 
 ## 3 How to run
-### 3.1 Run the compiler
+#### 3.1 Run the compiler
 In order to run the parser, execute <code>./Main.native file [-fopoff]</code>. For example: <code>./Main.native main.txt -fopoff</code>. The compiler will generate an assembly file in the same directory. 
 
 1. <code>file</code> is the path of the source code. 
