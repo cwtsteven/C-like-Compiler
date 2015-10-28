@@ -9,13 +9,13 @@ In order to compile, execute <code>make</code>.
 
 # How to run
 ## Run the compiler
-In order to run the parser, execute<code>./Main.native file [-fopoff]</code>, then enter you code in the console. 
+In order to run the parser, execute<code>./Main.native file [-fopoff]</code>, then enter you code in the console. For example: <code>./Main.native main.txt -fopoff</code>
 
 1. <code>file</code> is the path of the source code. 
 2. <code>-fopoff</code> turns off fron-end optimisation. If this tag does not appear, the compiler will perform front-end optimisation by default.
 
 ## Run the tests
-In order to run the tests, execute<code>./TestBench.native</code>.
+In order to run the tests, execute<code>sh testbench.sh</code>.
 
 # Error
 The error will inform you where and what exactly happened, for instance, if we have this input program:
@@ -161,3 +161,6 @@ main() {
   int g = d;
 }
 </code></pre>
+
+#Code Generation
+For now, the compiler can generate codes for simple expression evaluation and global variable assignment.
