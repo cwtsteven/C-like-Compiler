@@ -9,10 +9,12 @@ In order to compile, execute <code>make</code>.
 
 # How to run
 ## Run the compiler
-In order to run the parser, execute <code>./Main.native file [-fopoff]</code>, then enter you code in the console. For example: <code>./Main.native main.txt -fopoff</code>
+In order to run the parser, execute <code>./Main.native file [-fopoff]</code>. For example: <code>./Main.native main.txt -fopoff</code>. The compiler will generate an assembly file in the same directory. 
 
 1. <code>file</code> is the path of the source code. 
 2. <code>-fopoff</code> turns off fron-end optimisation. If this tag does not appear, the compiler will perform front-end optimisation by default.
+
+Another way to run the compiler is to execute <code>./Main.native [-fopoff]</code> without a file. This will allow you to type your code in terminal. 
 
 ## Run the tests
 In order to run the tests, execute <code>sh testbench.sh</code>.
