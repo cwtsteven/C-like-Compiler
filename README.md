@@ -11,7 +11,8 @@ In order to compile, execute <code>make</code>.
 ## Run the compiler
 In order to run the parser, execute<code>./Main.native file [-fopoff]</code>, then enter you code in the console. 
 
-1. <code>-fopoff</code> turns off fron-end optimisation. If this tag does not appear, the compiler will perform front-end optimisation by default.
+1. <code>file</code> is the path of the source code. 
+2. <code>-fopoff</code> turns off fron-end optimisation. If this tag does not appear, the compiler will perform front-end optimisation by default.
 
 ## Run the tests
 In order to run the tests, execute<code>./TestBench.native</code>.
