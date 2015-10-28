@@ -19,8 +19,8 @@ Another way to run the compiler is to execute <code>./Main.native [-fopoff]</cod
 ## Run the tests
 In order to run the tests, execute <code>sh testbench.sh</code>.
 
-# Error
-The error will inform you where and what exactly happened, for instance, if we have this input program:
+# Error Reporting
+The compiler will inform you where and what exactly happened, for instance, if we have this input program:
 <pre><code>int a = ;</code></pre>
 we will get
 <pre><code>Parse error in Line 1, Column 9. expression was expected but I got this token: ;</code></pre>
