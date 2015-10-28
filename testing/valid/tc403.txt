@@ -1,0 +1,14 @@
+int a = 5;
+int b = a + 5;
+int double(int x) {
+	return x + x;
+}
+int d = a;
+main() {
+	int d = a;
+	int e = 1;
+	int f = e + 1;
+	int c = double(d);
+	a = a + 1;
+	int g = d;
+}

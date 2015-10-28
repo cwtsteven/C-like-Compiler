@@ -1,0 +1,11 @@
+main() {
+	int a = 1;
+	int b = 2;
+	int x;
+	int y;
+	if (a == b) {
+		x = y;
+	} else {
+		>> a;
+	}
+}

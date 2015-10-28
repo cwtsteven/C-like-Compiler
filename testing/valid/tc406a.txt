@@ -1,0 +1,23 @@
+int a = 6;
+real b = 6.1;
+
+int pure_function(int x) {
+	return 3 * x;
+}
+
+int d = 6;
+
+main() {
+	int c = 18;
+	if (true) {
+		int e = 5;
+		bool a = true;
+		if (true) {
+			>> a;
+		} else {
+		}
+	} else {
+	}
+	while (false) {
+	}
+}

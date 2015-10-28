@@ -1,15 +1,10 @@
 open SyntaxTree
 open TestHelper
 
-let parse content = 
-content
-|> Lexing.from_string
-|> Parser.program Lexer.read
-|> ConstantFolding.optimise
-|> ConstantPropagation.optimise
+let parse = Compiler.parse_with_op
 
 let valid_testcases = [
-"tc301" ; "tc302" ; "tc303" ; "tc304"; "tc305" ; "tc306" ; "tc307" ; "tc308" ; "tc309"
+"tc301" ; "tc302" ; "tc303" ; "tc304"; "tc305"
 ]
 	
 
@@ -24,8 +19,8 @@ let rec test_valid_cases testcases =
 									  let result = parse !content
 									  and expected = parse !content2 in
 									  (if result = expected 
-									  then print_string "passed"
-									  else print_string "failed.");
+									  then print_string "\tpassed"
+									  else print_string "\t\tfailed.");
 									  print_string "\n";
 									  test_valid_cases xs
 

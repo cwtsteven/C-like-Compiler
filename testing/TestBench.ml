@@ -1,5 +1,5 @@
 let _ = 
 	ParserTest.test;
-	ConstantFoldingTest.test;
+	FunctionInliningTest.test;
 	ConstantPropagationTest.test;
-	FunctionInliningTest.test
+	ConstantFoldingTest.test

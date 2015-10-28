@@ -1,6 +1,5 @@
 {
   open Parser
-  exception SyntaxError of string
 
   let incr_linenum lexbuf = 
 	let pos = lexbuf.Lexing.lex_curr_p in
@@ -117,4 +116,4 @@ rule read = parse
 | eol { incr_linenum lexbuf; read lexbuf }
 
 | eof { EOF }
-| _ { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf))}
+| _ { raise (ErrorHandling.SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf))}

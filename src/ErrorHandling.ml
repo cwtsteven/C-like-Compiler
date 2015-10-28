@@ -3,6 +3,9 @@ open Parser
 open Parser.MenhirInterpreter
 open MenhirLib.General
 
+exception SyntaxError of string
+exception ParserError of string
+
 let symbol2string (type a) (symbol : xsymbol) : string =
 	match symbol with
 	| X (T T_INT) 			-> "int"
@@ -70,7 +73,7 @@ let symbol2string (type a) (symbol : xsymbol) : string =
 let positionString lexbuf : string =
 	let pos = lexbuf.lex_curr_p in  "Line " ^ string_of_int pos.pos_lnum ^ ", Column "  ^ string_of_int (pos.pos_cnum - pos.pos_bol)  
 
-let print_syntaxError lexbuf msg = prerr_string ("Syntax Error in " ^ positionString lexbuf ^ ". " ^ msg ^ "\n")
+let string_of_syntax_error lexbuf msg : string = "Syntax Error in " ^ positionString lexbuf ^ ". " ^ msg ^ "\n"
 
 let rec rhs_string symbols : string = 
 	match symbols with
@@ -133,17 +136,17 @@ let rec find_symbol_through_stack stack symbol : xsymbol option =
 		end
 		if no match for every rules, we pop the previous state from stack and iterate every rules again
 *)
-let print_parseError env lexbuf = 
+let string_of_parse_error env lexbuf : string = 
 	let stack = stack env in
 	match Lazy.force stack with
-		| Nil -> prerr_string ("Parse error in " ^ positionString lexbuf ^ ". Unexpected token: " ^ Lexing.lexeme lexbuf ^ "\n")
+		| Nil -> "Parse error in " ^ positionString lexbuf ^ ". Unexpected token: " ^ Lexing.lexeme lexbuf ^ "\n"
 		| Cons (Element (state, _, _, _), _) -> 
 			let symbol = incoming_symbol state in (
 				(*print_string (symbol2string (X symbol) ^ "\n");*)
 				match find_symbol_through_stack stack symbol with
-				| None 		   -> prerr_string ("Parse error in " ^ positionString lexbuf ^ ". Unexpected token: " ^ Lexing.lexeme lexbuf ^ "\n")
-				| Some xsymbol -> prerr_string ("Parse error in " ^ positionString lexbuf ^ ". " ^ symbol2string xsymbol
-								 ^ " was expected but I got this token: " ^ Lexing.lexeme lexbuf ^ "\n")
+				| None 		   -> "Parse error in " ^ positionString lexbuf ^ ". Unexpected token: " ^ Lexing.lexeme lexbuf ^ "\n"
+				| Some xsymbol -> "Parse error in " ^ positionString lexbuf ^ ". " ^ symbol2string xsymbol
+								 ^ " was expected but I got this token: " ^ Lexing.lexeme lexbuf ^ "\n"
 				)
 
 	

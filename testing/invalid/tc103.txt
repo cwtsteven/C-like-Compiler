@@ -1,0 +1,5 @@
+bool 0abc;
+
+main() {
+	
+}

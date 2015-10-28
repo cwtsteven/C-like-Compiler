@@ -1,6 +1,0 @@
-int a = 5;
-int double(int x) {
-	return x + x;
-}
-int c = 10;
-int d = 5;

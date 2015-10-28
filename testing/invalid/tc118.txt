@@ -1,0 +1,17 @@
+var a = 5;
+
+int double(x) {
+	return x + x
+}
+
+main() {
+	int b = <<;
+	while (b <= a) {
+		a = a + 1;
+		if (b <= a) {
+			>> a;
+		} else {
+			>> b;
+		}
+	}
+}

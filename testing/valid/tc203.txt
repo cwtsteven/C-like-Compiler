@@ -1,0 +1,5 @@
+string a = "I am" + " so excited!";
+
+main() {
+	
+}

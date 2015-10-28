@@ -1,9 +1,0 @@
-int a = 5;
-
-int f() {
-	while (1 == 1) {
-		return 1;
-	}
-}
-
-int c = f();
