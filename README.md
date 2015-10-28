@@ -24,9 +24,11 @@ we will get
 # Syntax
 This grammar is simulating a C-like imperative programming languages. In the top-level, you can declare global variables and functions, below gives you a first taste of a valid program:
 <pre><code>int a = 3;
+
 int double(int x) {
   return x + x;
 }
+
 main() {
   a = 1;
   int b = <<;
@@ -104,36 +106,56 @@ Right now, the compiler will do constant folding. For instance, <code>int a = 3 
 The compiler will also perform constant propagation and function inlining on the parse tree. For instance: 
 <pre><code>int a = 1;
 int b = a + 1;
+
 int double(int x) {
   return x + x;
 }
-int c = double(a);
+
+main() {
+  int c = double(a);
+}
 </code></pre>
 will be transformed to
 <pre><code>int a = 1;
 int b = 2;
+
 int double(int x) {
   return x + x;
 }
-int c = 2;
+
+main() {
+  int c = 2;
+}
 </code></pre>
 However, this optimisation is not extremely sophisticated. Within a block of code, if we reach a statement that has side effects (ie, printing, prompting, assigning non-local variables), we will stop the process within that particular block (but we will continue on inner block). For instance:
 <pre><code>int a = 1;
 int c = a + 2;
+
 int f(int x) {
   a = a + 1;
   return 1;
 }
-int d = f(a);
-int e = f(a);
+
+main() {
+  int d = 1;
+  int f = d;
+  int e = f(a);
+  int g = d;
+}
 </code></pre>
 will be transformed to 
 <pre><code>int a = 1;
 int c = 3;
+
 int f(int x) {
   a = a + 1;
   return 1;
 }
-int d = f(1);
-int e = f(a);
+
+main() {
+  int d = 1;
+  int f = 1;
+  int e = f(a);
+  int g = d;
+}
 </code></pre>
