@@ -103,7 +103,7 @@ In the above, we defined a function called <code>double</code> which takes a sin
 
 ## 6 Syntactic Optimisation
 
-#### 6.2 Constant Folding
+#### 6.1 Constant Folding
 Right now, the compiler will do constant folding. For instance, <code>int a = 3 + 6;</code> will be transformed to <code>int a = 9;</code> in the parse tree.
 
 #### 6.2 Constant Propagation and Function Inlining
