@@ -165,4 +165,4 @@ main() {
 </code></pre>
 
 ## 7 Code Generation
-For now, the compiler can generate codes for simple expression evaluation and global variable assignment.
+For now, the compiler can generate codes for simple expression evaluation (int arithmetic) and global variable declaration and assignment.
