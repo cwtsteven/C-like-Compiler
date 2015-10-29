@@ -165,10 +165,11 @@ main() {
 </code></pre>
 
 ## 7 Code Generation
-For now, the compiler can generate codes for :
+For now, the compiler can generate codes for
 
 1. int arithmetic and comparison
 2. char comparison
 3. boolean operations
 4. printing int char and boolean
-5. decalring and assigning global variables
+5. if-else statement
+6. decalring and assigning global variables
