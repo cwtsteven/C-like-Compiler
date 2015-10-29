@@ -90,7 +90,7 @@ Here are the rules for each statement:
 - <code>if (expr) {statements}</code>
 - <code>if (expr) {statements} else {statements}</code>
 - <code>while (expr) {statements}</code>
-- <code>for(expr;expr;expr) {statements}</code>
+- <code>for(int var = integer;expr;expr) {statements}</code>
 
 #### 5.7 Function
 Funtion declaration is also allowed in the top-level. Here is an example:
