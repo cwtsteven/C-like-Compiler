@@ -31,7 +31,7 @@ let () =
 		| "-fopoff"	-> 	opflag := false
 		| x 		-> 	sourcefile := x
 	done;
-	(if !sourcefile = "" then (content := Buffer.contents (read_to_empty (Buffer.create 1)); sourcefile := "test")
+	(if !sourcefile = "" then (content := Buffer.contents (read_to_empty (Buffer.create 1)); sourcefile := "test.txt")
 	else read_file !sourcefile content);
 	let desfil = String.sub !sourcefile 0 ((String.length !sourcefile) - 4) ^ ".s" in
 	try write_file desfil (compile !opflag !content) with

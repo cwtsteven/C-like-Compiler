@@ -1,6 +1,12 @@
 	.section __TEXT,__cstring,cstring_literals
-format_int:
+int.str:
 	.string "%d\0"
+char.str:
+	.string "%c\0"
+true.str:
+	.string "true"
+false.str:
+	.string "false"
 
 	.data
 	.section __TEXT,__text,regular,pure_instructions
@@ -12,8 +18,8 @@ _main:
 	pop %r8
 	pop %rax
 	add %r8, %rax
-	push %rax
-	lea format_int(%rip), %rdi
+	push %rax\
+	lea int.str(%rip), %rdi
 	pop %rsi
 	call _printf
 	mov $0, %rdi
