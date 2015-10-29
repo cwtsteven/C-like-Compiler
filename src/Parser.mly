@@ -95,10 +95,10 @@ while_stmnt:
 ;
 
 for_stmnt:
-| FOR; L_BRACKET; e1 = expr; SEMICOLON; 
+| FOR; L_BRACKET; TYPEINT; v = IDENTIFIER; ASSIGN; e = expr; SEMICOLON; 
 	e2 = expr; SEMICOLON; 
 	e3 = expr; R_BRACKET;
-	b = block							{ For (e1, e2, e3, b) }
+	b = block							{ For (DeclareAssign (Int, v, e), e2, e3, b) }
 ;
 
 expr:

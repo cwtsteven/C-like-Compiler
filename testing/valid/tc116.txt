@@ -1,5 +1,7 @@
+int a = 1;
 main() {
-	while (true) {
-		int x = 1;
+	while (a <= 2) {
+		>> a;
+		a = a + 1;
 	}
 }

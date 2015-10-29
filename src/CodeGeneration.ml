@@ -42,7 +42,7 @@ and generate_binary_op (op, e1, e2) v_tables : type_ * string =
 	and (t2, e2') = generate_expr e2 v_tables in
 	(match op with
 	| Add 		-> 	(match (t1, t2) with
-					| (Int, Int)		->	(Int, e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tadd %r8, %rax\n" ^ "\tpush %rax\\\n")
+					| (Int, Int)		->	(Int, e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tadd %r8, %rax\n" ^ "\tpush %rax\n")
 					| (Real, Real)		->	raise NotYetDeveloped
 					| (Real, Int) 		->	raise NotYetDeveloped
 					| (Int, Real) 		-> 	raise NotYetDeveloped
@@ -72,68 +72,68 @@ and generate_binary_op (op, e1, e2) v_tables : type_ * string =
 					)
 	| Eq 		-> 	(Bool, 
 					(match (t1, t2) with
-					| (Int, Int) 		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\txor %rax, %rax\n" ^ "\tsete %al\n" ^ "\tpush %rax\n"
+					| (Int, Int) 		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\tmov $0, %rax\n" ^ "\tsete %al\n" ^ "\tpush %rax\n"
 					| (Real, Real)
 					| (Real, Int)
 					| (Int, Real)		-> 	raise NotYetDeveloped
-					| (Char, Char)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\txor %rax, %rax\n" ^ "\tsete %al\n" ^ "\tpush %rax\n"
+					| (Char, Char)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\tmov $0, %rax\n" ^ "\tsete %al\n" ^ "\tpush %rax\n"
 					| (String, String)	-> 	raise NotYetDeveloped
-					| (Bool, Bool)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\txor %rax, %rax\n" ^ "\tsete %al\n" ^ "\tpush %rax\n"
+					| (Bool, Bool)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\tmov $0, %rax\n" ^ "\tsete %al\n" ^ "\tpush %rax\n"
 					| _ 				-> 	raise NotYetDeveloped
 					))
 	| Neq 		->	(Bool, 
 					(match (t1, t2) with
-					| (Int, Int) 		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\txor %rax, %rax\n" ^ "\tsetne %al\n" ^ "\tpush %rax\n"
+					| (Int, Int) 		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\tmov $0, %rax\n" ^ "\tsetne %al\n" ^ "\tpush %rax\n"
 					| (Real, Real)
 					| (Real, Int)
 					| (Int, Real)		-> 	raise NotYetDeveloped
-					| (Char, Char)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\txor %rax, %rax\n" ^ "\tsetne %al\n" ^ "\tpush %rax\n"
+					| (Char, Char)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\tmov $0, %rax\n" ^ "\tsetne %al\n" ^ "\tpush %rax\n"
 					| (String, String)	-> 	raise NotYetDeveloped
-					| (Bool, Bool)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\txor %rax, %rax\n" ^ "\tsetne %al\n" ^ "\tpush %rax\n"
+					| (Bool, Bool)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\tmov $0, %rax\n" ^ "\tsetne %al\n" ^ "\tpush %rax\n"
 					| _ 				-> 	raise NotYetDeveloped
 					))
 	| Gt 		-> 	(Bool, 
 					(match (t1, t2) with
-					| (Int, Int) 		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\txor %rax, %rax\n" ^ "\tsetg %al\n" ^ "\tpush %rax\n"
+					| (Int, Int) 		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\tmov $0, %rax\n" ^ "\tsetg %al\n" ^ "\tpush %rax\n"
 					| (Real, Real)
 					| (Real, Int)
 					| (Int, Real)		-> 	raise NotYetDeveloped
-					| (Char, Char)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\txor %rax, %rax\n" ^ "\tsetg %al\n" ^ "\tpush %rax\n"
+					| (Char, Char)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\tmov $0, %rax\n" ^ "\tsetg %al\n" ^ "\tpush %rax\n"
 					| (String, String)	-> 	raise NotYetDeveloped
-					| (Bool, Bool)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\txor %rax, %rax\n" ^ "\tsetg %al\n" ^ "\tpush %rax\n"
+					| (Bool, Bool)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\tmov $0, %rax\n" ^ "\tsetg %al\n" ^ "\tpush %rax\n"
 					| _ 				-> 	raise NotYetDeveloped
 					))
 	| Geq		->	(Bool, 
 					(match (t1, t2) with
-					| (Int, Int) 		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\txor %rax, %rax\n" ^ "\tsetge %al\n" ^ "\tpush %rax\n"
+					| (Int, Int) 		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\tmov $0, %rax\n" ^ "\tsetge %al\n" ^ "\tpush %rax\n"
 					| (Real, Real)
 					| (Real, Int)
 					| (Int, Real)		-> 	raise NotYetDeveloped
-					| (Char, Char)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\txor %rax, %rax\n" ^ "\tsetge %al\n" ^ "\tpush %rax\n"
+					| (Char, Char)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\tmov $0, %rax\n" ^ "\tsetge %al\n" ^ "\tpush %rax\n"
 					| (String, String)	-> 	raise NotYetDeveloped
-					| (Bool, Bool)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\txor %rax, %rax\n" ^ "\tsetge %al\n" ^ "\tpush %rax\n"
+					| (Bool, Bool)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\tmov $0, %rax\n" ^ "\tsetge %al\n" ^ "\tpush %rax\n"
 					| _ 				-> 	raise NotYetDeveloped
 					))
 	| Lt 		-> 	(Bool, 
 					(match (t1, t2) with
-					| (Int, Int) 		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\txor %rax, %rax\n" ^ "\tsetl %al\n" ^ "\tpush %rax\n"
+					| (Int, Int) 		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\tmov $0, %rax\n" ^ "\tsetl %al\n" ^ "\tpush %rax\n"
 					| (Real, Real)
 					| (Real, Int)
 					| (Int, Real)		-> 	raise NotYetDeveloped
-					| (Char, Char)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\txor %rax, %rax\n" ^ "\tsetl %al\n" ^ "\tpush %rax\n"
+					| (Char, Char)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\tmov $0, %rax\n" ^ "\tsetl %al\n" ^ "\tpush %rax\n"
 					| (String, String)	-> 	raise NotYetDeveloped
-					| (Bool, Bool)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\txor %rax, %rax\n" ^ "\tsetl %al\n" ^ "\tpush %rax\n"
+					| (Bool, Bool)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\tmov $0, %rax\n" ^ "\tsetl %al\n" ^ "\tpush %rax\n"
 					| _ 				-> 	raise NotYetDeveloped
 					))
 	| Leq 		-> 	(Bool, 
 					(match (t1, t2) with
-					| (Int, Int) 		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\txor %rax, %rax\n" ^ "\tsetle %al\n" ^ "\tpush %rax\n"
+					| (Int, Int) 		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\tmov $0, %rax\n" ^ "\tsetle %al\n" ^ "\tpush %rax\n"
 					| (Real, Real)
 					| (Real, Int)
 					| (Int, Real)		-> 	raise NotYetDeveloped
-					| (Char, Char)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\txor %rax, %rax\n" ^ "\tsetle %al\n" ^ "\tpush %rax\n"
+					| (Char, Char)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\tmov $0, %rax\n" ^ "\tsetle %al\n" ^ "\tpush %rax\n"
 					| (String, String)	-> 	raise NotYetDeveloped
-					| (Bool, Bool)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\txor %rax, %rax\n" ^ "\tsetle %al\n" ^ "\tpush %rax\n"
+					| (Bool, Bool)		->	e1' ^ e2' ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcmp %r8, %rax\n" ^ "\tmov $0, %rax\n" ^ "\tsetle %al\n" ^ "\tpush %rax\n"
 					| _ 				-> 	raise NotYetDeveloped
 					))
 	| And 		->	(match (t1, t2) with
@@ -191,7 +191,13 @@ let rec generate_block block v_tables : string =
 										| Bool	->	"\tpop %r8\n" ^ "\tcmp $1, %r8\n" ^ "\tjne L" ^ string_of_int !lbl_counter ^ "\n" ^ generate_block b1 v_tables ^ "\tjmp L" ^ string_of_int (!lbl_counter + 1) ^ "\n" ^ "L" ^ string_of_int !lbl_counter ^ ": \n" ^ generate_block b2 v_tables ^ "L" ^ string_of_int (!lbl_counter + 1) ^ ": \n"
 										| _ 	-> 	raise NotYetDeveloped
 										)
-		| While (e, b)				-> 	raise NotYetDeveloped
+		| While (e, b)				-> 	let (t, e') = generate_expr e v_tables in
+										lbl_counter := !lbl_counter + 2;
+										"L" ^ string_of_int !lbl_counter ^ ": \n" ^ e' ^
+										(match t with
+										| Bool 	-> 	"\tpop %r8\n" ^ "\tcmp $1, %r8\n" ^ "\tjne L" ^ string_of_int (!lbl_counter + 1) ^ "\n" ^ generate_block b v_tables ^ "\tjmp L" ^ string_of_int !lbl_counter ^ "\n" ^ "L" ^ string_of_int (!lbl_counter + 1) ^ ": \n"
+										| _ 	-> raise NotYetDeveloped
+										)
 		| For (e1, e2, e3, b)		-> 	raise NotYetDeveloped
 		| Block b 					-> 	generate_block b v_tables
 		)

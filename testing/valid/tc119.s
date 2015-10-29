@@ -18,7 +18,7 @@ _main:
 	pop %r8
 	pop %rax
 	add %r8, %rax
-	push %rax\
+	push %rax
 	lea int.str(%rip), %rdi
 	pop %rsi
 	call _printf
