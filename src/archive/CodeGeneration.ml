@@ -5,7 +5,7 @@ exception NotYetDeveloped
 
 let lbl_counter = ref (-2)
 
-let rec var_lookup v v_tables : type_ * int =
+let rec var_lookup v v_tables : type_ * var * int =
 	match v_tables with
 	| [] -> raise (UnboundVarError ("Unbound variable " ^ v ^ "\n"))
 	| (v_table :: vs) 	->	if Hashtbl.mem !v_table v then Hashtbl.find !v_table v else var_lookup v vs
@@ -148,12 +148,9 @@ and generate_binary_op (op, e1, e2) v_tables : type_ * string =
 
 and generate_expr expr v_tables : type_ * string = 
 	match expr with
-	| Var v 				-> 	let (t, offset) = var_lookup v v_tables in
-								if offset = -1 then 
-									(t, "\tmovabsq (" ^ v ^ "), %rax\n" ^ "\tpush %rax\n")
-								else (
-									(t, "\tpush -" ^ string_of_int offset ^ "(%rbp)\n")
-								)
+	| Var v 				-> 	let (t, var, offset) = var_lookup v v_tables in
+								if offset = -1 then (t, "\tmovabsq (" ^ var ^ "), %rax\n" ^ "\tpush %rax\n")
+								else raise NotYetDeveloped
 	| Int i 				-> 	(Int, "\tpush $" ^ Int32.to_string i ^ "\n")
 	| Real r 				-> 	raise NotYetDeveloped
 	| Char c 				-> 	(Char, "\tpush $'" ^ Char.escaped c ^ "'\n")
@@ -163,96 +160,59 @@ and generate_expr expr v_tables : type_ * string =
 	| UnaryOp (op, e) 		-> 	generate_unary_op (op, e) v_tables
 	| BinaryOp (op, e1, e2)	->	generate_binary_op (op, e1, e2) v_tables
 	| Assign (v, e)			->	let (t', e') = generate_expr e v_tables
-								and (t, offset) = var_lookup v v_tables in
+								and (t, var, offset) = var_lookup v v_tables in
 								if offset = -1 then 
-									(match (t, t') with
-									| (Int, Int) 		->	(t', e' ^ "\tpop %rax\n" ^ "\tmovabsq %rax, (" ^ v ^ ")\n")
-									| (Real, Real)		->	raise NotYetDeveloped
-									| (Char, Char) 		->	(t', e' ^ "\tpop %rax\n" ^ "\tmovabsq %rax, (" ^ v ^ ")\n")
-									| (String, String) 	->	raise NotYetDeveloped
-									| (Bool, Bool)		->	(t', e' ^ "\tpop %rax\n" ^ "\tmovabsq %rax, (" ^ v ^ ")\n")
-									| _ 				->	raise NotYetDeveloped
-									)
-								else (
-									(match (t, t') with
-									| (Int, Int) 		->	(t', e' ^ "\tpop %rax\n" ^ "\tmov %rax, -" ^ string_of_int offset ^ "(%rbp)\n")
-									| (Real, Real)		->	raise NotYetDeveloped
-									| (Char, Char) 		->	(t', e' ^ "\tpop %rax\n" ^ "\tmov %rax, -" ^ string_of_int offset ^ "(%rbp)\n")
-									| (String, String) 	->	raise NotYetDeveloped
-									| (Bool, Bool)		->	(t', e' ^ "\tpop %rax\n" ^ "\tmov %rax, -" ^ string_of_int offset ^ "(%rbp)\n")
-									| _ 				->	raise NotYetDeveloped
-									)
+								(match t' with
+								| Int 		->	(t', e' ^ "\tpop %rax\n" ^ "\tmovabsq %rax, (" ^ v ^ ")\n")
+								| Real		->	raise NotYetDeveloped
+								| Char 		->	(t', e' ^ "\tpop %rax\n" ^ "\tmovabsq %rax, (" ^ v ^ ")\n")
+								| String 	->	raise NotYetDeveloped
+								| Bool		->	(t', e' ^ "\tpop %rax\n" ^ "\tmovabsq %rax, (" ^ v ^ ")\n")
+								| _ 		->	raise NotYetDeveloped
 								)
+								else raise NotYetDeveloped
 	| FunCall (v, ps) 		->	raise NotYetDeveloped
 
 let rec generate_block block v_tables : string = 
-	let v_table : ((var, (type_ * int)) Hashtbl.t) ref = ref (Hashtbl.create 10) in
+	let v_table : ((var, (type_ * var * int)) Hashtbl.t) ref = ref (Hashtbl.create 10) in
 	let v_tables = v_table :: v_tables 
 	and block_array = Array.of_list block
-	and offset = ref 0
 	and result = ref "" in
 	for i = 0 to (Array.length block_array) - 1 do 
 		result := !result ^ 
 		(match block_array.(i) with
-		| Expr e 							-> 	snd (generate_expr e v_tables)
-		| Return e  						-> 	raise NotYetDeveloped
-		| Local (Declare (t, v) )			-> 	(match t with
-												| Int 		-> 	offset := !offset + 8;
-												| Real		
-												| Char 		
-												| Bool		
-												| String 	->	raise NotYetDeveloped
-												| _ 		-> 	raise NotYetDeveloped
-												);
-												Hashtbl.add !v_table v (t, !offset);
-												"\tsub $" ^ string_of_int !offset ^ ", %rsp\n" ^ "\tand $-32, %rsp\n"
-		| Local (DeclareAssign (t, v, e))	-> 	let (t', e') = generate_expr e v_tables in
-												(match (t, t') with
-												| (Int, Int)		->	offset := !offset + 8;
-												| (Real, Real)
-												| (Char, Char)
-												| (Bool, Bool)
-												| (String, String)	->	raise NotYetDeveloped
-												| _ 				->	raise NotYetDeveloped
-												);
-												Hashtbl.add !v_table v (t, !offset);
-												e' ^ "\tpop %rax\n" ^ "\tsub $" ^ string_of_int !offset ^ ", %rsp\n" ^ "\tand $-32, %rsp\n" ^ "\tmov %rax, (%rsp)\n"
-		| If_Then_Else (e, b1, b2)			-> 	let (t, e') = generate_expr e v_tables in
-												lbl_counter := !lbl_counter + 2;
-												e' ^ 
-												(match t with
-												| Bool	->	"\tpop %r8\n" ^ "\tcmp $1, %r8\n" ^ "\tjne L" ^ string_of_int !lbl_counter ^ "\n" ^ generate_block b1 v_tables ^ "\tjmp L" ^ string_of_int (!lbl_counter + 1) ^ "\n" ^ "L" ^ string_of_int !lbl_counter ^ ": \n" ^ generate_block b2 v_tables ^ "L" ^ string_of_int (!lbl_counter + 1) ^ ": \n"
-												| _ 	-> 	raise NotYetDeveloped
-												)
-		| While (e, b)						-> 	let (t, e') = generate_expr e v_tables in
-												lbl_counter := !lbl_counter + 2;
-												"L" ^ string_of_int !lbl_counter ^ ": \n" ^ e' ^
-												(match t with
-												| Bool 	-> 	"\tpop %r8\n" ^ "\tcmp $1, %r8\n" ^ "\tjne L" ^ string_of_int (!lbl_counter + 1) ^ "\n" ^ generate_block b v_tables ^ "\tjmp L" ^ string_of_int !lbl_counter ^ "\n" ^ "L" ^ string_of_int (!lbl_counter + 1) ^ ": \n"
-												| _ 	-> raise NotYetDeveloped
-												)
-		| For (e1, e2, e3, b)				-> 	raise NotYetDeveloped
-		| Block b 							-> 	generate_block b v_tables
+		| Expr e 					-> 	snd (generate_expr e v_tables)
+		| Return e  				-> 	raise NotYetDeveloped
+		| Local s 					-> 	raise NotYetDeveloped
+		| If_Then_Else (e, b1, b2)	-> 	let (t, e') = generate_expr e v_tables in
+										lbl_counter := !lbl_counter + 2;
+										e' ^ 
+										(match t with
+										| Bool	->	"\tpop %r8\n" ^ "\tcmp $1, %r8\n" ^ "\tjne L" ^ string_of_int !lbl_counter ^ "\n" ^ generate_block b1 v_tables ^ "\tjmp L" ^ string_of_int (!lbl_counter + 1) ^ "\n" ^ "L" ^ string_of_int !lbl_counter ^ ": \n" ^ generate_block b2 v_tables ^ "L" ^ string_of_int (!lbl_counter + 1) ^ ": \n"
+										| _ 	-> 	raise NotYetDeveloped
+										)
+		| While (e, b)				-> 	let (t, e') = generate_expr e v_tables in
+										lbl_counter := !lbl_counter + 2;
+										"L" ^ string_of_int !lbl_counter ^ ": \n" ^ e' ^
+										(match t with
+										| Bool 	-> 	"\tpop %r8\n" ^ "\tcmp $1, %r8\n" ^ "\tjne L" ^ string_of_int (!lbl_counter + 1) ^ "\n" ^ generate_block b v_tables ^ "\tjmp L" ^ string_of_int !lbl_counter ^ "\n" ^ "L" ^ string_of_int (!lbl_counter + 1) ^ ": \n"
+										| _ 	-> raise NotYetDeveloped
+										)
+		| For (e1, e2, e3, b)		-> 	raise NotYetDeveloped
+		| Block b 					-> 	generate_block b v_tables
 		)
 	done;
 	!result
 
-let function_prefix : string =
-	"\tpush %rbp\n" ^
-	"\tmov %rsp, %rbp\n"
-
-let function_postfix : string =
-	"\tjmp RETURN\n"
-
 let generate_program program v_tables : string = 
-	let v_table : ((var, (type_ * int)) Hashtbl.t) ref = ref (Hashtbl.create 10) in
+	let v_table : ((var, (type_ * var * int)) Hashtbl.t) ref = ref (Hashtbl.create 10) in
 	let v_tables = v_table :: v_tables 
 	and program_array = Array.of_list program
 	and result = ref "" in
 	for i = 0 to (Array.length program_array) - 1 do 
 		result := !result ^ 
 		(match program_array.(i) with
-		| Global (Declare (t, v)) 			->	Hashtbl.add !v_table v (t, -1);
+		| Global (Declare (t, v)) 			->	Hashtbl.add !v_table v (t, v, -1);
 												v ^ ": " ^ 
 												(match t with
 												| Void 		->	raise NotYetDeveloped
@@ -262,7 +222,7 @@ let generate_program program v_tables : string =
 												| Bool 		-> 	"\t.byte"
 												| String 	-> 	"\t.string"
 												) ^ "\n"
-		| Global (DeclareAssign (t, v, e))	-> 	Hashtbl.add !v_table v (t, -1);
+		| Global (DeclareAssign (t, v, e))	-> 	Hashtbl.add !v_table v (t, v, -1);
 												v ^ ": " ^ 
 												(match (t, e) with
 												| (Int, Int i)			->	"\t.long " ^ Int32.to_string i
@@ -273,7 +233,7 @@ let generate_program program v_tables : string =
 												| _ 					-> 	raise NotYetDeveloped
 												) ^ "\n"
 		| Function (t, v, ps, b) 			-> 	raise NotYetDeveloped
-		| Main b 							-> 	"\n\t.section __TEXT,__text,regular,pure_instructions\n" ^ "\t.globl _main\n" ^ "_main:\n" ^ function_prefix ^ generate_block b v_tables ^ "\tmov $0, %rdi\n\tcall _exit"
+		| Main b 							-> 	"\t.section __TEXT,__text,regular,pure_instructions\n" ^ "\t.globl _main" ^ "\n_main:\n" ^ "\tpush $0\n" ^ generate_block b v_tables ^ "\tmov $0, %rdi\n\tcall _exit"
 		)
 	done;
 	!result
@@ -296,18 +256,11 @@ let prefix : string =
 	"true.str:\n" ^
 	"\t.string \"true\"\n" ^
 	"false.str:\n" ^
-	"\t.string \"false\"\n" 
-
-let postfix : string =
-	"RETURN: \n" ^
-	"\tmov %rbp, %rsp\n" ^
-	"\tpop %rbp\n" ^
-	"\tret\n"
+	"\t.string \"false\"\n"
 
 let generate program : string = 
-	let v_tables : (((var, (type_ * int)) Hashtbl.t) ref) list = [] in
+	let v_tables : (((var, (type_ * var * int)) Hashtbl.t) ref) list = [] in
 	prefix ^ "\n" ^
 	static_data ^
-	generate_program (sort_program [] [] program) v_tables ^ "\n" ^
-	postfix ^
+	generate_program (sort_program [] [] program) v_tables ^ 
 	"\n"

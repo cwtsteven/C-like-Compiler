@@ -6,17 +6,12 @@ let f_table : (var, bool) Hashtbl.t = Hashtbl.create 10
 (* store the block of an function that has no side-effects *)
 let f_table_fun : (var, (type_ * var * (type_ * var) list * block)) Hashtbl.t = Hashtbl.create 10
 
-let rec var_lookup v v_tables : expr option =
-	match v_tables with
-	| [] -> None
-	| (v_table :: vs) 	->	if Hashtbl.mem !v_table v then Hashtbl.find !v_table v else var_lookup v vs
-
 (* evaulating pure functions *)
 let push_params_to_fun (es, ps) v_table = 
 	match (es, ps) with
-	| ([], [])  				-> ()
-	| (x :: xs, (t, y) :: ys) 	-> Hashtbl.add !v_table y (Some x)
-	| _ 		 				-> ()
+	| ([], [])   -> ()
+	| (x :: xs, (t, y) :: ys) -> Hashtbl.add v_table y (Some x)
+	| _ 		 -> ()
 
 let rec find_return block =
 	match block with
@@ -24,11 +19,11 @@ let rec find_return block =
 	| ((Return e) :: xs) -> (Some e)
 	| (x :: xs) 		 -> find_return xs
 
-let rec evaluate_function (v, es) (t, v, ps, b) v_tables : expr =
-	let v_table : ((var, expr option) Hashtbl.t) ref = ref (Hashtbl.create 10) in
-	let v_tables = v_table :: v_tables in
+let rec evaluate_function (v, es) (t, v, ps, b) : expr =
+	let v_table : (var, expr option) Hashtbl.t = Hashtbl.create 10 in
+	let can_progress = ref true in 
 	push_params_to_fun (es, ps) v_table;
-	let b' = optimise_block b v_tables in
+	let b' = optimise_block b v_table can_progress in
 	let e' = find_return b' in
 	match e' with
 	| None 		-> FunCall (v, es)
@@ -40,8 +35,8 @@ and optimise_nullary_op op can_progress : expr =
 	match op with
 	| Prompt 	-> can_progress := false; NullaryOp Prompt
 
-and optimise_unary_op (op, e) v_tables can_progress : expr = 
-	let e' = optimise_expr e v_tables can_progress in 
+and optimise_unary_op (op, e) v_table can_progress : expr = 
+	let e' = optimise_expr e v_table can_progress in 
 	match op with
 	| Print 	-> 	can_progress := false;
 					UnaryOp(Print, e')
@@ -52,8 +47,8 @@ and optimise_unary_op (op, e) v_tables can_progress : expr =
 	| Not 		-> 	(match e' with
 					| Bool x 	-> Bool (not x)
 					| x 		-> UnaryOp (Not, x))
-and optimise_binary_op (op, e1, e2) v_tables can_progress : expr = 
-	let (e1', e2') = (optimise_expr e1 v_tables can_progress, optimise_expr e2 v_tables can_progress) in 
+and optimise_binary_op (op, e1, e2) v_table can_progress : expr = 
+	let (e1', e2') = (optimise_expr e1 v_table can_progress, optimise_expr e2 v_table can_progress) in 
 	match op with
 	| Add    -> (match (e1', e2') with
 					| (Int i1, Int i2)       -> Int (Int32.add i1 i2)
@@ -148,71 +143,71 @@ and optimise_binary_op (op, e1, e2) v_tables can_progress : expr =
 					| (Bool b1, Bool b2)     -> Bool (b1 || b2)
 					| _                      -> BinaryOp (Or, e1', e2')
 				)
-and optimise_expr expr v_tables can_progress : expr = 
-	let v_table = List.hd v_tables in
+and optimise_expr expr v_table can_progress : expr =
 	match expr with
-	| Var v 				-> 	if !can_progress && Hashtbl.mem !v_table v then 
-									(match Hashtbl.find !v_table v with
-									| None		-> 	Var v
-									| Some e 	-> 	e)
-								else (
-									let e' = var_lookup v v_tables in
-									(match e' with
-									| None 		-> 	Var v
-									| Some e 	-> 	can_progress := false; e
-									)
-								)
-	| Assign (v, e)			->	let e' = optimise_expr e v_tables can_progress in
-								can_progress := Hashtbl.mem !v_table v;
-								Hashtbl.add !v_table v (Some e');
+	| Var v 				-> 	if !can_progress && Hashtbl.mem v_table v then 
+								(match Hashtbl.find v_table v with
+								| None		-> 	Var v
+								| Some e 	-> 	e)
+								else Var v
+	| Assign (v, e)			->	let e' = optimise_expr e v_table can_progress in
+								can_progress := Hashtbl.mem v_table v;
+								Hashtbl.add v_table v (Some e');
 								Assign (v, e')
 	| NullaryOp op 			->  optimise_nullary_op op can_progress
-	| UnaryOp (op, e)		->	optimise_unary_op (op, e) v_tables can_progress
-	| BinaryOp (op, e1, e2)	->	optimise_binary_op (op, e1, e2) v_tables can_progress
-	| FunCall (v, ps)		->	let ps' = optimise_expr_list ps v_tables can_progress in
+	| UnaryOp (op, e)		->	optimise_unary_op (op, e) v_table can_progress
+	| BinaryOp (op, e1, e2)	->	optimise_binary_op (op, e1, e2) v_table can_progress
+	| FunCall (v, ps)		->	let ps' = optimise_expr_list ps v_table can_progress in
 								can_progress := !can_progress && Hashtbl.mem f_table v && (not (Hashtbl.find f_table v));
-								if (not (Hashtbl.find f_table v)) then evaluate_function (v, ps') (Hashtbl.find f_table_fun v) v_tables
+								if (not (Hashtbl.find f_table v)) then evaluate_function (v, ps') (Hashtbl.find f_table_fun v)
 								else FunCall (v, ps')
 	| x 					-> 	x
-and optimise_expr_list ls v_tables can_progress : expr list =
+and optimise_expr_list ls v_table can_progress : expr list =
 	match ls with
 	| [] -> []
-	| (x :: xs) -> optimise_expr x v_tables can_progress :: optimise_expr_list xs v_tables can_progress
+	| (x :: xs) -> optimise_expr x v_table can_progress :: optimise_expr_list xs v_table can_progress
 
 
-and optimise_declare_stmnt declare_stmnt v_tables can_progress : declare_stmnt = 
-	let v_table = List.hd v_tables in
+and optimise_declare_stmnt declare_stmnt v_table can_progress : declare_stmnt = 
 	match declare_stmnt with
-	| Declare (t, v) 			->	Hashtbl.add !v_table v None; Declare (t, v)
-	| DeclareAssign (t, v, e)	->	let e' = optimise_expr e v_tables can_progress in
-									Hashtbl.add !v_table v (Some e');
+	| Declare (t, v) 			->	Hashtbl.add v_table v None; Declare (t, v)
+	| DeclareAssign (t, v, e)	->	let e' = optimise_expr e v_table can_progress in
+									Hashtbl.add v_table v (Some e');
 									DeclareAssign (t, v, e')
 
-and optimise_block block v_tables : block = 
-	let v_table : ((var, expr option) Hashtbl.t) ref = ref (Hashtbl.create 10) in
-	let v_tables = v_table :: v_tables
-	and can_progress = ref true
-	and block_array : stmnt array = Array.make (List.length block) (Expr (Bool true)) in
+and optimise_block block v_table can_progress : block = 
+	let block_array : stmnt array = Array.make (List.length block) (Expr (Bool true)) in
 	for i = 0 to (List.length block) - 1 do 
 		let stmnt = List.nth block i in
 		block_array.(i) <- (
 		match stmnt with
-		| Expr e 					-> 	Expr (optimise_expr e v_tables can_progress)
-		| Return e 					-> 	Return (optimise_expr e v_tables can_progress) 
-		| Local s 					-> 	Local (optimise_declare_stmnt s v_tables can_progress)
-		| If_Then_Else (e, b1, b2)	-> 	let e' = optimise_expr e v_tables can_progress in
-										can_progress := false;
+		| Expr e 					-> 	Expr (optimise_expr e v_table can_progress)
+		| Return e 					-> 	Return (optimise_expr e v_table can_progress) 
+		| Local s 					-> 	Local (optimise_declare_stmnt s v_table can_progress)
+		| If_Then_Else (e, b1, b2)	-> 	let v_table' : (var, expr option) Hashtbl.t = Hashtbl.create 10
+										and can_progress' = ref true in
+										( 	let e' = optimise_expr e v_table can_progress in
+											can_progress := false;
+											match e' with
+											| Bool true 	-> Block (optimise_block b1 v_table' can_progress')
+											| Bool false 	-> Block (optimise_block b2 v_table' can_progress')
+											| _ 			-> If_Then_Else (e', optimise_block b1 v_table' can_progress', optimise_block b2 v_table' can_progress')
+										) 
+		| While (e, b) 				-> 	let v_table' : (var, expr option) Hashtbl.t = Hashtbl.create 10
+										and can_progress' = ref true in
+										let e' = optimise_expr e v_table can_progress in 
 										(match e' with
-										| Bool true 	-> Block (optimise_block b1 v_tables)
-										| Bool false 	-> Block (optimise_block b2 v_tables)
-										| _ 			-> If_Then_Else (e', optimise_block b1 v_tables, optimise_block b2 v_tables)
-										)
-		| While (e, b) 				-> 	(match e with
 											| Bool false 	-> 	Block [] 
-											| _ 			->  can_progress := false; While (e, optimise_block b v_tables)
+											| _ 			->  can_progress := false; While (e', optimise_block b v_table' can_progress')
 										)
-		| For (e1, e2, e3, b) 		-> 	can_progress := false; For (e1, e2, e3, optimise_block b v_tables)
-		| Block b 					-> 	can_progress := false; Block (optimise_block b v_tables)
+		| For (e1, e2, e3, b) 		-> 	let v_table' : (var, expr option) Hashtbl.t = Hashtbl.create 10
+										and can_progress' = ref true in
+										can_progress := false;
+										For (e1, e2, e3, optimise_block b v_table' can_progress')
+		| Block b 					-> 	let v_table' : (var, expr option) Hashtbl.t = Hashtbl.create 10
+										and can_progress' = ref true in
+										can_progress := false; 
+										Block (optimise_block b v_table' can_progress')
 		)
 	done;
 	Array.to_list block_array
@@ -220,17 +215,16 @@ and optimise_block block v_tables : block =
 let push_params ps v_table = 
 	match ps with
 	| [] -> ()
-	| ((t, v) :: xs) -> Hashtbl.add !v_table v None
+	| ((t, v) :: xs) -> Hashtbl.add v_table v None
 
 (*
 	we add the function to f_table_fun if the function has no side effects.
 *)
-let optimise_function (t, v, ps, b) v_tables : top_level = 
-	let v_table : ((var, expr option) Hashtbl.t) ref = ref (Hashtbl.create 10) in
-	let v_tables = v_table :: v_tables
+let optimise_function (t, v, ps, b) : top_level = 
+	let v_table : (var, expr option) Hashtbl.t = Hashtbl.create 10
 	and can_progress = ref true in
 	push_params ps v_table;
-	let b' = optimise_block b v_tables in
+	let b' = optimise_block b v_table can_progress in
 	Hashtbl.add f_table v (not !can_progress);
 	if !can_progress then Hashtbl.add f_table_fun v (t, v, ps, b');
 	Function (t, v, ps, b')
@@ -248,18 +242,18 @@ let optimise_function (t, v, ps, b) v_tables : top_level =
 
 *)
 let optimise program : program = 
-	let v_tables : (((var, expr option) Hashtbl.t) ref) list = []
-	and v_table : ((var, expr option) Hashtbl.t) ref = ref (Hashtbl.create 10) in
-	let v_tables = v_table :: v_tables
+	let v_table : (var, expr option) Hashtbl.t = Hashtbl.create 10
 	and can_progress = ref true
 	and program_array : top_level array = Array.make (List.length program) (Main[]) in
 	for i = 0 to (List.length program) - 1 do 
 		let declare_stmnt = List.nth program i in
 		program_array.(i) <- (
 		match declare_stmnt with
-		| Global s  				->	Global (optimise_declare_stmnt s v_tables can_progress)
-		| Function (t, v, ps, b)	->  optimise_function (t, v, ps, b) v_tables
-		| Main b 					->	Main (optimise_block b v_tables)
+		| Global s  				->	Global (optimise_declare_stmnt s v_table can_progress)
+		| Function (t, v, ps, b)	->  optimise_function (t, v, ps, b)
+		| Main b 					->	let v_table' : (var, expr option) Hashtbl.t = Hashtbl.create 10
+										and can_progress' = ref true in 
+										Main (optimise_block b v_table' can_progress')
 		)
 	done;
 	Array.to_list program_array

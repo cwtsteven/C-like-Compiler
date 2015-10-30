@@ -24,8 +24,7 @@ let write_file filename content =
 let () = 	
 	let opflag = ref true
 	and sourcefile = ref ""
-	and content = ref "" 
-	and testflag = ref "" in
+	and content = ref "" in
 	for i = 1 to Array.length Sys.argv - 1 do
 		match Sys.argv.(i) with
 		| "-fopoff"	-> 	opflag := false
