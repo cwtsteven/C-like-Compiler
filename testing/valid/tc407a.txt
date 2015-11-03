@@ -1,0 +1,14 @@
+int a = 2;
+int b = 3;
+int double(int n) {
+	return n + n;
+}
+
+main() {
+	int b = 3;
+	int c = 5;
+	if (true) {
+		>> 20;
+	}
+	int d = c;
+}

@@ -1,0 +1,8 @@
+int plus(int x, int y) {
+	return x + y;
+}
+main() {
+	int a = 1;
+	int b = a + 1;
+	>> plus(a, b);
+}

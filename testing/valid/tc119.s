@@ -8,19 +8,29 @@ true.str:
 false.str:
 	.string "false"
 
-	.data
+
 	.section __TEXT,__text,regular,pure_instructions
+
 	.globl _main
 _main:
-	push $0
+	push %rbp
+	mov %rsp, %rbp
+	sub $0, %rsp
+	and $-32, %rsp
 	push $1
 	push $2
-	pop %r8
 	pop %rax
-	add %r8, %rax
-	push %rax
+	pop %r8
+	add %rax, %r8
+	push %r8
 	lea int.str(%rip), %rdi
 	pop %rsi
 	call _printf
 	mov $0, %rdi
 	call _exit
+
+RETURN: 
+	mov %rbp, %rsp
+	pop %rbp
+	ret
+

@@ -1,0 +1,27 @@
+int a = 1;
+int factorial(int n) {
+	if (n <= 1) {
+		return 1;
+	} else {
+		return n * factorial(n - 1);
+	}
+}
+main() {
+	int a = 10;
+	if (a == 2) {
+		char c = 'c';
+		>> c;
+	} else {
+		char b = 'b';
+		>> b;
+	}
+	while (a >= 0) {
+		int b = 1;
+		while (b <= a) {
+			>> factorial(a);
+			b = b + 1;
+		}
+		b = 1;
+		a = a - 1;
+	}
+}

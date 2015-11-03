@@ -10,9 +10,18 @@ false.str:
 
 	.data
 _acc: 	.string
+
 	.section __TEXT,__text,regular,pure_instructions
+
 	.globl _main
 _main:
-	push $0
+	push %rbp
+	mov %rsp, %rbp
 	mov $0, %rdi
 	call _exit
+
+RETURN: 
+	mov %rbp, %rsp
+	pop %rbp
+	ret
+

@@ -8,7 +8,7 @@ int pure_function(int x) {
 int d = a;
 
 main() {
-	int c = pure_function(a);
+	int c = pure_function(a) + pure_function(d);
 	if (1 == 1) {
 		int e = 5;
 		bool a = e == 5;
@@ -19,8 +19,5 @@ main() {
 		}
 	} else {
 		>> a;
-	}
-	while (1 == 2) {
-		>> "not gonna work.";
 	}
 }

@@ -10,9 +10,20 @@ false.str:
 
 	.data
 a: 	.long 0
+
 	.section __TEXT,__text,regular,pure_instructions
+
 	.globl _main
 _main:
-	push $0
+	push %rbp
+	mov %rsp, %rbp
+	sub $0, %rsp
+	and $-32, %rsp
 	mov $0, %rdi
 	call _exit
+
+RETURN: 
+	mov %rbp, %rsp
+	pop %rbp
+	ret
+

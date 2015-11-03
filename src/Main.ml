@@ -37,11 +37,15 @@ let () =
 	| SyntaxError msg		->	prerr_string msg; exit(1)
 	| ParserError msg 		-> 	prerr_string msg; exit(1)
 	| UnboundVarError msg 	->	prerr_string msg; exit(1)
+	| TypeError msg 		-> 	prerr_string msg; exit(1)
 	| NotYetDeveloped 		-> 	prerr_string "This part is not ready yet...\n"; exit(1)
+
+
 (*
 let () =
 	read_to_empty (Buffer.create 1)
 	|> Buffer.contents
 	|> parse_with_op
 	|> SyntaxTree.string_of_program
-	|> print_string;*)
+	|> print_string;
+*)

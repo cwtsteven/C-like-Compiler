@@ -8,16 +8,14 @@ int pure_function(int x) {
 int d = 6;
 
 main() {
-	int c = 18;
+	int c = 36;
 	if (true) {
 		int e = 5;
 		bool a = true;
 		if (true) {
-			>> a;
+			>> true;
 		} else {
 		}
 	} else {
-	}
-	while (false) {
 	}
 }
