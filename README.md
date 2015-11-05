@@ -197,4 +197,4 @@ For now, the compiler can generate codes for
 | java          | 0.86s         |
 | compiler      | 1.44s         |
 
-In order to run the benchmark script, please execute <code>cd benchmark</code> and run <code>sh benchmark.sh</code>. The code that was used in benchmarking can also be found inside the <code>benchmark</code> folder. 
+In order to run the benchmark script, please execute <code>sh benchmark.sh</code>. The code that was used in benchmarking can also be found inside the <code>benchmark</code> folder. 
