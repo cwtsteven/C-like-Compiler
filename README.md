@@ -179,4 +179,7 @@ For now, the compiler can generate codes for
 4. printing int char and boolean
 5. if-else statement
 6. while statement
-7. decalring and assigning global variables
+7. decalring and assigning global and local variables
+8. functions and function calls
+
+# 8 Benchmark
