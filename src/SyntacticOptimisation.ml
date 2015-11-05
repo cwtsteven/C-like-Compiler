@@ -170,7 +170,7 @@ and optimise_expr expr v_tables can_progress : expr =
 	| BinaryOp (op, e1, e2)	->	optimise_binary_op (op, e1, e2) v_tables can_progress
 	| FunCall (v, es)		->	let es' = optimise_expr_list es v_tables can_progress in
 								can_progress := !can_progress && Hashtbl.mem f_table v && (not (Hashtbl.find f_table v));
-								if (not (Hashtbl.find f_table v)) then evaluate_function (v, es') (Hashtbl.find f_table_fun v) v_tables
+								if (Hashtbl.mem f_table v && not (Hashtbl.find f_table v)) then evaluate_function (v, es') (Hashtbl.find f_table_fun v) v_tables
 								else FunCall (v, es')
 	| x 					-> 	x
 and optimise_expr_list ls v_tables can_progress : expr list =
