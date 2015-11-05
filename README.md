@@ -184,10 +184,11 @@ For now, the compiler can generate codes for
 
 # 8 Benchmark
 ### Compile time
-Language | Time elasped
-c | 0.02s
-java | 1.41s
-compiler | 0.01s
+| Language      | Time elasped  |
+| ------------- |:-------------:|
+| c             | 0.02s         |
+| java          | 1.41s         |
+| compiler      | 0.01s         |
 
 ### Run time
 Language | Time elasped
