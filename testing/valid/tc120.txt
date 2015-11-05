@@ -1,0 +1,10 @@
+int plus1(int n) {
+	int m = 1;
+	return n + m;
+}
+
+main() {
+	int a = 2;
+	int b = plus1(a);
+	>> b;
+}

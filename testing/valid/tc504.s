@@ -62,6 +62,17 @@ L2:
 	pop %rax
 	cmp $1, %rax
 	jne L3
+	push -16(%rbp)
+	push -8(%rbp)
+	pop %rax
+	pop %r8
+	cmp %rax, %r8
+	mov $0, %rax
+	setle %al
+	push %rax
+	pop %rax
+	cmp $1, %rax
+	jne L4
 	push -8(%rbp)
 	pop %rax
 	mov %rax, %rdi
@@ -78,6 +89,9 @@ L2:
 	push %r8
 	pop %rax
 	mov %rax, -16(%rbp)
+	jmp L5
+L4: 
+L5: 
 	jmp L2
 L3: 
 	push -8(%rbp)
