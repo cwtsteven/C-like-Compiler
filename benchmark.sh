@@ -1,7 +1,7 @@
 #!/bin/bash
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
-
+cd benchmark
 printf "\n------- Compile Time -------\n"
 printf "C:\t"
 cd ./c
@@ -25,5 +25,6 @@ cd ..
 printf "Mine:\t"
 mtime=$(/usr/bin/time ./mine/a.out)
 printf "\n"
+cd ..
 
 exit 0
