@@ -183,15 +183,18 @@ For now, the compiler can generate codes for
 8. functions and function calls
 
 # 8 Benchmark
-### Compile time
+##### Compile time
 | Language      | Time elasped  |
 | ------------- |:-------------:|
 | c             | 0.02s         |
 | java          | 1.41s         |
 | compiler      | 0.01s         |
 
-### Run time
-Language | Time elasped
-c | 0.69s
-java | 0.86s
-compiler | 1.44s
+##### Run time
+| Language      | Time elasped  |
+| ------------- |:-------------:|
+| c             | 0.69s         |
+| java          | 0.86s         |
+| compiler      | 1.44s         |
+
+In order to run the benchmark script, please execute <code>cd benchmark</code> and run <code>sh benchmark.sh</code>. The code that was used in benchmarking can also be found inside the <code>benchmark</code> folder. 
