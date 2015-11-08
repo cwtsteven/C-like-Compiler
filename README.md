@@ -5,19 +5,19 @@ In order to compile the project correctly, please make sure you have the followi
 2. Menhir, minimum version 20151005
 
 # 2 How to compile
-In order to compile, execute <code>make</code>.
+To compile the whole project, execute <code>make</code>.
 
 # 3 How to run
 ### 3.1 Run the compiler
-In order to run the parser, execute <code>./Main.native file [-fopoff]</code>. For example: <code>./Main.native main.txt -fopoff</code>. The compiler will generate an assembly file in the same directory. 
+To run the compiler, execute <code>./Main.native file [-fopoff]</code>. For example: <code>./Main.native main.txt -fopoff</code>. The compiler will generate an assembly file in the same directory. 
 
 1. <code>file</code> is the path of the source code. 
 2. <code>-fopoff</code> turns off fron-end optimisation. If this tag does not appear, the compiler will perform front-end optimisation by default.
 
-Another way to run the compiler is to execute <code>./Main.native [-fopoff]</code> without a file. This will allow you to type your code in terminal. 
+Another way to run the compiler is to execute <code>./Main.native [-fopoff]</code> without a specified file. This will allow you to type your code in terminal. An assembly file named "test.s" will be created in the same directory.
 
 ### 3.2 Run the tests
-In order to run the tests, execute <code>sh testbench.sh</code>.
+To run the tests, execute <code>sh testbench.sh</code>.
 
 # 4 Error Reporting
 The compiler will inform you where and what exactly happened, for instance, if we have this input program:
@@ -26,7 +26,7 @@ we will get
 <pre><code>Parse error in Line 1, Column 9. expression was expected but I got this token: ;</code></pre>
 
 # 5 Syntax
-This grammar is simulating a C-like imperative programming languages. In the top-level, you can declare global variables and functions, below gives you a first taste of a valid program:
+This grammar is simulating a C-like imperative programming language. In the top-level, you can declare global variables and functions, below gives you a first taste of a valid program:
 <pre><code>int a = 3;
 
 int double(int x) {
@@ -54,17 +54,17 @@ An identifier is the name of a variable or function. The name is restricted by t
 
 ### 5.2 Primitive Data types
 There are five primitive data types. 
-- <code>int</code> correspond to a 32-bit integer
-- <code>real</code> corrresponed to double precision floating point (double in C)
+- <code>int</code> corresponds to a 32-bit integer
+- <code>real</code> corresponds to double precision floating point (double in C)
 - <code>char</code> a single character
 - <code>string</code> a string (cannot contain <code>"</code>)
 - <code>bool</code> either true or false
 
 ### 5.3 Declaring variables
-You can either just to decalre a variable or at the same time, assign a value to it, for instance: <code>int a;</code> and <code>int a = 1;</code>. 
+You can either just to decalre a variable or at the same time, assign a value to it, for instance: <code>int a;</code> and <code>int a = 1;</code> are valid. 
 
 ##### 5.3.1 Global variables
-When declaring global variables, be aware that the right hand side of the statement can only be a simple expression (i.e. without function call). For instance: <code>int a = 3 + 5;</code> is valid.
+When declaring global variables, be aware that the right hand side of the statement can only be a simple expression (i.e. without function call). For instance: <code>int a = 3 + 5;</code> is valid, but <code>int a = f(2);</code> is invalid.
 
 ##### 5.3.2 Local variables
 The right hand side can also be any expression including function call. Be aware that the variables declared inside a function is local to the function, for instance, if we decalre a global variable and a local varibale with the same name, the local one is used inside the function.
@@ -137,7 +137,7 @@ main() {
   int c = 2;
 }
 </code></pre>
-However, this optimisation is not extremely sophisticated. Within a block of code, if we reach a statement that has side effects (ie, printing, prompting, assigning non-local variables), we will stop the process within that particular block (but we will continue on inner block). For instance:
+However, the optimisation within a block of code will be stopped, if we reach a statement that has side effects (ie, printing, prompting, assigning non-local variables), but we will continue on, if any, inner blocks. For instance:
 <pre><code>int a = 1;
 int c = a + 2;
 
