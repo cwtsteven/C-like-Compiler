@@ -4,7 +4,7 @@ open TestHelper
 let parse = Compiler.parse_with_op
 
 let valid_testcases = [
-"tc401" ; "tc402" ; "tc403" ; "tc404" ; "tc405" ; "tc406" ; "tc407" ; "tc408" ; "tc409"
+"tc401" ; "tc402" ; "tc403" ; "tc404" ; "tc405" ; "tc406" ; "tc407" ; "tc408" ; "tc409" ; "tc410"
 ]
 	
 
