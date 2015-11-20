@@ -1,5 +1,6 @@
-int a = 2;
-int b = 3;
+int a = 5;
+int b = 6;
+
 int double(int n) {
 	return n + n;
 }

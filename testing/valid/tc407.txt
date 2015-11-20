@@ -1,9 +1,8 @@
-int a = 2;
+int a = 5;
 int b = a + 1;
 int double(int n) {
 	return n + n;
 }
-
 main() {
 	int b = 3;
 	int c = 5;

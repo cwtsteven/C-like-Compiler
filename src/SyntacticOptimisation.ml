@@ -209,12 +209,12 @@ and optimise_block' block v_tables can_progress : block =
 	| ((While (e, b)) :: bs) 				-> 	let stmnt' = 
 												(match e with
 												| Bool false 	-> 	Block [] 
-												| _ 			->  can_progress := false; While (e, optimise_block b v_tables)
+												| _ 			->  can_progress := false; While (e, b)
 												) in
 												stmnt' :: optimise_block' bs v_tables can_progress
 	| ((For (e1, e2, e3, b)) :: bs) 		-> 	let () = can_progress := false in
 												let stmnt' = optimise_block b v_tables in
-												For (e1, e2, e3, stmnt') :: optimise_block' bs v_tables can_progress
+												For (e1, e2, e3, b) :: optimise_block' bs v_tables can_progress
 	| ((Block b) :: bs) 					-> 	let () = can_progress := false in
 												let b' = optimise_block b v_tables in
 												Block b' :: optimise_block' bs v_tables can_progress

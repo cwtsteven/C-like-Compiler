@@ -9,8 +9,8 @@ false.str:
 	.string "false"
 
 	.data
-a: 	.long 2
-b: 	.long 3
+a: 	.long 5
+b: 	.long 6
 
 	.section __TEXT,__text,regular,pure_instructions
 

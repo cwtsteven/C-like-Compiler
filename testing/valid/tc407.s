@@ -10,8 +10,7 @@ false.str:
 
 	.data
 a: 	.long 5
-b: 	.long 10
-d: 	.long 5
+b: 	.long 6
 
 	.section __TEXT,__text,regular,pure_instructions
 
@@ -34,26 +33,21 @@ _double:
 _main:
 	push %rbp
 	mov %rsp, %rbp
-	sub $40, %rsp
+	sub $24, %rsp
 	and $-32, %rsp
-	push $5
+	push $3
 	pop %rax
 	mov %rax, -8(%rbp)
-	push $1
-	pop %rax
-	mov %rax, -16(%rbp)
-	push $2
-	pop %rax
-	mov %rax, -24(%rbp)
-	push $10
-	pop %rax
-	mov %rax, -32(%rbp)
-	push $6
-	pop %rax
-	movabsq %rax, (a)
 	push $5
 	pop %rax
-	mov %rax, -40(%rbp)
+	mov %rax, -16(%rbp)
+	push $20
+	lea int.str(%rip), %rdi
+	pop %rsi
+	call _printf
+	push $5
+	pop %rax
+	mov %rax, -24(%rbp)
 	mov $0, %rdi
 	call _exit
 
