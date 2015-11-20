@@ -11,7 +11,7 @@ printf "Java:\t"
 javatime=$(/usr/bin/time javac ./java/Test.java)
 printf "Mine:\t"
 cd ./mine
-mtime=$(/usr/bin/time ../../Main.native -fopoff ./test.txt && cc test.s)
+mtime=$(/usr/bin/time ../../Main.native ./test.txt && cc test.s)
 cd ..
 printf "\n"
 
