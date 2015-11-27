@@ -12,8 +12,10 @@ false.str:
 a: 	.long 5
 b: 	.long 10
 d: 	.long 5
+Read_int: .long
 
 	.section __TEXT,__text,regular,pure_instructions
+
 
 _double: 
 	push %rbp

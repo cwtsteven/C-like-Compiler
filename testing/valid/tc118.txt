@@ -5,9 +5,9 @@ int double(int x) {
 }
 
 main() {
-	int b = <<;
+	int b = 2;
 	while (b <= a) {
-		a = a + 1;
+		b = b + 1;
 		if (b <= a) {
 			>> a;
 		} else {

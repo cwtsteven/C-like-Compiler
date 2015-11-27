@@ -8,8 +8,11 @@ true.str:
 false.str:
 	.string "false"
 
+	.data
+Read_int: .long
 
 	.section __TEXT,__text,regular,pure_instructions
+
 
 _double: 
 	push %rbp

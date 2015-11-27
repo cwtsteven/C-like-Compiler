@@ -11,8 +11,10 @@ false.str:
 	.data
 a: 	.byte 1
 b: 	.byte 0
+Read_int: .long
 
 	.section __TEXT,__text,regular,pure_instructions
+
 
 	.globl _main
 _main:
@@ -23,7 +25,7 @@ _main:
 	push $2
 	pop %rax
 	mov %rax, -8(%rbp)
-	push $2
+	push -8(%rbp)
 	lea int.str(%rip), %rdi
 	pop %rsi
 	call _printf

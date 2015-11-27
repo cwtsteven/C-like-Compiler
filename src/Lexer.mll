@@ -40,6 +40,8 @@ let if = "if"
 let else = "else"
 let while = "while"
 let for = "for"
+let break = "break"
+let continue = "continue"
 
 let int = ['0'-'9']['0'-'9']*
 let real = ['0'-'9']+'.'['0'-'9']+
@@ -51,6 +53,7 @@ let false = "false"
 let identifier = ['a'-'z' '_']['a'-'z' 'A'-'Z' '0'-'9' '_']*
 
 let comma = ','
+let colon = ':'
 let semicolon = ';'
 let l_bracket = '('
 let r_bracket = ')'
@@ -94,6 +97,8 @@ rule read = parse
 | else { ELSE }
 | while { WHILE }
 | for { FOR }
+| break { BREAK }
+| continue { CONTINUE }
 
 | int { INT (Int32.of_string (Lexing.lexeme lexbuf)) }
 | real { REAL (float_of_string (Lexing.lexeme lexbuf)) }
@@ -105,6 +110,7 @@ rule read = parse
 | identifier { IDENTIFIER (Lexing.lexeme lexbuf) }
 
 | comma { COMMA }
+| colon { COLON }
 | semicolon { SEMICOLON }
 | l_bracket { L_BRACKET }
 | r_bracket { R_BRACKET }

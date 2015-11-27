@@ -6,6 +6,10 @@ exception NotYetDeveloped
 
 let lbl_counter = ref 0
 
+let lbl_stack : (string * string * string * expr) Stack.t = Stack.create ()
+
+let lbl_tbl : (string, (string * string * string * expr)) Hashtbl.t = Hashtbl.create 20
+
 let f_table : (var, (type_ * int)) Hashtbl.t = Hashtbl.create 10
 
 let rec var_lookup v v_tables : type_ * int =
@@ -15,7 +19,7 @@ let rec var_lookup v v_tables : type_ * int =
 
 let rec generate_nullary_op op v_tables : type_ * string = 
 	match op with
-	| Prompt 	-> 	raise NotYetDeveloped
+	| Prompt 	-> 	(Int, "\tmov $0, %rax\n" ^ "\tlea int.str(%rip), %rdi\n" ^ "\tlea Read_int(%rip), %rsi\n" ^ "\tcall _scanf\n" ^ "\tmovabsq (Read_int), %rax\n" ^ "\tpush %rax\n")
 and generate_unary_op (op, e) v_tables : type_ * string =
 	let (t, e') = generate_expr e v_tables in
 	match op with 
@@ -204,18 +208,53 @@ let rec generate_block' block v_tables offset : string =
 														| Bool	->	(match e with | FunCall _ 	->	"" | _ 	-> 	"\tpop %rax\n") ^ "\tcmp $1, %rax\n" ^ "\tjne L" ^ string_of_int lbl ^ "\n" ^ b1' ^ "\tjmp L" ^ string_of_int (lbl + 1) ^ "\n" ^ "L" ^ string_of_int lbl ^ ": \n" ^ b2' ^ "L" ^ string_of_int (lbl + 1) ^ ": \n"
 														| _ 	-> 	raise NotYetDeveloped
 														) ^ generate_block' bs v_tables offset
-	| ((While (e, b)) :: bs)						-> 	let (t, e') = generate_expr e v_tables in
-														let lbl = !lbl_counter in
+	| ((While (e, b)) :: bs)						-> 	let lbl = !lbl_counter in
 														let () = lbl_counter := lbl + 2 in
-														let b' = generate_block b v_tables offset in
-														"L" ^ string_of_int lbl ^ ": \n" ^ e' ^
-														(match t with
-														| Bool 	-> 	(match e with | FunCall _ 	->	"" | _ 	-> 	"\tpop %rax\n") ^ "\tcmp $1, %rax\n" ^ "\tjne L" ^ string_of_int (lbl + 1) ^ "\n" ^ b' ^ "\tjmp L" ^ string_of_int lbl ^ "\n" ^ "L" ^ string_of_int (lbl + 1) ^ ": \n"
-														| _ 	-> 	raise NotYetDeveloped
-														) ^ generate_block' bs v_tables offset
-	| ((For (e1, e2, e3, b)) :: bs)					-> 	raise NotYetDeveloped
+														let () = Stack.push ("while", string_of_int lbl, string_of_int (lbl + 1), Int (Int32.of_int 0)) lbl_stack in
+														let b' = generate_control e b lbl v_tables offset in
+														b' ^ generate_block' bs v_tables offset
+	| ((Label s) :: (For (e1, e2, e3, b)) :: bs)	-> 	let lbl = !lbl_counter in
+														let () = lbl_counter := lbl + 2 in
+														let () = Hashtbl.add lbl_tbl s ("for", s, s, e3) in
+														let () = Stack.push ("for", string_of_int lbl, string_of_int (lbl + 1), e3) lbl_stack in
+														let local_var = generate_block' (Local e1 :: []) v_tables offset in
+														let loop = generate_control e2 (List.append b (Expr e3 :: [])) lbl v_tables offset in
+														let v_table = List.hd v_tables in
+														let DeclareAssign (t, v, e) = e1 in
+														let () = Hashtbl.remove v_table v in
+														local_var ^ "L" ^ s ^ ": \n" ^ loop ^ generate_block' bs v_tables offset
+	| ((For (e1, e2, e3, b)) :: bs)					-> 	let lbl = !lbl_counter in
+														let () = lbl_counter := lbl + 2 in
+														let () = Stack.push ("for", string_of_int lbl, string_of_int (lbl + 1), e3) lbl_stack in
+														let local_var = generate_block' (Local e1 :: []) v_tables offset in
+														let loop = generate_control e2 (List.append b (Expr e3 :: [])) lbl v_tables offset in
+														let v_table = List.hd v_tables in
+														let DeclareAssign (t, v, e) = e1 in
+														let () = Hashtbl.remove v_table v in
+														local_var ^ loop ^ generate_block' bs v_tables offset
+	| ((Label s) :: bs) 							->  let () = Hashtbl.add lbl_tbl s ("while", s, s, Int (Int32.of_int 0)) in
+														"L" ^ s ^ ": \n"
+														^ generate_block' bs v_tables offset
+	| (Break :: bs)									->	let (ctr, loop, exit, e) = Stack.top lbl_stack in
+														"\tjmp L" ^ exit ^ "\n"
+														^ generate_block' bs v_tables offset
+	| ((Continue s) :: bs)							-> 	let (ctr, loop, exit, e) = if s = "" then Stack.top lbl_stack else Hashtbl.find lbl_tbl s in
+														(if ctr = "for" then snd (generate_expr e v_tables) else "")
+														^ "\tjmp L" ^ (if s = "" then loop else s) ^ "\n"
+														^ generate_block' bs v_tables offset
 	| ((Block b) :: bs) 							-> 	let b' = generate_block b v_tables offset in
 														b' ^ generate_block' bs v_tables offset
+
+and generate_control e b lbl v_tables offset : string = 
+	let (t, e') = generate_expr e v_tables in
+	let b' = generate_block b v_tables offset in
+	let _  = Stack.pop lbl_stack in
+	"L" ^ string_of_int lbl ^ ": \n" ^ e' ^
+	(match t with
+	| Bool 	-> 	(match e with | FunCall _ 	->	"" | _ 	-> 	"\tpop %rax\n") ^ "\tcmp $1, %rax\n" ^ "\tjne L" ^ string_of_int (lbl + 1) ^ "\n" ^ b' ^ "\tjmp L" ^ string_of_int lbl ^ "\n" ^ "L" ^ string_of_int (lbl + 1) ^ ": \n"
+	| _ 	-> 	raise NotYetDeveloped
+	)
+
 and generate_block block v_tables offset : string = 
 	let v_table : (var, (type_ * int)) Hashtbl.t = Hashtbl.create 10 in
 	let v_tables = v_table :: v_tables in
@@ -254,13 +293,17 @@ let generate_function (t, v, ps, b) v_tables : string =
 let rec generate_func funcs v_tables : string =
 	(match funcs with
 	| [] 								-> 	""
-	| ((Function (t, v, ps, b)) :: fs) 	-> 	let f' = generate_function (t, v, ps, b) v_tables in
-											f' ^ "\n"
-											^ generate_func fs v_tables
-	| ((Main b) :: fs) 					->  let local_offset = ref 0 in
+	| ((Function (t, v, ps, b)) :: fs) 	-> 	let fs' = generate_func fs v_tables in
+											fs'
+											^ "\n"
+											^ generate_function (t, v, ps, b) v_tables
+	| ((Main b) :: fs) 					->  let fs' = generate_func fs v_tables in
+											fs'
+											^ "\n"
+											^
+											let local_offset = ref 0 in
 											let b' = generate_block b v_tables local_offset in
-											"\t.globl _main\n" ^ "_main:\n" ^ function_prefix ^ "\tsub $" ^ string_of_int (!local_offset * -1) ^ ", %rsp\n" ^ "\tand $-32, %rsp\n" ^ b' ^ "\tmov $0, %rdi\n\tcall _exit\n" ^ "\n"
-											^ generate_func fs v_tables
+											"\t.globl _main\n" ^ "_main:\n" ^ function_prefix ^ "\tsub $" ^ string_of_int (!local_offset * -1) ^ ", %rsp\n" ^ "\tand $-32, %rsp\n" ^ b' ^ "\tmov $0, %rdi\n\tcall _exit\n" ^ "\n"									 
 	| _ 								->	raise NotYetDeveloped
 	)
 
@@ -268,10 +311,11 @@ let rec generate_func funcs v_tables : string =
 let rec generate_global globals v_table : string =
 	(match globals with
 	| [] 											-> 	""
-	| ((Global (Declare (t, v))) :: gs) 			->	Hashtbl.add v_table v (t, 0);
-														generate_global gs v_table 
+	| ((Global (Declare (t, v))) :: gs) 			->	let gs' = generate_global gs v_table in
+														gs'
 														^ v ^ ": "
-														^ (match t with
+														^ (Hashtbl.add v_table v (t, 0);
+														match t with
 														| Void 		->	raise NotYetDeveloped
 														| Int 		->	"\t.long"
 														| Real 		->	raise NotYetDeveloped
@@ -279,10 +323,11 @@ let rec generate_global globals v_table : string =
 														| Bool 		-> 	"\t.byte"
 														| String 	-> 	raise NotYetDeveloped
 														) ^ "\n"
-	| ((Global (DeclareAssign (t, v, e))) :: gs)	-> 	Hashtbl.add v_table v (t, 0);
-														generate_global gs v_table
+	| ((Global (DeclareAssign (t, v, e))) :: gs)	-> 	let gs' = generate_global gs v_table in
+														gs'
 														^ v ^ ": "
-														^ (match (t, e) with
+														^ (Hashtbl.add v_table v (t, 0);
+														match (t, e) with
 														| (Int, Int i)			->	"\t.long " ^ Int32.to_string i
 														| (Real, Real r) 		->	raise NotYetDeveloped
 														| (Char, Char c) 		-> 	"\t.byte '" ^ Char.escaped c ^ "'"
@@ -322,11 +367,12 @@ let generate program : string =
 	and (global, func) = sort_program [] [] program in
 	let v_tables = v_table :: v_tables in
 	let global_asm = generate_global global v_table in
-	let func_asm = generate_func (List.rev func) v_tables in
+	let func_asm = generate_func func v_tables in
 	prefix 
 	^ "\n"
-	^ (if List.length global != 0 then "\t.data\n" else "") 
+	^ "\t.data\n" 
 	^ global_asm 
+	^ "Read_int: .long\n"
 	^ "\n"
 	^ "\t.section __TEXT,__text,regular,pure_instructions\n\n"
 	^ func_asm 

@@ -153,17 +153,20 @@ and optimise_expr expr v_tables can_progress : expr =
 	| Var v 				-> 	if !can_progress && Hashtbl.mem v_table v then 
 									(match Hashtbl.find v_table v with
 									| None		-> 	Var v
-									| Some e 	-> 	e)
-								else (
+									| Some e 	-> 	e
+									)
+								else Var v
+									(*(
 									let e' = var_lookup v v_tables in
 									(match e' with
 									| None 		-> 	Var v
-									| Some e 	-> 	can_progress := false; e
+									| Some e 	-> 	e (*can_progress := false; e*)
 									)
-								)
+								)*)
 	| Assign (v, e)			->	let e' = optimise_expr e v_tables can_progress in
 								can_progress := Hashtbl.mem v_table v;
-								Hashtbl.add v_table v (Some e');
+								if !can_progress then
+									Hashtbl.add v_table v (Some e');
 								Assign (v, e')
 	| NullaryOp op 			->  optimise_nullary_op op can_progress
 	| UnaryOp (op, e)		->	optimise_unary_op (op, e) v_tables can_progress
@@ -172,7 +175,7 @@ and optimise_expr expr v_tables can_progress : expr =
 								can_progress := !can_progress && Hashtbl.mem f_table v && (not (Hashtbl.find f_table v));
 								if (Hashtbl.mem f_table v && not (Hashtbl.find f_table v)) then evaluate_function (v, es') (Hashtbl.find f_table_fun v) v_tables
 								else FunCall (v, es')
-	| x 					-> 	x
+	| x 					->	x
 and optimise_expr_list ls v_tables can_progress : expr list =
 	match ls with
 	| [] -> []
@@ -185,7 +188,13 @@ and optimise_declare_stmnt declare_stmnt v_tables can_progress : declare_stmnt =
 	match declare_stmnt with
 	| Declare (t, v) 			->	Hashtbl.add v_table v None; Declare (t, v)
 	| DeclareAssign (t, v, e)	->	let e' = optimise_expr e v_tables can_progress in
-									let () = Hashtbl.add v_table v (Some e') in
+									let () = 
+									(match e' with
+									| FunCall _ 			->	Hashtbl.add v_table v (Some (Var v))
+									| NullaryOp (Prompt)	->	Hashtbl.add v_table v (Some (Var v)) 
+									| UnaryOp (Print, _)	->	Hashtbl.add v_table v (Some (Var v)) 
+									| _ 					-> 	Hashtbl.add v_table v (Some e') 
+									) in
 									DeclareAssign (t, v, e')
 
 and optimise_block' block v_tables can_progress : block = 
@@ -206,15 +215,19 @@ and optimise_block' block v_tables can_progress : block =
 												| _ 			-> If_Then_Else (e', optimise_block b1 v_tables, optimise_block b2 v_tables)
 												) in
 												stmnt' :: optimise_block' bs v_tables can_progress
-	| ((While (e, b)) :: bs) 				-> 	let stmnt' = 
-												(match e with
+	| ((While (e, b)) :: bs) 				-> 	let e' = optimise_expr e v_tables can_progress in
+												let stmnt' = 
+												(match e' with
 												| Bool false 	-> 	Block [] 
 												| _ 			->  can_progress := false; While (e, b)
 												) in
 												stmnt' :: optimise_block' bs v_tables can_progress
 	| ((For (e1, e2, e3, b)) :: bs) 		-> 	let () = can_progress := false in
-												let stmnt' = optimise_block b v_tables in
+												(*let stmnt' = optimise_block b v_tables in*)
 												For (e1, e2, e3, b) :: optimise_block' bs v_tables can_progress
+	| ((Label s) :: bs) 					->  Label s :: optimise_block' bs v_tables can_progress
+	| (Break :: bs)							->	Break :: optimise_block' bs v_tables can_progress
+	| ((Continue s) :: bs)					-> 	Continue s :: optimise_block' bs v_tables can_progress
 	| ((Block b) :: bs) 					-> 	let () = can_progress := false in
 												let b' = optimise_block b v_tables in
 												Block b' :: optimise_block' bs v_tables can_progress
@@ -224,6 +237,7 @@ and optimise_block block v_tables : block =
 	let v_tables = v_table :: v_tables
 	and can_progress = ref true in
 	optimise_block' block v_tables can_progress
+
 
 let push_params ps v_table = 
 	match ps with
@@ -242,6 +256,7 @@ let optimise_function (t, v, ps, b) v_tables : top_level =
 	Hashtbl.add f_table v (not !can_progress);
 	if !can_progress then Hashtbl.add f_table_fun v (t, ps, b');
 	Function (t, v, ps, b')
+
 
 let rec optimise_program program v_tables can_progress : program = 
 	match program with

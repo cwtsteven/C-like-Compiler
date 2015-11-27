@@ -11,8 +11,10 @@ false.str:
 	.data
 a: 	.byte 1
 b: 	.byte 0
+Read_int: .long
 
 	.section __TEXT,__text,regular,pure_instructions
+
 
 	.globl _main
 _main:

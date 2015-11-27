@@ -48,6 +48,9 @@ type stmnt = Expr of expr
 		   | While of expr * block
 		   | For of declare_stmnt * expr * expr * block
 		   | Block of stmnt list
+		   | Label of string
+		   | Break
+		   | Continue of string
 and block = stmnt list
 
 type top_level = Global of declare_stmnt
@@ -125,6 +128,9 @@ let rec string_of_stmnt stmnt =
 	| If_Then_Else (e, b1, b2) 	-> "If_Then_Else " ^ string_of_expr e ^ " [" ^string_of_block b1 ^ "] {" ^ string_of_block b2 ^ "}"
 	| While (e, b)				-> "While " ^ string_of_expr e ^  " {" ^string_of_block b ^ "}"
 	| For (e1, e2, e3, b)		-> "For " ^ string_of_declare_stmnt e1 ^ " " ^ string_of_expr e2 ^ " " ^ string_of_expr e3 ^ " {" ^ string_of_block b ^ "}"
+	| Label s 					-> "Label " ^ s ^ ":"
+	| Break 					-> "Break"
+	| Continue s				-> "Continue " ^ s 
 	| Block b 					-> "Block " ^ string_of_block b
 	end
 	^ "; "

@@ -19,10 +19,11 @@
 %token IF ELSE
 %token WHILE
 %token FOR
+%token BREAK CONTINUE
 %token MAIN RETURN
 
 %token COMMA
-%token SEMICOLON
+%token COLON SEMICOLON
 %token L_BRACKET R_BRACKET
 %token L_CBRACKET R_CBRACKET
 
@@ -73,6 +74,10 @@ stmnt:
 | ifs = if_stmnt						{ ifs }
 | whs = while_stmnt						{ whs }
 | fos = for_stmnt						{ fos }
+| v = IDENTIFIER; COLON 				{ Label v }
+| BREAK; SEMICOLON						{ Break }
+| CONTINUE; SEMICOLON					{ Continue ""}
+| CONTINUE; v = IDENTIFIER SEMICOLON	{ Continue v }
 ;
 
 declare_stmnt:

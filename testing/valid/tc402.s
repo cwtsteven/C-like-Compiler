@@ -10,8 +10,10 @@ false.str:
 
 	.data
 a: 	.byte 1
+Read_int: .long
 
 	.section __TEXT,__text,regular,pure_instructions
+
 
 _f: 
 	push %rbp

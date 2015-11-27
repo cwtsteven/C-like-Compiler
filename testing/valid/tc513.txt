@@ -1,0 +1,9 @@
+int f() {
+	>> 1;
+	return 2;
+}
+
+main() {
+	int a = f();
+	>> a;
+}

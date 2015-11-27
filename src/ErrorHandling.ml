@@ -40,6 +40,9 @@ let symbol2string (type a) (symbol : xsymbol) : string =
 	| X (T T_ELSE) 			-> "else"
 	| X (T T_WHILE) 		-> "while"
 	| X (T T_FOR) 			-> "for"
+	| X (T T_COLON) 		-> ":"
+	| X (T T_BREAK)			-> "Break"
+	| X (T T_CONTINUE)		-> "Continue"
 	| X (T T_MAIN)			-> "main"
 	| X (T T_RETURN)		-> "return"
 	| X (T T_COMMA)			-> ","
@@ -113,6 +116,7 @@ let rec find_symbol_through_stack stack symbol : xsymbol option =
 
 			| Some (X (T T_ELSE))    		-> Some (X (T T_ELSE))
 			| Some (X (N N_expr)) 			-> Some (X (N N_expr))
+			| Some (X (T T_COLON)) 			-> Some (X (T T_COLON))
 			| Some (X (T T_SEMICOLON)) 		-> Some (X (T T_SEMICOLON))
 			| Some (X (T T_L_BRACKET)) 		-> Some (X (T T_L_BRACKET))
 			| Some (X (T T_R_BRACKET))		-> Some (X (T T_R_BRACKET))
