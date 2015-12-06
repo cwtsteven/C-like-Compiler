@@ -1,13 +1,8 @@
 int a = 5;
-
-int double(int x) {
-	return x + x;
-}
-
 main() {
 	int b = 2;
 	while (b <= a) {
-		b = b + 1;
+		b = <<;
 		if (b <= a) {
 			>> a;
 		} else {

@@ -1,6 +1,6 @@
 	.section __TEXT,__cstring,cstring_literals
 int.str:
-	.string "%d\0"
+	.string "%ld\0"
 char.str:
 	.string "%c\0"
 true.str:
@@ -9,8 +9,8 @@ false.str:
 	.string "false"
 
 	.data
-a: 	.long 1
-Read_int: .long
+a: 	.quad 1
+Read_int: .quad
 
 	.section __TEXT,__text,regular,pure_instructions
 
@@ -59,40 +59,19 @@ L1:
 _main:
 	push %rbp
 	mov %rsp, %rbp
-	sub $32, %rsp
+	sub $24, %rsp
 	and $-32, %rsp
 	push $10
 	pop %rax
 	mov %rax, -8(%rbp)
-	push -8(%rbp)
-	push $2
-	pop %rax
-	pop %r8
-	cmp %rax, %r8
-	mov $0, %rax
-	sete %al
-	push %rax
-	pop %rax
-	cmp $1, %rax
-	jne L2
-	push $'c'
-	pop %rax
-	mov %rax, -16(%rbp)
-	push -16(%rbp)
-	lea char.str(%rip), %rdi
-	pop %rsi
-	call _printf
-	jmp L3
-L2: 
 	push $'b'
 	pop %rax
-	mov %rax, -24(%rbp)
-	push -24(%rbp)
+	mov %rax, -16(%rbp)
+	push $'b'
 	lea char.str(%rip), %rdi
 	pop %rsi
 	call _printf
-L3: 
-L4: 
+L2: 
 	push -8(%rbp)
 	push $0
 	pop %rax
@@ -103,12 +82,12 @@ L4:
 	push %rax
 	pop %rax
 	cmp $1, %rax
-	jne L5
+	jne L3
 	push $1
 	pop %rax
-	mov %rax, -32(%rbp)
-L6: 
-	push -32(%rbp)
+	mov %rax, -24(%rbp)
+L4: 
+	push -24(%rbp)
 	push -8(%rbp)
 	pop %rax
 	pop %r8
@@ -118,7 +97,7 @@ L6:
 	push %rax
 	pop %rax
 	cmp $1, %rax
-	jne L7
+	jne L5
 	push -8(%rbp)
 	pop %rax
 	mov %rax, %rdi
@@ -127,19 +106,19 @@ L6:
 	lea int.str(%rip), %rdi
 	mov %rax, %rsi
 	call _printf
-	push -32(%rbp)
+	push -24(%rbp)
 	push $1
 	pop %rax
 	pop %r8
 	add %rax, %r8
 	push %r8
 	pop %rax
-	mov %rax, -32(%rbp)
-	jmp L6
-L7: 
+	mov %rax, -24(%rbp)
+	jmp L4
+L5: 
 	push $1
 	pop %rax
-	mov %rax, -32(%rbp)
+	mov %rax, -24(%rbp)
 	push -8(%rbp)
 	push $1
 	pop %rax
@@ -148,8 +127,8 @@ L7:
 	push %r8
 	pop %rax
 	mov %rax, -8(%rbp)
-	jmp L4
-L5: 
+	jmp L2
+L3: 
 	mov $0, %rdi
 	call _exit
 

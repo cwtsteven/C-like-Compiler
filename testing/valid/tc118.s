@@ -1,6 +1,6 @@
 	.section __TEXT,__cstring,cstring_literals
 int.str:
-	.string "%d\0"
+	.string "%ld\0"
 char.str:
 	.string "%c\0"
 true.str:
@@ -9,26 +9,11 @@ false.str:
 	.string "false"
 
 	.data
-a: 	.long 5
-Read_int: .long
+a: 	.quad 5
+Read_int: .quad
 
 	.section __TEXT,__text,regular,pure_instructions
 
-
-_double: 
-	push %rbp
-	mov %rsp, %rbp
-	sub $8, %rsp
-	and $-32, %rsp
-	mov %rdi, -8(%rbp)
-	push -8(%rbp)
-	push -8(%rbp)
-	pop %rax
-	pop %r8
-	add %rax, %r8
-	push %r8
-	pop %rax
-	jmp RETURN
 
 	.globl _main
 _main:
@@ -41,7 +26,7 @@ _main:
 	mov %rax, -8(%rbp)
 L0: 
 	push -8(%rbp)
-	movabsq (a), %rax
+	mov a(%rip), %rax
 	push %rax
 	pop %rax
 	pop %r8
@@ -52,16 +37,15 @@ L0:
 	pop %rax
 	cmp $1, %rax
 	jne L1
-	push -8(%rbp)
-	push $1
-	pop %rax
-	pop %r8
-	add %rax, %r8
-	push %r8
+	lea int.str(%rip), %rdi
+	lea Read_int(%rip), %rsi
+	call _scanf
+	mov Read_int(%rip), %rax
+	push %rax
 	pop %rax
 	mov %rax, -8(%rbp)
 	push -8(%rbp)
-	movabsq (a), %rax
+	mov a(%rip), %rax
 	push %rax
 	pop %rax
 	pop %r8
@@ -72,7 +56,7 @@ L0:
 	pop %rax
 	cmp $1, %rax
 	jne L2
-	movabsq (a), %rax
+	mov a(%rip), %rax
 	push %rax
 	lea int.str(%rip), %rdi
 	pop %rsi

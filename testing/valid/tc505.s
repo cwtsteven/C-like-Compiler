@@ -1,6 +1,6 @@
 	.section __TEXT,__cstring,cstring_literals
 int.str:
-	.string "%d\0"
+	.string "%ld\0"
 char.str:
 	.string "%c\0"
 true.str:
@@ -9,7 +9,7 @@ false.str:
 	.string "false"
 
 	.data
-Read_int: .long
+Read_int: .quad
 
 	.section __TEXT,__text,regular,pure_instructions
 
@@ -26,42 +26,14 @@ _main:
 	push $2
 	pop %rax
 	mov %rax, -16(%rbp)
-	push -8(%rbp)
-	push $1
-	pop %rax
-	pop %r8
-	cmp %rax, %r8
-	mov $0, %rax
-	sete %al
-	push %rax
-	pop %rax
-	cmp $1, %rax
-	jne L0
 	push $1
 	lea int.str(%rip), %rdi
 	pop %rsi
 	call _printf
-	jmp L1
-L0: 
-L1: 
-	push -8(%rbp)
-	push $1
-	pop %rax
-	pop %r8
-	cmp %rax, %r8
-	mov $0, %rax
-	sete %al
-	push %rax
-	pop %rax
-	cmp $1, %rax
-	jne L2
 	push $2
 	lea int.str(%rip), %rdi
 	pop %rsi
 	call _printf
-	jmp L3
-L2: 
-L3: 
 	mov $0, %rdi
 	call _exit
 

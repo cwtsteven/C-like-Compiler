@@ -1,6 +1,6 @@
 	.section __TEXT,__cstring,cstring_literals
 int.str:
-	.string "%d\0"
+	.string "%ld\0"
 char.str:
 	.string "%c\0"
 true.str:
@@ -11,7 +11,7 @@ false.str:
 	.data
 a: 	.byte 1
 b: 	.byte 0
-Read_int: .long
+Read_int: .quad
 
 	.section __TEXT,__text,regular,pure_instructions
 
@@ -25,7 +25,7 @@ _main:
 	push $2
 	pop %rax
 	mov %rax, -8(%rbp)
-	push -8(%rbp)
+	push $2
 	lea int.str(%rip), %rdi
 	pop %rsi
 	call _printf

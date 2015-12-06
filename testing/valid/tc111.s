@@ -1,6 +1,6 @@
 	.section __TEXT,__cstring,cstring_literals
 int.str:
-	.string "%d\0"
+	.string "%ld\0"
 char.str:
 	.string "%c\0"
 true.str:
@@ -9,8 +9,8 @@ false.str:
 	.string "false"
 
 	.data
-a: 	.long 12
-Read_int: .long
+a: 	.quad 12
+Read_int: .quad
 
 	.section __TEXT,__text,regular,pure_instructions
 

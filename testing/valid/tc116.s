@@ -1,6 +1,6 @@
 	.section __TEXT,__cstring,cstring_literals
 int.str:
-	.string "%d\0"
+	.string "%ld\0"
 char.str:
 	.string "%c\0"
 true.str:
@@ -9,8 +9,8 @@ false.str:
 	.string "false"
 
 	.data
-a: 	.long 1
-Read_int: .long
+a: 	.quad 1
+Read_int: .quad
 
 	.section __TEXT,__text,regular,pure_instructions
 
@@ -22,7 +22,7 @@ _main:
 	sub $0, %rsp
 	and $-32, %rsp
 L0: 
-	movabsq (a), %rax
+	mov a(%rip), %rax
 	push %rax
 	push $2
 	pop %rax
@@ -34,12 +34,12 @@ L0:
 	pop %rax
 	cmp $1, %rax
 	jne L1
-	movabsq (a), %rax
+	mov a(%rip), %rax
 	push %rax
 	lea int.str(%rip), %rdi
 	pop %rsi
 	call _printf
-	movabsq (a), %rax
+	mov a(%rip), %rax
 	push %rax
 	push $1
 	pop %rax
@@ -47,7 +47,7 @@ L0:
 	add %rax, %r8
 	push %r8
 	pop %rax
-	movabsq %rax, (a)
+	mov %rax, a(%rip)
 	jmp L0
 L1: 
 	mov $0, %rdi

@@ -1,6 +1,6 @@
 	.section __TEXT,__cstring,cstring_literals
 int.str:
-	.string "%d\0"
+	.string "%ld\0"
 char.str:
 	.string "%c\0"
 true.str:
@@ -9,7 +9,7 @@ false.str:
 	.string "false"
 
 	.data
-Read_int: .long
+Read_int: .quad
 
 	.section __TEXT,__text,regular,pure_instructions
 
@@ -33,11 +33,10 @@ _main:
 	mov %rsp, %rbp
 	sub $8, %rsp
 	and $-32, %rsp
-	mov $0, %rax
 	lea int.str(%rip), %rdi
 	lea Read_int(%rip), %rsi
 	call _scanf
-	movabsq (Read_int), %rax
+	mov Read_int(%rip), %rax
 	push %rax
 	pop %rax
 	mov %rax, -8(%rbp)

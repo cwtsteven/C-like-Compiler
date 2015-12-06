@@ -3,6 +3,8 @@ bool a = true;
 int f(bool a) {
 	if (a) {
 		return 1;
+	} else {
+		return 3;
 	}
 }
 

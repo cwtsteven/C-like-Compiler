@@ -155,14 +155,13 @@ and optimise_expr expr v_tables can_progress : expr =
 									| None		-> 	Var v
 									| Some e 	-> 	e
 									)
-								else Var v
-									(*(
-									let e' = var_lookup v v_tables in
+								else 
+								(let e' = var_lookup v v_tables in
 									(match e' with
 									| None 		-> 	Var v
-									| Some e 	-> 	e (*can_progress := false; e*)
+									| Some e 	-> 	e
 									)
-								)*)
+								)
 	| Assign (v, e)			->	let e' = optimise_expr e v_tables can_progress in
 								can_progress := Hashtbl.mem v_table v;
 								if !can_progress then
@@ -188,13 +187,7 @@ and optimise_declare_stmnt declare_stmnt v_tables can_progress : declare_stmnt =
 	match declare_stmnt with
 	| Declare (t, v) 			->	Hashtbl.add v_table v None; Declare (t, v)
 	| DeclareAssign (t, v, e)	->	let e' = optimise_expr e v_tables can_progress in
-									let () = 
-									(match e' with
-									| FunCall _ 			->	Hashtbl.add v_table v (Some (Var v))
-									| NullaryOp (Prompt)	->	Hashtbl.add v_table v (Some (Var v)) 
-									| UnaryOp (Print, _)	->	Hashtbl.add v_table v (Some (Var v)) 
-									| _ 					-> 	Hashtbl.add v_table v (Some e') 
-									) in
+									let () = (if !can_progress then Hashtbl.add v_table v (Some e') else Hashtbl.add v_table v (Some (Var v))) in
 									DeclareAssign (t, v, e')
 
 and optimise_block' block v_tables can_progress : block = 
@@ -223,13 +216,11 @@ and optimise_block' block v_tables can_progress : block =
 												) in
 												stmnt' :: optimise_block' bs v_tables can_progress
 	| ((For (e1, e2, e3, b)) :: bs) 		-> 	let () = can_progress := false in
-												(*let stmnt' = optimise_block b v_tables in*)
 												For (e1, e2, e3, b) :: optimise_block' bs v_tables can_progress
 	| ((Label s) :: bs) 					->  Label s :: optimise_block' bs v_tables can_progress
 	| (Break :: bs)							->	Break :: optimise_block' bs v_tables can_progress
 	| ((Continue s) :: bs)					-> 	Continue s :: optimise_block' bs v_tables can_progress
-	| ((Block b) :: bs) 					-> 	let () = can_progress := false in
-												let b' = optimise_block b v_tables in
+	| ((Block b) :: bs) 					-> 	let b' = optimise_block b v_tables in
 												Block b' :: optimise_block' bs v_tables can_progress
 	
 and optimise_block block v_tables : block = 

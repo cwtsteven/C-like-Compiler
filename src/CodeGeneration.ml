@@ -19,7 +19,7 @@ let rec var_lookup v v_tables : type_ * int =
 
 let rec generate_nullary_op op v_tables : type_ * string = 
 	match op with
-	| Prompt 	-> 	(Int, "\tmov $0, %rax\n" ^ "\tlea int.str(%rip), %rdi\n" ^ "\tlea Read_int(%rip), %rsi\n" ^ "\tcall _scanf\n" ^ "\tmovabsq (Read_int), %rax\n" ^ "\tpush %rax\n")
+	| Prompt 	-> 	(Int, "\tlea int.str(%rip), %rdi\n" ^ "\tlea Read_int(%rip), %rsi\n" ^ "\tcall _scanf\n" ^ "\tmov Read_int(%rip), %rax\n" ^ "\tpush %rax\n")
 and generate_unary_op (op, e) v_tables : type_ * string =
 	let (t, e') = generate_expr e v_tables in
 	match op with 
@@ -34,11 +34,11 @@ and generate_unary_op (op, e) v_tables : type_ * string =
 							)
 					)
 	| Neg 		->	(match t with
-					| Int 		-> 	(Int, e' ^ (match e with | FunCall _ 	->	"" | _ 	-> 	"\tpop %rax\n") ^ "\tnegl (%rsp)\n")
+					| Int 		-> 	(Int, e' ^ (match e with | FunCall _ 	->	"" | _ 	-> 	"\tpop %rax\n") ^ "\tneg %rax\n" ^ "\tpush %rax\n")
 					| _ 		->	raise NotYetDeveloped
 					)
 	| Not 		->	(match t with
-					| Bool 		->	(Bool, e' ^ (match e with | FunCall _ 	->	"" | _ 	-> 	"\tpop %rax\n") ^ "\tnot (%rsp)\n")
+					| Bool 		->	(Bool, e' ^ (match e with | FunCall _ 	->	"" | _ 	-> 	"\tpop %rax\n") ^ "\tnot %rax\n" ^ "\tpush %rax\n")
 					| _ 		->	raise NotYetDeveloped
 					)
 
@@ -120,7 +120,7 @@ and generate_expr expr v_tables : type_ * string =
 	match expr with
 	| Var v 				-> 	let (t, offset) = var_lookup v v_tables in
 								if offset = 0 then 
-									(t, "\tmovabsq (" ^ v ^ "), %rax\n" ^ "\tpush %rax\n")
+									(t, "\tmov " ^ v ^ "(%rip), %rax\n" ^ "\tpush %rax\n")
 								else 
 									(t, "\tpush " ^ string_of_int offset ^ "(%rbp)\n")
 	| Int i 				-> 	(Int, "\tpush $" ^ Int32.to_string i ^ "\n")
@@ -138,7 +138,7 @@ and generate_expr expr v_tables : type_ * string =
 									(match (t, t') with
 									| (Int, Int) 		
 									| (Char, Char) 		
-									| (Bool, Bool)		->	e' ^ (match e with | FunCall _ 	->	"" | _ 	-> 	"\tpop %rax\n") ^ "\tmovabsq %rax, (" ^ v ^ ")\n"
+									| (Bool, Bool)		->	e' ^ (match e with | FunCall _ 	->	"" | _ 	-> 	"\tpop %rax\n") ^ "\tmov %rax, " ^ v ^ "(%rip)\n"
 									| _ 				->	raise NotYetDeveloped
 									)
 								else
@@ -317,7 +317,7 @@ let rec generate_global globals v_table : string =
 														^ (Hashtbl.add v_table v (t, 0);
 														match t with
 														| Void 		->	raise NotYetDeveloped
-														| Int 		->	"\t.long"
+														| Int 		->	"\t.quad"
 														| Real 		->	raise NotYetDeveloped
 														| Char 		-> 	"\t.byte"
 														| Bool 		-> 	"\t.byte"
@@ -328,11 +328,17 @@ let rec generate_global globals v_table : string =
 														^ v ^ ": "
 														^ (Hashtbl.add v_table v (t, 0);
 														match (t, e) with
-														| (Int, Int i)			->	"\t.long " ^ Int32.to_string i
+														| (Int, Int i)			->	"\t.quad " ^ Int32.to_string i
+														| (Int, (UnaryOp (Neg, Int i)))			->	"\t.quad " ^ Int32.to_string (Int32.neg i)
 														| (Real, Real r) 		->	raise NotYetDeveloped
 														| (Char, Char c) 		-> 	"\t.byte '" ^ Char.escaped c ^ "'"
 														| (Bool, Bool b)		-> 	"\t.byte " ^ (if b then "1" else "0")
 														| (String, String s)	-> 	raise NotYetDeveloped
+														| (_, Var _)
+														| (_, NullaryOp _)
+														| (_, UnaryOp _)
+														| (_, BinaryOp _)		->  raise (TypeError ("Please turn on Syntactic optimisation."))
+														| (_, FunCall _)		->  raise (TypeError ("Function call is not supported in global variables"))
 														| _ 					-> 	raise (TypeError ("Type mismatch for variable " ^ v ^ "."))
 														) ^ "\n"
 	| _ 											->	raise NotYetDeveloped
@@ -347,7 +353,7 @@ let rec sort_program global func iterate : program * program =
 let prefix : string = 
 	"\t.section __TEXT,__cstring,cstring_literals\n" 
 	^ "int.str:\n" 
-	^ "\t.string \"%d\\0\"\n" 
+	^ "\t.string \"%ld\\0\"\n" 
 	^ "char.str:\n" 
 	^ "\t.string \"%c\\0\"\n" 
 	^ "true.str:\n" 
@@ -372,7 +378,7 @@ let generate program : string =
 	^ "\n"
 	^ "\t.data\n" 
 	^ global_asm 
-	^ "Read_int: .long\n"
+	^ "Read_int: .quad\n"
 	^ "\n"
 	^ "\t.section __TEXT,__text,regular,pure_instructions\n\n"
 	^ func_asm 

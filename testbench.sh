@@ -9,7 +9,7 @@ for file in testing/valid/*.txt; do
 	if ./Main.native $file; then
 		if ls "$path_no_ext.r" 1> /dev/null 2>&1; then
 			expected=`cat ${path_no_ext%%a*}.r`
-			cc "$path_no_ext.s" &> /dev/null
+			cc "$path_no_ext.s" &> /dev/null0
 			result=`./a.out`
 			if [ "$expected" == "$result" ]; then 
 				printf "\tpassed.\n"

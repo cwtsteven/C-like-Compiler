@@ -1,6 +1,6 @@
 	.section __TEXT,__cstring,cstring_literals
 int.str:
-	.string "%d\0"
+	.string "%ld\0"
 char.str:
 	.string "%c\0"
 true.str:
@@ -9,10 +9,10 @@ false.str:
 	.string "false"
 
 	.data
-a: 	.long 5
-b: 	.long 10
-d: 	.long 5
-Read_int: .long
+a: 	.quad 5
+b: 	.quad 10
+d: 	.quad 5
+Read_int: .quad
 
 	.section __TEXT,__text,regular,pure_instructions
 
@@ -52,7 +52,7 @@ _main:
 	mov %rax, -32(%rbp)
 	push $6
 	pop %rax
-	movabsq %rax, (a)
+	mov %rax, a(%rip)
 	push $5
 	pop %rax
 	mov %rax, -40(%rbp)
