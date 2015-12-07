@@ -223,6 +223,8 @@ and optimise_block' block v_tables isPure isLoop : block =
 																	While (s, e, b')
 												) in
 												stmnt' :: optimise_block' bs v_tables isPure isLoop
+	| (DoWhile (s, e, b) :: bs) 			->	let bs' = List.append b (While (s, e, b) :: bs) in
+												optimise_block' bs' v_tables isPure isLoop
 	| (For (s, e1, e2, e3, b) :: bs) 		-> 	let temp = ref true in 
 												let b' = optimise_block b v_tables temp true in
 												let () = isPure := !isPure && !temp in

@@ -38,6 +38,7 @@ let main = "main"
 let return = "return"
 let if = "if"
 let else = "else"
+let do = "do"
 let while = "while"
 let for = "for"
 let break = "break"
@@ -95,6 +96,7 @@ rule read = parse
 | return { RETURN }
 | if { IF }
 | else { ELSE }
+| do { DO }
 | while { WHILE }
 | for { FOR }
 | break { BREAK }

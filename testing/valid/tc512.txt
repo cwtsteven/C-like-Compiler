@@ -3,6 +3,6 @@ int f() {
 	return 10;
 }
 main() {
-	int a = <<;
+	int a = 1;
 	>> a + f();
 }

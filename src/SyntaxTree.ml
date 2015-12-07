@@ -46,6 +46,7 @@ type stmnt = Expr of expr
 		   | Local of declare_stmnt
 		   | If_Then_Else of expr * block * block
 		   | While of var * expr * block
+   		   | DoWhile of var * expr * block
 		   | For of var * declare_stmnt * expr * expr * block
 		   | Block of stmnt list
 		   | Break of string
@@ -126,6 +127,7 @@ let rec string_of_stmnt stmnt =
 	| Local s 			   		-> "Local (" ^ string_of_declare_stmnt s ^ ")"
 	| If_Then_Else (e, b1, b2) 	-> "If_Then_Else " ^ string_of_expr e ^ " [" ^string_of_block b1 ^ "] {" ^ string_of_block b2 ^ "}"
 	| While (s, e, b)			-> "While " ^ string_of_expr e ^  " {" ^string_of_block b ^ "}"
+	| DoWhile (s, e, b)			-> "Do " ^ string_of_block b ^ " While " ^ string_of_expr e
 	| For (s, e1, e2, e3, b)	-> "For " ^ string_of_declare_stmnt e1 ^ " " ^ string_of_expr e2 ^ " " ^ string_of_expr e3 ^ " {" ^ string_of_block b ^ "}"
 	| Break s					-> "Break " ^ s
 	| Continue s				-> "Continue " ^ s 

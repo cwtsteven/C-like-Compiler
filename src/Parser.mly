@@ -17,7 +17,7 @@
 %token EQ NEQ GT GEQ LT LEQ
 %token PROMPT PRINT
 %token IF ELSE
-%token WHILE
+%token DO WHILE
 %token FOR
 %token BREAK CONTINUE
 %token MAIN RETURN
@@ -73,6 +73,7 @@ stmnt:
 | d = declare_stmnt		 					{ Local d }
 | ifs = if_stmnt							{ ifs }
 | whs = while_stmnt							{ whs }
+| dos = do_while_stmnt						{ dos }
 | fos = for_stmnt							{ fos }
 | BREAK; SEMICOLON							{ Break "" }
 | BREAK; v = IDENTIFIER; SEMICOLON			{ Break v}
@@ -97,16 +98,25 @@ if_stmnt:
 while_stmnt:
 | WHILE; L_BRACKET; e = expr; R_BRACKET; 
 	b = block; 							{ While ("" , e, b) }
-| WHILE; lbl = IDENTIFIER; COLON; L_BRACKET; e = expr; R_BRACKET; 
+| WHILE; lbl = IDENTIFIER; COLON; 
+	L_BRACKET; e = expr; R_BRACKET; 
 	b = block; 							{ While (lbl , e, b) }
 ;
 
+do_while_stmnt:
+| DO; b = block; 
+	WHILE; L_BRACKET; e = expr; R_BRACKET 				{ DoWhile ("", e, b) }
+| DO; lbl = IDENTIFIER; COLON;  
+	b = block; WHILE; L_BRACKET; e = expr; R_BRACKET 	{ DoWhile (lbl, e, b) }
+
 for_stmnt:
-| FOR; L_BRACKET; TYPEINT; v = IDENTIFIER; ASSIGN; e = expr; SEMICOLON; 
+| FOR; L_BRACKET; 
+	TYPEINT; v = IDENTIFIER; ASSIGN; e = expr; SEMICOLON; 
 	e2 = expr; SEMICOLON; 
 	e3 = expr; R_BRACKET;
 	b = block							{ For ("", DeclareAssign (Int, v, e), e2, e3, b) }
-| FOR; lbl = IDENTIFIER; COLON; L_BRACKET; TYPEINT; v = IDENTIFIER; ASSIGN; e = expr; SEMICOLON; 
+| FOR; lbl = IDENTIFIER; COLON; L_BRACKET; 
+	TYPEINT; v = IDENTIFIER; ASSIGN; e = expr; SEMICOLON; 
 	e2 = expr; SEMICOLON; 
 	e3 = expr; R_BRACKET;
 	b = block							{ For (lbl, DeclareAssign (Int, v, e), e2, e3, b) }
