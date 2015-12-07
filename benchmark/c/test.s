@@ -23,21 +23,16 @@ Ltmp2:
 	jmp	LBB0_3
 LBB0_2:
 	movl	-8(%rbp), %eax
-	movl	-8(%rbp), %ecx
-	subl	$1, %ecx
-	movl	%ecx, %edi
+	subl	$1, %eax
+	movl	%eax, %edi
+	callq	_fibonacci
+	movl	-8(%rbp), %edi
+	subl	$2, %edi
 	movl	%eax, -12(%rbp)         ## 4-byte Spill
 	callq	_fibonacci
-	movl	-12(%rbp), %ecx         ## 4-byte Reload
-	addl	%eax, %ecx
-	movl	-8(%rbp), %eax
-	subl	$2, %eax
-	movl	%eax, %edi
-	movl	%ecx, -16(%rbp)         ## 4-byte Spill
-	callq	_fibonacci
-	movl	-16(%rbp), %ecx         ## 4-byte Reload
-	addl	%eax, %ecx
-	movl	%ecx, -4(%rbp)
+	movl	-12(%rbp), %edi         ## 4-byte Reload
+	addl	%eax, %edi
+	movl	%edi, -4(%rbp)
 LBB0_3:
 	movl	-4(%rbp), %eax
 	addq	$16, %rsp
@@ -97,40 +92,39 @@ Ltmp8:
 	.cfi_def_cfa_register %rbp
 	subq	$32, %rsp
 	movl	$0, -4(%rbp)
-	movl	$1, -8(%rbp)
-	movl	$25, -12(%rbp)
+	movl	$100, -8(%rbp)
+	movl	$0, -12(%rbp)
 LBB2_1:                                 ## =>This Loop Header: Depth=1
                                         ##     Child Loop BB2_3 Depth 2
                                         ##       Child Loop BB2_5 Depth 3
-	movl	-8(%rbp), %eax
-	cmpl	-12(%rbp), %eax
-	jg	LBB2_11
+	movl	-12(%rbp), %eax
+	cmpl	-8(%rbp), %eax
+	jge	LBB2_17
 ## BB#2:                                ##   in Loop: Header=BB2_1 Depth=1
-	movl	$1, -16(%rbp)
+	movl	$0, -16(%rbp)
 LBB2_3:                                 ##   Parent Loop BB2_1 Depth=1
                                         ## =>  This Loop Header: Depth=2
                                         ##       Child Loop BB2_5 Depth 3
 	movl	-16(%rbp), %eax
-	cmpl	-12(%rbp), %eax
-	jg	LBB2_10
+	cmpl	-8(%rbp), %eax
+	jge	LBB2_15
 ## BB#4:                                ##   in Loop: Header=BB2_3 Depth=2
-	movl	$1, -20(%rbp)
+	movl	$0, -20(%rbp)
 LBB2_5:                                 ##   Parent Loop BB2_1 Depth=1
                                         ##     Parent Loop BB2_3 Depth=2
                                         ## =>    This Inner Loop Header: Depth=3
 	movl	-20(%rbp), %eax
-	cmpl	-12(%rbp), %eax
-	jg	LBB2_9
+	cmpl	-8(%rbp), %eax
+	jge	LBB2_12
 ## BB#6:                                ##   in Loop: Header=BB2_5 Depth=3
-	movl	-8(%rbp), %eax
-	movl	-16(%rbp), %ecx
-	addl	-20(%rbp), %ecx
-	cmpl	%ecx, %eax
-	jg	LBB2_8
-## BB#7:                                ##   in Loop: Header=BB2_5 Depth=3
-	movl	-8(%rbp), %edi
+	cmpl	$50, -20(%rbp)
+	jle	LBB2_8
+## BB#7:                                ##   in Loop: Header=BB2_3 Depth=2
+	jmp	LBB2_13
+LBB2_8:                                 ##   in Loop: Header=BB2_5 Depth=3
+	movl	-12(%rbp), %edi
 	callq	_fibonacci
-	movl	-8(%rbp), %edi
+	movl	-12(%rbp), %edi
 	movl	%eax, -24(%rbp)         ## 4-byte Spill
 	callq	_factorial
 	leaq	L_.str(%rip), %rdi
@@ -139,23 +133,37 @@ LBB2_5:                                 ##   Parent Loop BB2_1 Depth=1
 	movl	%ecx, %esi
 	movb	$0, %al
 	callq	_printf
+	cmpl	$25, -12(%rbp)
 	movl	%eax, -28(%rbp)         ## 4-byte Spill
-LBB2_8:                                 ##   in Loop: Header=BB2_5 Depth=3
+	jne	LBB2_10
+## BB#9:
+	jmp	LBB2_18
+LBB2_10:                                ##   in Loop: Header=BB2_5 Depth=3
+	jmp	LBB2_11
+LBB2_11:                                ##   in Loop: Header=BB2_5 Depth=3
 	movl	-20(%rbp), %eax
 	addl	$1, %eax
 	movl	%eax, -20(%rbp)
 	jmp	LBB2_5
-LBB2_9:                                 ##   in Loop: Header=BB2_3 Depth=2
+LBB2_12:                                ##   in Loop: Header=BB2_3 Depth=2
+	jmp	LBB2_13
+LBB2_13:                                ##   in Loop: Header=BB2_3 Depth=2
+	jmp	LBB2_14
+LBB2_14:                                ##   in Loop: Header=BB2_3 Depth=2
 	movl	-16(%rbp), %eax
 	addl	$1, %eax
 	movl	%eax, -16(%rbp)
 	jmp	LBB2_3
-LBB2_10:                                ##   in Loop: Header=BB2_1 Depth=1
-	movl	-8(%rbp), %eax
+LBB2_15:                                ##   in Loop: Header=BB2_1 Depth=1
+	jmp	LBB2_16
+LBB2_16:                                ##   in Loop: Header=BB2_1 Depth=1
+	movl	-12(%rbp), %eax
 	addl	$1, %eax
-	movl	%eax, -8(%rbp)
+	movl	%eax, -12(%rbp)
 	jmp	LBB2_1
-LBB2_11:
+LBB2_17:
+	jmp	LBB2_18
+LBB2_18:
 	xorl	%eax, %eax
 	addq	$32, %rsp
 	popq	%rbp

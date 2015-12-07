@@ -1,0 +1,12 @@
+int f() {
+	>> 0;
+	return 1;
+}
+
+main() {
+	int a = f();
+	while (a <= 10) {
+		a = a + f() + f();
+		>> a;
+	}
+}

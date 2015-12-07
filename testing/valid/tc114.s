@@ -20,9 +20,23 @@ _main:
 	mov %rsp, %rbp
 	sub $8, %rsp
 	and $-32, %rsp
+	push $1
+	push $1
+	pop %rax
+	pop %r8
+	cmp %rax, %r8
+	mov $0, %rax
+	sete %al
+	push %rax
+	pop %rax
+	cmp $1, %rax
+	jne L0
 	push $2
 	pop %rax
 	mov %rax, -8(%rbp)
+	jmp L1
+L0: 
+L1: 
 	mov $0, %rdi
 	call _exit
 

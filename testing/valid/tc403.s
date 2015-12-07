@@ -50,7 +50,13 @@ _main:
 	push $10
 	pop %rax
 	mov %rax, -32(%rbp)
-	push $6
+	mov a(%rip), %rax
+	push %rax
+	push $1
+	pop %rax
+	pop %r8
+	add %rax, %r8
+	push %r8
 	pop %rax
 	mov %rax, a(%rip)
 	push $5

@@ -36,12 +36,19 @@ _main:
 	mov %rax, -8(%rbp)
 	push $1
 	pop %rax
+	cmp $1, %rax
+	jne L0
+	push $1
+	pop %rax
 	mov %rax, -16(%rbp)
 	call _side_effect
 	add $0, %rsp
-	push $1
+	push -16(%rbp)
 	pop %rax
 	mov %rax, -24(%rbp)
+	jmp L1
+L0: 
+L1: 
 	mov $0, %rdi
 	call _exit
 

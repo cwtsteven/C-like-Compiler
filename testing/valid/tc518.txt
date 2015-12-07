@@ -1,0 +1,16 @@
+main() {
+	int limit = 2;
+	int i = 0;
+	while (i < limit) {
+		int j = 0;
+		while (j < limit) {
+			int k = 0;
+			while (k < limit) {
+				>> 1;
+				k = k + 1;
+			}
+			j = j + 1;
+		}
+		i = i + 1;
+	}
+}

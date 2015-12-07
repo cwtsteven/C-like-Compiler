@@ -1,0 +1,14 @@
+main() {
+	int a = 0;
+	while lbl: (a < 10) {
+		int b = a;
+		while (b < a) {
+			if (b == 5) {
+				break lbl;
+			}
+			>> b;
+			b = b + 1;
+		}
+		a = a + 1;
+	}
+}

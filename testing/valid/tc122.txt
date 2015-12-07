@@ -1,0 +1,10 @@
+main() {
+	int a = 1;
+	while (a <= 10) {
+		if (a <= 5) {
+			a = a + 2;
+			break;
+		}
+		a = a + 1;
+	}
+}

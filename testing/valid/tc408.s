@@ -38,13 +38,13 @@ _main:
 	push $2
 	pop %rax
 	mov %rax, -8(%rbp)
-	push $2
+	push -8(%rbp)
 	pop %rax
 	mov %rax, -16(%rbp)
-	push $2
+	push -16(%rbp)
 	pop %rax
 	mov %rax, %rsi
-	push $2
+	push -8(%rbp)
 	pop %rax
 	mov %rax, %rdi
 	call _side_effect

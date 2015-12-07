@@ -38,7 +38,8 @@ _main:
 	mov %rsp, %rbp
 	sub $40, %rsp
 	and $-32, %rsp
-	push $5
+	mov a(%rip), %rax
+	push %rax
 	pop %rax
 	mov %rax, -8(%rbp)
 	push $1
@@ -50,10 +51,16 @@ _main:
 	push $10
 	pop %rax
 	mov %rax, -32(%rbp)
-	push $6
+	mov a(%rip), %rax
+	push %rax
+	push $1
+	pop %rax
+	pop %r8
+	add %rax, %r8
+	push %r8
 	pop %rax
 	mov %rax, a(%rip)
-	push $5
+	push -8(%rbp)
 	pop %rax
 	mov %rax, -40(%rbp)
 	mov $0, %rdi

@@ -23,7 +23,6 @@ _main:
 	push $0
 	pop %rax
 	mov %rax, -8(%rbp)
-Llbl1: 
 L0: 
 	push -8(%rbp)
 	push $10
@@ -70,7 +69,7 @@ L2:
 	push %r8
 	pop %rax
 	mov %rax, -8(%rbp)
-	jmp Llbl1
+	jmp L0
 	jmp L5
 L4: 
 L5: 

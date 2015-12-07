@@ -4,7 +4,7 @@ public class Test {
 		if (n <= 1) 
 			return n;
 		else 
-			return n + fibonacci(n - 1) + fibonacci(n - 2);
+			return fibonacci(n - 1) + fibonacci(n - 2);
 	}
 
 	public static int factorial(int n) {
@@ -15,20 +15,19 @@ public class Test {
 	}
 
 	public static void main(String[] args) {
-		int i = 1;
-		int limit = 25;
-		while (i <= limit) {
-			int j = 1;
-			while (j <= limit) {
-				int k = 1;
-				while (k <= limit) {
-					if (i <= j + k)
-						System.out.print("" + (fibonacci(i) + factorial(i)));
-					k++;
+		int limit = 100;
+		lbl:
+		for (int i = 0; i < limit; i++) {
+			lbl2:
+			for (int j = 0; j < limit; j++) {
+				for (int k = 0; k < limit; k++) {
+					if (k > 50)
+						continue lbl2;
+					System.out.print("" + (fibonacci(i) + factorial(i)));
+					if (i == 25)
+						break lbl;
 				}
-				j++;
 			}
-			i++;
 		}
 	}
 

@@ -34,14 +34,32 @@ _main:
 	push $'a'
 	pop %rax
 	mov %rax, -8(%rbp)
+	push -8(%rbp)
+	push $'a'
+	pop %rax
+	pop %r8
+	cmp %rax, %r8
+	mov $0, %rax
+	sete %al
+	push %rax
+	pop %rax
+	cmp $1, %rax
+	jne L0
 	push $1
 	pop %rax
 	mov %rax, -16(%rbp)
 	call _side_effect
 	add $0, %rsp
-	push $1
+	push -16(%rbp)
 	pop %rax
 	mov %rax, -24(%rbp)
+	jmp L1
+L0: 
+	push -8(%rbp)
+	lea char.str(%rip), %rdi
+	pop %rsi
+	call _printf
+L1: 
 	mov $0, %rdi
 	call _exit
 

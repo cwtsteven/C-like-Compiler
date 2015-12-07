@@ -20,7 +20,12 @@ _main:
 	mov %rsp, %rbp
 	sub $0, %rsp
 	and $-32, %rsp
-	push $3
+	push $1
+	push $2
+	pop %rax
+	pop %r8
+	add %rax, %r8
+	push %r8
 	lea int.str(%rip), %rdi
 	pop %rsi
 	call _printf

@@ -1,6 +1,6 @@
 	.section __TEXT,__cstring,cstring_literals
 int.str:
-	.string "%d\0"
+	.string "%ld\0"
 char.str:
 	.string "%c\0"
 true.str:
@@ -8,8 +8,11 @@ true.str:
 false.str:
 	.string "false"
 
+	.data
+Read_int: .quad
 
 	.section __TEXT,__text,regular,pure_instructions
+
 
 _fibonacci: 
 	push %rbp
@@ -34,7 +37,6 @@ _fibonacci:
 	jmp L1
 L0: 
 	push -8(%rbp)
-	push -8(%rbp)
 	push $1
 	pop %rax
 	pop %r8
@@ -44,9 +46,7 @@ L0:
 	mov %rax, %rdi
 	call _fibonacci
 	add $0, %rsp
-	pop %r8
-	add %rax, %r8
-	push %r8
+	push %rax
 	push -8(%rbp)
 	push $2
 	pop %rax
@@ -110,77 +110,84 @@ _main:
 	mov %rsp, %rbp
 	sub $32, %rsp
 	and $-32, %rsp
-	push $1
+	push $100
 	pop %rax
 	mov %rax, -8(%rbp)
-	push $25
+	push $0
 	pop %rax
 	mov %rax, -16(%rbp)
 L4: 
-	push -8(%rbp)
 	push -16(%rbp)
+	push -8(%rbp)
 	pop %rax
 	pop %r8
 	cmp %rax, %r8
 	mov $0, %rax
-	setle %al
+	setl %al
 	push %rax
 	pop %rax
 	cmp $1, %rax
 	jne L5
-	push $1
+	push $0
 	pop %rax
 	mov %rax, -24(%rbp)
 L6: 
 	push -24(%rbp)
-	push -16(%rbp)
+	push -8(%rbp)
 	pop %rax
 	pop %r8
 	cmp %rax, %r8
 	mov $0, %rax
-	setle %al
+	setl %al
 	push %rax
 	pop %rax
 	cmp $1, %rax
 	jne L7
-	push $1
+	push $0
 	pop %rax
 	mov %rax, -32(%rbp)
 L8: 
 	push -32(%rbp)
-	push -16(%rbp)
+	push -8(%rbp)
 	pop %rax
 	pop %r8
 	cmp %rax, %r8
 	mov $0, %rax
-	setle %al
+	setl %al
 	push %rax
 	pop %rax
 	cmp $1, %rax
 	jne L9
-	push -8(%rbp)
-	push -24(%rbp)
 	push -32(%rbp)
+	push $50
+	pop %rax
+	pop %r8
+	cmp %rax, %r8
+	mov $0, %rax
+	setg %al
+	push %rax
+	pop %rax
+	cmp $1, %rax
+	jne L10
+	push -24(%rbp)
+	push $1
 	pop %rax
 	pop %r8
 	add %rax, %r8
 	push %r8
 	pop %rax
-	pop %r8
-	cmp %rax, %r8
-	mov $0, %rax
-	setle %al
-	push %rax
-	pop %rax
-	cmp $1, %rax
-	jne L10
-	push -8(%rbp)
+	mov %rax, -24(%rbp)
+	jmp L6
+	jmp L11
+L10: 
+L11: 
+	push -16(%rbp)
 	pop %rax
 	mov %rax, %rdi
 	call _fibonacci
 	add $0, %rsp
 	push %rax
-	push -8(%rbp)
+	push -16(%rbp)
 	pop %rax
 	mov %rax, %rdi
 	call _factorial
@@ -191,9 +198,21 @@ L8:
 	lea int.str(%rip), %rdi
 	pop %rsi
 	call _printf
-	jmp L11
-L10: 
-L11: 
+	push -16(%rbp)
+	push $25
+	pop %rax
+	pop %r8
+	cmp %rax, %r8
+	mov $0, %rax
+	sete %al
+	push %rax
+	pop %rax
+	cmp $1, %rax
+	jne L12
+	jmp L5
+	jmp L13
+L12: 
+L13: 
 	push -32(%rbp)
 	push $1
 	pop %rax
@@ -214,14 +233,14 @@ L9:
 	mov %rax, -24(%rbp)
 	jmp L6
 L7: 
-	push -8(%rbp)
+	push -16(%rbp)
 	push $1
 	pop %rax
 	pop %r8
 	add %rax, %r8
 	push %r8
 	pop %rax
-	mov %rax, -8(%rbp)
+	mov %rax, -16(%rbp)
 	jmp L4
 L5: 
 	mov $0, %rdi

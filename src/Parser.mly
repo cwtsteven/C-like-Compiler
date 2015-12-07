@@ -68,16 +68,16 @@ block:
 ;
 
 stmnt:
-| e = expr; SEMICOLON					{ Expr e }
-| RETURN; e = expr; SEMICOLON			{ Return e }
-| d = declare_stmnt		 				{ Local d }
-| ifs = if_stmnt						{ ifs }
-| whs = while_stmnt						{ whs }
-| fos = for_stmnt						{ fos }
-| v = IDENTIFIER; COLON 				{ Label v }
-| BREAK; SEMICOLON						{ Break }
-| CONTINUE; SEMICOLON					{ Continue ""}
-| CONTINUE; v = IDENTIFIER SEMICOLON	{ Continue v }
+| e = expr; SEMICOLON						{ Expr e }
+| RETURN; e = expr; SEMICOLON				{ Return e }
+| d = declare_stmnt		 					{ Local d }
+| ifs = if_stmnt							{ ifs }
+| whs = while_stmnt							{ whs }
+| fos = for_stmnt							{ fos }
+| BREAK; SEMICOLON							{ Break "" }
+| BREAK; v = IDENTIFIER; SEMICOLON			{ Break v}
+| CONTINUE; SEMICOLON						{ Continue ""}
+| CONTINUE; v = IDENTIFIER; SEMICOLON		{ Continue v }
 ;
 
 declare_stmnt:
@@ -96,14 +96,20 @@ if_stmnt:
 
 while_stmnt:
 | WHILE; L_BRACKET; e = expr; R_BRACKET; 
-	b = block; 							{ While (e, b) }
+	b = block; 							{ While ("" , e, b) }
+| WHILE; lbl = IDENTIFIER; COLON; L_BRACKET; e = expr; R_BRACKET; 
+	b = block; 							{ While (lbl , e, b) }
 ;
 
 for_stmnt:
 | FOR; L_BRACKET; TYPEINT; v = IDENTIFIER; ASSIGN; e = expr; SEMICOLON; 
 	e2 = expr; SEMICOLON; 
 	e3 = expr; R_BRACKET;
-	b = block							{ For (DeclareAssign (Int, v, e), e2, e3, b) }
+	b = block							{ For ("", DeclareAssign (Int, v, e), e2, e3, b) }
+| FOR; lbl = IDENTIFIER; COLON; L_BRACKET; TYPEINT; v = IDENTIFIER; ASSIGN; e = expr; SEMICOLON; 
+	e2 = expr; SEMICOLON; 
+	e3 = expr; R_BRACKET;
+	b = block							{ For (lbl, DeclareAssign (Int, v, e), e2, e3, b) }
 ;
 
 expr:

@@ -43,11 +43,18 @@ _main:
 	push $5
 	pop %rax
 	mov %rax, -16(%rbp)
+	push $1
+	pop %rax
+	cmp $1, %rax
+	jne L0
 	push $20
 	lea int.str(%rip), %rdi
 	pop %rsi
 	call _printf
-	push $5
+	jmp L1
+L0: 
+L1: 
+	push -16(%rbp)
 	pop %rax
 	mov %rax, -24(%rbp)
 	mov $0, %rdi

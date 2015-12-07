@@ -20,7 +20,13 @@ _f:
 	mov %rsp, %rbp
 	sub $0, %rsp
 	and $-32, %rsp
-	push $4
+	mov a(%rip), %rax
+	push %rax
+	push $1
+	pop %rax
+	pop %r8
+	add %rax, %r8
+	push %r8
 	pop %rax
 	mov %rax, a(%rip)
 	jmp RETURN
@@ -29,19 +35,23 @@ _f:
 _main:
 	push %rbp
 	mov %rsp, %rbp
-	sub $24, %rsp
+	sub $32, %rsp
 	and $-32, %rsp
 	push $1
 	pop %rax
 	mov %rax, -8(%rbp)
-	push $1
+	push -8(%rbp)
 	pop %rax
 	mov %rax, -16(%rbp)
 	call _f
 	add $0, %rsp
-	push $1
+	push -8(%rbp)
 	pop %rax
 	mov %rax, -24(%rbp)
+	mov a(%rip), %rax
+	push %rax
+	pop %rax
+	mov %rax, -32(%rbp)
 	mov $0, %rdi
 	call _exit
 

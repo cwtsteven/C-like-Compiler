@@ -8,5 +8,6 @@ main() {
 	int v = 1;
 	int w = 1;
 	f();
-	int c = v;
+	int c = 1;
+	int d = a;
 }

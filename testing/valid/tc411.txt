@@ -1,0 +1,18 @@
+int pure_f(int x) {
+	return x;
+}
+int side_effect(int x) {
+	>> x;
+	return x;
+}
+main() {
+	int a = 1;
+	while (a <= 10) {
+		int b = 3 + 3;
+		int c = b + 2;
+		int d = pure_f(b) + pure_f(c);
+		int e = side_effect(1);
+		int f = c;
+		a = a + 1;
+	}
+}

@@ -44,7 +44,7 @@ _main:
 	push $1
 	pop %rax
 	mov %rax, -8(%rbp)
-	push $1
+	push -8(%rbp)
 	pop %rax
 	mov %rax, -16(%rbp)
 	push $1
@@ -53,7 +53,7 @@ _main:
 	call _f
 	add $0, %rsp
 	mov %rax, -24(%rbp)
-	push $1
+	push -8(%rbp)
 	pop %rax
 	mov %rax, -32(%rbp)
 	mov $0, %rdi

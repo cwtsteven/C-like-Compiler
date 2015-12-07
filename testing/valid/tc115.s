@@ -26,10 +26,27 @@ _main:
 	push $2
 	pop %rax
 	mov %rax, -16(%rbp)
-	push $1
+	push -8(%rbp)
+	push -16(%rbp)
+	pop %rax
+	pop %r8
+	cmp %rax, %r8
+	mov $0, %rax
+	sete %al
+	push %rax
+	pop %rax
+	cmp $1, %rax
+	jne L0
+	push -32(%rbp)
+	pop %rax
+	mov %rax, -24(%rbp)
+	jmp L1
+L0: 
+	push -8(%rbp)
 	lea int.str(%rip), %rdi
 	pop %rsi
 	call _printf
+L1: 
 	mov $0, %rdi
 	call _exit
 

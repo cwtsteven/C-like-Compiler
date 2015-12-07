@@ -208,23 +208,15 @@ let rec generate_block' block v_tables offset : string =
 														| Bool	->	(match e with | FunCall _ 	->	"" | _ 	-> 	"\tpop %rax\n") ^ "\tcmp $1, %rax\n" ^ "\tjne L" ^ string_of_int lbl ^ "\n" ^ b1' ^ "\tjmp L" ^ string_of_int (lbl + 1) ^ "\n" ^ "L" ^ string_of_int lbl ^ ": \n" ^ b2' ^ "L" ^ string_of_int (lbl + 1) ^ ": \n"
 														| _ 	-> 	raise NotYetDeveloped
 														) ^ generate_block' bs v_tables offset
-	| ((While (e, b)) :: bs)						-> 	let lbl = !lbl_counter in
+	| ((While (s, e, b)) :: bs)						-> 	let lbl = !lbl_counter in
 														let () = lbl_counter := lbl + 2 in
+														let () = if s = "" then () else Hashtbl.add lbl_tbl s ("while", string_of_int lbl, string_of_int (lbl + 1), Int (Int32.of_int 0)) in
 														let () = Stack.push ("while", string_of_int lbl, string_of_int (lbl + 1), Int (Int32.of_int 0)) lbl_stack in
 														let b' = generate_control e b lbl v_tables offset in
 														b' ^ generate_block' bs v_tables offset
-	| ((Label s) :: (For (e1, e2, e3, b)) :: bs)	-> 	let lbl = !lbl_counter in
+	| ((For (s, e1, e2, e3, b)) :: bs)				-> 	let lbl = !lbl_counter in
 														let () = lbl_counter := lbl + 2 in
-														let () = Hashtbl.add lbl_tbl s ("for", s, s, e3) in
-														let () = Stack.push ("for", string_of_int lbl, string_of_int (lbl + 1), e3) lbl_stack in
-														let local_var = generate_block' (Local e1 :: []) v_tables offset in
-														let loop = generate_control e2 (List.append b (Expr e3 :: [])) lbl v_tables offset in
-														let v_table = List.hd v_tables in
-														let DeclareAssign (t, v, e) = e1 in
-														let () = Hashtbl.remove v_table v in
-														local_var ^ "L" ^ s ^ ": \n" ^ loop ^ generate_block' bs v_tables offset
-	| ((For (e1, e2, e3, b)) :: bs)					-> 	let lbl = !lbl_counter in
-														let () = lbl_counter := lbl + 2 in
+														let () = if s = "" then () else Hashtbl.add lbl_tbl s ("for", string_of_int lbl, string_of_int (lbl + 1), e3) in
 														let () = Stack.push ("for", string_of_int lbl, string_of_int (lbl + 1), e3) lbl_stack in
 														let local_var = generate_block' (Local e1 :: []) v_tables offset in
 														let loop = generate_control e2 (List.append b (Expr e3 :: [])) lbl v_tables offset in
@@ -232,15 +224,12 @@ let rec generate_block' block v_tables offset : string =
 														let DeclareAssign (t, v, e) = e1 in
 														let () = Hashtbl.remove v_table v in
 														local_var ^ loop ^ generate_block' bs v_tables offset
-	| ((Label s) :: bs) 							->  let () = Hashtbl.add lbl_tbl s ("while", s, s, Int (Int32.of_int 0)) in
-														"L" ^ s ^ ": \n"
-														^ generate_block' bs v_tables offset
-	| (Break :: bs)									->	let (ctr, loop, exit, e) = Stack.top lbl_stack in
+	| (Break s :: bs)								->	let (ctr, loop, exit, e) = if s = "" then Stack.top lbl_stack else Hashtbl.find lbl_tbl s in
 														"\tjmp L" ^ exit ^ "\n"
 														^ generate_block' bs v_tables offset
 	| ((Continue s) :: bs)							-> 	let (ctr, loop, exit, e) = if s = "" then Stack.top lbl_stack else Hashtbl.find lbl_tbl s in
 														(if ctr = "for" then snd (generate_expr e v_tables) else "")
-														^ "\tjmp L" ^ (if s = "" then loop else s) ^ "\n"
+														^ "\tjmp L" ^ loop ^ "\n"
 														^ generate_block' bs v_tables offset
 	| ((Block b) :: bs) 							-> 	let b' = generate_block b v_tables offset in
 														b' ^ generate_block' bs v_tables offset

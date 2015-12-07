@@ -48,7 +48,7 @@ L0:
 	mov %rax, -16(%rbp)
 	jmp L0
 L1: 
-	push $20
+	push -8(%rbp)
 	lea int.str(%rip), %rdi
 	pop %rsi
 	call _printf

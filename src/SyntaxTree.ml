@@ -45,11 +45,10 @@ type stmnt = Expr of expr
 		   | Return of expr
 		   | Local of declare_stmnt
 		   | If_Then_Else of expr * block * block
-		   | While of expr * block
-		   | For of declare_stmnt * expr * expr * block
+		   | While of var * expr * block
+		   | For of var * declare_stmnt * expr * expr * block
 		   | Block of stmnt list
-		   | Label of string
-		   | Break
+		   | Break of string
 		   | Continue of string
 and block = stmnt list
 
@@ -126,10 +125,9 @@ let rec string_of_stmnt stmnt =
 	| Return e 					-> "Return " ^ string_of_expr e
 	| Local s 			   		-> "Local (" ^ string_of_declare_stmnt s ^ ")"
 	| If_Then_Else (e, b1, b2) 	-> "If_Then_Else " ^ string_of_expr e ^ " [" ^string_of_block b1 ^ "] {" ^ string_of_block b2 ^ "}"
-	| While (e, b)				-> "While " ^ string_of_expr e ^  " {" ^string_of_block b ^ "}"
-	| For (e1, e2, e3, b)		-> "For " ^ string_of_declare_stmnt e1 ^ " " ^ string_of_expr e2 ^ " " ^ string_of_expr e3 ^ " {" ^ string_of_block b ^ "}"
-	| Label s 					-> "Label " ^ s ^ ":"
-	| Break 					-> "Break"
+	| While (s, e, b)			-> "While " ^ string_of_expr e ^  " {" ^string_of_block b ^ "}"
+	| For (s, e1, e2, e3, b)	-> "For " ^ string_of_declare_stmnt e1 ^ " " ^ string_of_expr e2 ^ " " ^ string_of_expr e3 ^ " {" ^ string_of_block b ^ "}"
+	| Break s					-> "Break " ^ s
 	| Continue s				-> "Continue " ^ s 
 	| Block b 					-> "Block " ^ string_of_block b
 	end

@@ -1,0 +1,16 @@
+main() {
+	int limit = 10;
+	for lbl1: (int i = 0; i < limit; i = i + 1) {
+		for lbl2: (int j = 0; j < limit; j = j + 1) {
+			for (int k = 0; k < limit; k = k + 1) {
+				if (k > limit / 2) {
+					continue lbl2;
+				}
+				>> k;
+				if (i > limit / 2) {
+					break lbl1;
+				}
+			}
+		}
+	}
+}

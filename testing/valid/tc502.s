@@ -59,19 +59,40 @@ L1:
 _main:
 	push %rbp
 	mov %rsp, %rbp
-	sub $24, %rsp
+	sub $32, %rsp
 	and $-32, %rsp
 	push $10
 	pop %rax
 	mov %rax, -8(%rbp)
-	push $'b'
+	push -8(%rbp)
+	push $2
+	pop %rax
+	pop %r8
+	cmp %rax, %r8
+	mov $0, %rax
+	sete %al
+	push %rax
+	pop %rax
+	cmp $1, %rax
+	jne L2
+	push $'c'
 	pop %rax
 	mov %rax, -16(%rbp)
-	push $'b'
+	push -16(%rbp)
 	lea char.str(%rip), %rdi
 	pop %rsi
 	call _printf
+	jmp L3
 L2: 
+	push $'b'
+	pop %rax
+	mov %rax, -24(%rbp)
+	push -24(%rbp)
+	lea char.str(%rip), %rdi
+	pop %rsi
+	call _printf
+L3: 
+L4: 
 	push -8(%rbp)
 	push $0
 	pop %rax
@@ -82,12 +103,12 @@ L2:
 	push %rax
 	pop %rax
 	cmp $1, %rax
-	jne L3
+	jne L5
 	push $1
 	pop %rax
-	mov %rax, -24(%rbp)
-L4: 
-	push -24(%rbp)
+	mov %rax, -32(%rbp)
+L6: 
+	push -32(%rbp)
 	push -8(%rbp)
 	pop %rax
 	pop %r8
@@ -97,7 +118,7 @@ L4:
 	push %rax
 	pop %rax
 	cmp $1, %rax
-	jne L5
+	jne L7
 	push -8(%rbp)
 	pop %rax
 	mov %rax, %rdi
@@ -106,19 +127,19 @@ L4:
 	lea int.str(%rip), %rdi
 	mov %rax, %rsi
 	call _printf
-	push -24(%rbp)
+	push -32(%rbp)
 	push $1
 	pop %rax
 	pop %r8
 	add %rax, %r8
 	push %r8
 	pop %rax
-	mov %rax, -24(%rbp)
-	jmp L4
-L5: 
+	mov %rax, -32(%rbp)
+	jmp L6
+L7: 
 	push $1
 	pop %rax
-	mov %rax, -24(%rbp)
+	mov %rax, -32(%rbp)
 	push -8(%rbp)
 	push $1
 	pop %rax
@@ -127,8 +148,8 @@ L5:
 	push %r8
 	pop %rax
 	mov %rax, -8(%rbp)
-	jmp L2
-L3: 
+	jmp L4
+L5: 
 	mov $0, %rdi
 	call _exit
 

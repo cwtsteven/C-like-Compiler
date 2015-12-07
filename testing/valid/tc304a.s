@@ -26,12 +26,19 @@ _main:
 	push $3
 	pop %rax
 	mov %rax, -16(%rbp)
+	push $1
+	pop %rax
+	cmp $1, %rax
+	jne L0
 	push $5
 	pop %rax
 	mov %rax, -24(%rbp)
 	push $5
 	pop %rax
 	mov %rax, -32(%rbp)
+	jmp L1
+L0: 
+L1: 
 	mov $0, %rdi
 	call _exit
 

@@ -26,10 +26,15 @@ _main:
 	push $2
 	pop %rax
 	mov %rax, -16(%rbp)
-	push $5
+	push -16(%rbp)
+	push $3
+	pop %rax
+	pop %r8
+	add %rax, %r8
+	push %r8
 	pop %rax
 	mov %rax, -16(%rbp)
-	push $5
+	push -16(%rbp)
 	pop %rax
 	mov %rax, -24(%rbp)
 	mov $0, %rdi

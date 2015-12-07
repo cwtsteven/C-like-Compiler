@@ -39,12 +39,24 @@ _main:
 	push $1
 	pop %rax
 	mov %rax, -8(%rbp)
-	push $2
+	push -8(%rbp)
+	push $1
+	pop %rax
+	pop %r8
+	add %rax, %r8
+	push %r8
 	pop %rax
 	mov %rax, -16(%rbp)
-	push $3
+	push -16(%rbp)
+	pop %rax
+	mov %rax, %rsi
+	push -8(%rbp)
+	pop %rax
+	mov %rax, %rdi
+	call _plus
+	add $0, %rsp
 	lea int.str(%rip), %rdi
-	pop %rsi
+	mov %rax, %rsi
 	call _printf
 	mov $0, %rdi
 	call _exit

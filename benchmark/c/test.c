@@ -1,34 +1,33 @@
 #include <stdio.h>
 
 int fibonacci(int n) {
-	if (n <= 1)
-		return n;
-	else
-		return n + fibonacci(n - 1) + fibonacci(n - 2);
+    if (n <= 1)
+        return n;
+    else
+        return fibonacci(n - 1) + fibonacci(n - 2);
 }
 
 int factorial(int n) {
-	if (n <= 1)
-		return 1;
-	else
-		return n * factorial(n - 1);
+    if (n <= 1)
+        return 1;
+    else
+        return n * factorial(n - 1);
 }
 
 int main() {
-	int i = 1;
-	int limit = 25;
-	while (i <= limit) {
-		int j = 1;
-		while (j <= limit) {
-			int k = 1;
-			while (k <= limit) {
-				if (i <= j + k)
-					printf("%d", fibonacci(i) + factorial(i));
-				k++;
-			}
-			j++;
-		}
-		i++;
-	}
-	return 0;
+    int limit = 100;
+    for (int i = 0; i < limit; i++) {
+        for (int j = 0; j < limit; j++) {
+            for (int k = 0; k < limit; k++) {
+                if (k > 50)
+                    goto lbl2;
+                printf("%d", fibonacci(i) + factorial(i));
+                if (i == 25)
+                    goto lbl1;
+            }
+            lbl2: ;
+        }
+    }
+    lbl1:
+    return 0;
 }

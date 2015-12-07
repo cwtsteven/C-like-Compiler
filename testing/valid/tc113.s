@@ -23,7 +23,12 @@ _main:
 	push $3
 	pop %rax
 	mov %rax, -8(%rbp)
-	push $6
+	push -8(%rbp)
+	push $3
+	pop %rax
+	pop %r8
+	add %rax, %r8
+	push %r8
 	pop %rax
 	mov %rax, -16(%rbp)
 	mov $0, %rdi
