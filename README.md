@@ -91,16 +91,18 @@ All operators are left-associative unless otherwise specified. For instance, an 
 <code>>> 3 + 4 * 5 >= 1;</code> will be evaluated to <code>>> ((3 + (4 * 5)) >= 1)</code>. 
 
 ### 5.6 Control
-Traditional control flow <code>if</code> <code>if else</code> <code>while</code> and <code>for</code> are supported. 
+Traditional control flow <code>if</code> <code>if else</code> <code>while</code> <code>do-while</code> and <code>for</code> are supported. 
 Here are the rules for each statement:
 - <code>if (expr) {statements}</code>
 - <code>if (expr) {statements} else {statements}</code>
 - <code>while (expr) {statements}</code>
+- <code>do {statements} while (expr)</code>
 - <code>for(int var = integer;expr;expr) {statements}</code>
 
 ##### 5.6.1 Label, Break, Continue
 <code>break</code> and <code>continue</code> are also supported. <code>break;</code> will escape from the closest loop and <code>continue;</code> will repeat the closest loop. You can also declare labels in a control loop as follows:
 - <code>while lbl: (expr) {statements}</code>
+- <code>do lbl: {statement} while (expr)</code>
 - <code>for lbl: (int var = integer;expr;expr) {statements}</code>
 You can also use <code>break lbl;</code> or <code>continue lbl;</code> to escape or repeat the labeled control loop.
 
