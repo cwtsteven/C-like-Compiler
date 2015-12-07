@@ -97,6 +97,7 @@ Here are the rules for each statement:
 - <code>if (expr) {statements} else {statements}</code>
 - <code>while (expr) {statements}</code>
 - <code>for(int var = integer;expr;expr) {statements}</code>
+
 ##### 5.6.1 Label, Break, Continue
 <code>break</code> and <code>continue</code> are also supported. <code>break;</code> will escape from the closest loop and <code>continue;</code> will repeat the closest loop. You can also declare labels in a control loop as follows:
 - <code>while lbl: (expr) {statements}</code>
@@ -191,15 +192,15 @@ For now, the compiler can generate codes for
 ##### Compile time
 | Language      | Time elasped  |
 | ------------- |:-------------:|
-| c             | 0.02s         |
-| java          | 1.41s         |
-| compiler      | 0.01s         |
+| c             | 0.03s         |
+| java          | 0.63s         |
+| compiler      | 0.00s         |
 
 ##### Run time
 | Language      | Time elasped  |
 | ------------- |:-------------:|
-| c             | 0.69s         |
-| java          | 0.86s         |
-| compiler      | 1.44s         |
+| c             | 5.35s         |
+| java          | 4.86s         |
+| compiler      | 13.24s        |
 
 In order to run the benchmark script, please execute <code>sh benchmark.sh</code>. The code that was used in benchmarking can also be found inside the <code>benchmark</code> folder. 
