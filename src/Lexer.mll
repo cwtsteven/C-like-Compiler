@@ -15,6 +15,7 @@ let add = '+'
 let sub = '-'
 let mul = '*'
 let div = '/'
+let mod = '%'
 let eq = "=="
 let neq = "!="
 let gt = '>'
@@ -75,6 +76,7 @@ rule read = parse
 | sub { SUB }
 | mul { MUL }
 | div { DIV }
+| mod { MOD }
 | eq { EQ }
 | neq { NEQ }
 | gt { GT }

@@ -17,6 +17,7 @@ type binary_op = Add
 			   | Sub
 			   | Mul
 			   | Div
+			   | Mod
 			   | Eq
 			   | Neq
 			   | Gt
@@ -74,6 +75,7 @@ let string_of_binary_op op = match op with
 	| Sub 	 ->  "Sub"
 	| Mul 	 ->  "Mul"
 	| Div 	 ->  "Div"
+	| Mod  	 ->  "Mod"
 	| Eq 	 ->  "Eq"
 	| Neq	 ->  "Neq"
 	| Gt	 ->  "Gt"

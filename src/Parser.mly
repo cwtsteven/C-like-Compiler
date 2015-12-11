@@ -13,7 +13,7 @@
 %token <string> IDENTIFIER
 %token ASSIGN
 %token AND OR NOT
-%token ADD SUB MUL DIV
+%token ADD SUB MUL DIV MOD
 %token EQ NEQ GT GEQ LT LEQ
 %token PROMPT PRINT
 %token IF ELSE
@@ -34,7 +34,7 @@
 %left AND OR NOT
 %left EQ NEQ GT GEQ LT LEQ 
 %left ADD SUB
-%left MUL DIV
+%left MUL DIV MOD
 
 %type <SyntaxTree.type_> type_
 %start <SyntaxTree.program> program
@@ -162,6 +162,7 @@ data:
 | SUB			{ Sub }
 | MUL			{ Mul }
 | DIV			{ Div }
+| MOD 			{ Mod }
 | NEQ			{ Neq }
 | EQ 			{ Eq }
 | GT			{ Gt }

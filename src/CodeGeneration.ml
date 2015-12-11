@@ -62,6 +62,10 @@ and generate_binary_op (op, e1, e2) v_tables : type_ * string =
 					| (Int, Int)		->	(Int, e1' ^ (match e1 with | FunCall _ 	->	"\tpush %rax\n" | _ 	-> 	"") ^ e2' ^ (match e2 with | FunCall _ 	->	"\tpush %rax\n" | _ 	-> 	"") ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcqto\n" ^ "\tidiv %r8\n" ^ "\tpush %rax\n")
 					| _ 				->	raise NotYetDeveloped
 					)
+	| Mod 		-> 	(match (t1, t2) with
+					| (Int, Int)		->	(Int, e1' ^ (match e1 with | FunCall _ 	->	"\tpush %rax\n" | _ 	-> 	"") ^ e2' ^ (match e2 with | FunCall _ 	->	"\tpush %rax\n" | _ 	-> 	"") ^ "\tpop %r8\n" ^ "\tpop %rax\n" ^ "\tcqto\n" ^ "\tidiv %r8\n" ^ "\tpush %rdx\n")
+					| _ 				->	raise NotYetDeveloped
+					)
 	| Eq 		-> 	(Bool, 
 					(match (t1, t2) with
 					| (Int, Int) 		

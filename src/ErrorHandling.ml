@@ -28,6 +28,7 @@ let symbol2string (type a) (symbol : xsymbol) : string =
 	| X (T T_SUB) 			-> "-"
 	| X (T T_MUL) 			-> "*"
 	| X (T T_DIV) 			-> "/"
+	| X (T T_MOD) 			-> "%"
 	| X (T T_EQ) 			-> "=="
 	| X (T T_NEQ) 			-> "!="
 	| X (T T_GT) 			-> ">"

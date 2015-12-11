@@ -83,6 +83,10 @@ and optimise_binary_op (op, e1, e2) v_tables isPure isLoop : expr =
 					| (Int i, Real r)        -> Real (Int32.to_float i /. r)
 					| _                      -> BinaryOp (Div, e1', e2')
 				)
+	| Mod 	 -> (match (e1', e2') with
+					| (Int i1, Int i2)       -> Int (Int32.rem i1 i2)
+					| _                      -> BinaryOp (Mod, e1', e2')
+				)				
 	| Eq     -> (match (e1', e2') with
 					| (Int i1, Int i2)       -> Bool (i1 = i2)
 					| (Real r1, Real r2)	 -> Bool (r1 = r2)
