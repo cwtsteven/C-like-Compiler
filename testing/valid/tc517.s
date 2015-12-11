@@ -18,7 +18,7 @@ Read_int: .quad
 _main:
 	push %rbp
 	mov %rsp, %rbp
-	sub $32, %rsp
+	sub $40, %rsp
 	and $-32, %rsp
 	push $10
 	pop %rax
@@ -68,6 +68,9 @@ L4:
 	pop %rax
 	cmp $1, %rax
 	jne L5
+	push $10
+	pop %rax
+	mov %rax, -40(%rbp)
 	push -32(%rbp)
 	push -8(%rbp)
 	push $2
