@@ -104,7 +104,21 @@ Here are the rules for each statement:
 - <code>while lbl: (expr) {statements}</code>
 - <code>do lbl: {statement} while (expr)</code>
 - <code>for lbl: (int var = integer;expr;expr) {statements}</code>
-You can also use <code>break lbl;</code> or <code>continue lbl;</code> to escape or repeat the labeled control loop.
+
+With lables, you can also write <code>break lbl;</code> or <code>continue lbl;</code> to escape or repeat the labeled control loop, for instance in
+<pre><code>main(){
+  int a = 0;
+  while lbl1: (a < 10;) {
+    int b = 0;
+    while (b < 10) {
+      if (b > 5) {
+        break lbl1;
+      }
+    }
+  }
+}
+</code></pre>
+<code>break lbl1;</code> will escape the outer loop.
 
 ### 5.7 Function
 Funtion declaration is also allowed in the top-level. Here is an example:
